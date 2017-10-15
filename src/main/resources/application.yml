@@ -1,0 +1,5 @@
+spring:
+ datasource:
+    url: ${sls.jdbc.url}
+    username: ${sls.db.username}
+    password: ${sls.db.password}
