@@ -11,7 +11,7 @@ import java.util.List;
 @Table(name = "entities")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
-@EqualsAndHashCode(of = "value, reference")
+@EqualsAndHashCode(of = {"value", "reference"})
 public class DataListEntity {
 
     @Id
@@ -19,10 +19,9 @@ public class DataListEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "list_id", nullable = false)
+    @Column(name = "list_id")
     @Getter
-    private DataList listId;
+    private Long listId;
 
     @Column(name = "value", nullable = false)
     @Getter
@@ -32,8 +31,12 @@ public class DataListEntity {
     @Getter
     private String reference;
 
-    @Column(name = "parent_entity_id", nullable = true)
-    @OneToMany(mappedBy = "id")
+    @Column(name = "parent_entity_id")
+    @Getter
+    private Long parentId;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name ="parent_entity_id", referencedColumnName = "id")
     @Getter
     private List<DataListEntity> subEntities;
 
@@ -42,9 +45,9 @@ public class DataListEntity {
         this.reference = reference;
     }
 
-    public DataListEntity(String value, String reference, List<DataListEntity> subEntities) {
+    public DataListEntity(String value, String reference, List<DataListEntity> subEntities ) {
         this.value = value;
         this.reference = reference;
         this.subEntities = subEntities;
-    }
+   }
 }

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @SpringBootTest
 @Profile("logtoconsole")
-public class DataListRepositoryTest {
+public class ListRepositoryTest {
 
     @Autowired
     private ListRepository repository;
@@ -28,15 +28,15 @@ public class DataListRepositoryTest {
         repository.deleteAll();
         List<DataListEntity> firstEntityList = new ArrayList<>();
         firstEntityList.add(new DataListEntity("Value", "ref"));
-        repository.save(createList("Test List One", firstEntityList ));
+        repository.save(new DataList("Test List One", firstEntityList ));
 
         List<DataListEntity> secondSubEntityList = new ArrayList<>();
         secondSubEntityList.add(new DataListEntity("SubValue", "sub_ref"));
 
         List<DataListEntity> secondEntityList = new ArrayList<>();
         secondEntityList.add(new DataListEntity("SecondValue", "second_ref", secondSubEntityList ));
-        repository.save(createList("Test List Two", secondEntityList));
-        repository.save(createList("Test List Three", null));
+        repository.save(new DataList("Test List Two", secondEntityList));
+        repository.save(new DataList("Test List Three", null));
     }
 
     @Test
@@ -88,10 +88,4 @@ public class DataListRepositoryTest {
         assertThat(dataList.getReference()).isEqualTo("Test List Three");
         assertThat(dataList.getEntities()).isNull();
     }
-
-    private static DataList createList(String reference, List<DataListEntity> listEntities) {
-        DataList dataList = new DataList(reference, listEntities);
-        return dataList;
-    }
-
 }

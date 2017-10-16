@@ -23,7 +23,8 @@ public class DataList {
     @Getter
     private String reference;
 
-    @OneToMany(mappedBy = "listId")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name ="list_id", referencedColumnName = "id")
     @Getter
     private List<DataListEntity> entities;
 

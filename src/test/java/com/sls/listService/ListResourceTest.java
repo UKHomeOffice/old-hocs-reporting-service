@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DataListResourceTest {
+public class ListResourceTest {
 
     @Mock
     private ListRepository mockRepo;
@@ -27,7 +27,7 @@ public class DataListResourceTest {
     }
 
     @Test
-    public void testCollaboratorsGettingAudit() {
+    public void testCollaboratorsGettingList() {
         when(mockRepo.findOneByReference("Test List One")).thenReturn(buildDataList());
 
         DataListRecord dataListRecord = resource.getListByReference("Test List One");
@@ -43,11 +43,7 @@ public class DataListResourceTest {
     private static DataList buildDataList() {
         List<DataListEntity> dle = new ArrayList<>();
         dle.add(new DataListEntity("Value", "ref"));
-        return createList("Test List One", dle);
+        return new DataList("Test List One", dle);
     }
 
-    private static DataList createList(String reference, List<DataListEntity> listEntities) {
-        DataList dataList = new DataList(reference, listEntities);
-        return dataList;
-    }
 }
