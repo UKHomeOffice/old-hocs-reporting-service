@@ -1,6 +1,9 @@
 package com.sls.listService.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -9,6 +12,6 @@ import java.util.List;
 @Getter
 @EqualsAndHashCode
 public class DataListRecord {
-    private String reference;
+    private String name;
     private List<DataListEntityRecord> entities;
 }

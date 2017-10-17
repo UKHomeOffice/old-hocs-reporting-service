@@ -1,11 +1,11 @@
 [
   {
-    "name": "TopValue",
-    "caseType": "top_ref",
+    "name": "TopText",
+    "caseType": "top_val",
     "topicListItems": [
       {
-        "topicUnit": "sub_ref",
-        "topicName": "SubValue",
+        "topicName": "SubText",
+        "topicUnit": "sub_val",
         "Key": "Value"
       }
     ]

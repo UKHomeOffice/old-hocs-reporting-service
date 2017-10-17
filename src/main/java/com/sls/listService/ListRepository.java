@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ListRepository extends CrudRepository<DataList, Long> {
 
-    DataList findOneByReference(String reference);
+    DataList findOneByName(String name);
 
 }
 

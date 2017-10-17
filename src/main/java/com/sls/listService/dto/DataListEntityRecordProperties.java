@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @EqualsAndHashCode
 public class DataListEntityRecordProperties {
-    private String property;
+    private String key;
     private String value;
 }

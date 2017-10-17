@@ -1,14 +1,14 @@
 {
-  "reference" : "TestListTwo",
+  "name": "TestListTwo",
   "entities" : [ {
-    "value" : "TopValue",
-    "reference" : "top_ref",
+    "text": "TopText",
+    "value": "top_val",
     "subEntities" : [ {
-      "value" : "SubValue",
-      "reference" : "sub_ref"
+      "text": "SubText",
+      "value": "sub_val"
     } ],
     "properties" : [ {
-      "property" : "Key",
+      "key": "Key",
       "value" : "Value"
     } ]
   } ]

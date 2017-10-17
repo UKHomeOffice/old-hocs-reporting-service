@@ -7,32 +7,31 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "list_properties")
+@Table(name = "properties")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"property", "value"})
+@EqualsAndHashCode(of = {"key", "value"})
 public class DataListEntityProperties {
 
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "entity_id")
-    @Getter
-    private long dataListEntity;
+    private Long entityid;
 
-    @Column(name = "property")
+    @Column(name = "key")
     @Getter
-    private String property;
+    private String key;
 
     @Column(name = "value")
     @Getter
     private String value;
 
-    public DataListEntityProperties(String property, String value)
+    public DataListEntityProperties(String key, String value)
     {
-        this.property = property;
+        this.key = key;
         this.value = value;
     }
 

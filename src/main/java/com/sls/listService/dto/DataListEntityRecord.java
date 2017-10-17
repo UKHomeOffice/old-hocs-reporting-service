@@ -15,9 +15,9 @@ import java.util.List;
 @Getter
 public class DataListEntityRecord {
 
-    private String value;
+    private String text;
 
-    private String reference;
+    private String value;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DataListEntityRecord> subEntities = new ArrayList<>();

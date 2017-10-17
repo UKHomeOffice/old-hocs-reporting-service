@@ -37,45 +37,45 @@ public class ListRepositoryTest {
 
     @Test
     public void shouldRetrieveListByName() {
-        final DataList dataList = repository.findOneByReference("Test List One");
-        assertThat(dataList.getReference()).isEqualTo("Test List One");
+        final DataList dataList = repository.findOneByName("Test List One");
+        assertThat(dataList.getName()).isEqualTo("Test List One");
     }
 
     @Test
     public void shouldRetrieveListByNameNotFound() {
-        final DataList dataList = repository.findOneByReference("Test List Five");
+        final DataList dataList = repository.findOneByName("Test List Five");
         assertThat(dataList).isNull();
     }
 
     @Test
     public void shouldRetrieveListEntities() {
-        final DataList dataList = repository.findOneByReference("Test List One");
-        assertThat(dataList.getReference()).isEqualTo("Test List One");
+        final DataList dataList = repository.findOneByName("Test List One");
+        assertThat(dataList.getName()).isEqualTo("Test List One");
         assertThat(dataList.getEntities()).size().isEqualTo(1);
-        assertThat(asList(dataList.getEntities()).get(0).getReference()).isEqualTo("ref");
+        assertThat(asList(dataList.getEntities()).get(0).getText()).isEqualTo("Text");
         assertThat(asList(dataList.getEntities()).get(0).getValue()).isEqualTo("Value");
     }
 
     @Test
     public void shouldRetrieveListSubEntities() {
-        final DataList dataList = repository.findOneByReference("Test List Two");
-        assertThat(dataList.getReference()).isEqualTo("Test List Two");
+        final DataList dataList = repository.findOneByName("Test List Two");
+        assertThat(dataList.getName()).isEqualTo("Test List Two");
         assertThat(dataList.getEntities()).size().isEqualTo(1);
 
         DataListEntity dataListEntityOne = asList(dataList.getEntities()).get(0);
-        assertThat(dataListEntityOne.getReference()).isEqualTo("second_ref");
-        assertThat(dataListEntityOne.getValue()).isEqualTo("SecondValue");
+        assertThat(dataListEntityOne.getText()).isEqualTo("SecondText");
+        assertThat(dataListEntityOne.getValue()).isEqualTo("second_val");
 
         assertThat(dataListEntityOne.getSubEntities()).size().isEqualTo(1);
         DataListEntity dataListEntitySub = asList(dataListEntityOne.getSubEntities()).get(0);
-        assertThat(dataListEntitySub.getReference()).isEqualTo("sub_ref");
-        assertThat(dataListEntitySub.getValue()).isEqualTo("SubValue");
+        assertThat(dataListEntitySub.getText()).isEqualTo("SubText");
+        assertThat(dataListEntitySub.getValue()).isEqualTo("sub_val");
     }
 
     @Test
     public void shouldRetrieveListEntitiesNone() {
-        final DataList dataList = repository.findOneByReference("Test List Three");
-        assertThat(dataList.getReference()).isEqualTo("Test List Three");
+        final DataList dataList = repository.findOneByName("Test List Three");
+        assertThat(dataList.getName()).isEqualTo("Test List Three");
         assertThat(dataList.getEntities()).isNull();
     }
 
@@ -84,14 +84,14 @@ public class ListRepositoryTest {
         repository.deleteAll();
 
         Set<DataListEntity> firstEntityList = new HashSet<>();
-        firstEntityList.add(new DataListEntity("Value", "ref"));
+        firstEntityList.add(new DataListEntity("Text", "Value"));
         repository.save(new DataList("Test List One", firstEntityList));
 
         Set<DataListEntity> secondSubEntityList = new HashSet<>();
-        secondSubEntityList.add(new DataListEntity("SubValue", "sub_ref"));
+        secondSubEntityList.add(new DataListEntity("SubText", "sub_val"));
 
         Set<DataListEntity> secondEntityList = new HashSet<>();
-        secondEntityList.add(new DataListEntity("SecondValue", "second_ref", secondSubEntityList));
+        secondEntityList.add(new DataListEntity("SecondText", "second_val", secondSubEntityList));
         repository.save(new DataList("Test List Two", secondEntityList));
         repository.save(new DataList("Test List Three", null));
     }

@@ -17,29 +17,29 @@ public class ListResource {
         this.service = service;
     }
 
-    @RequestMapping(value = "/list/{reference}", method = RequestMethod.GET)
-    public ResponseEntity<DataListRecord> getListByReference(@PathVariable("reference") String reference) {
-        log.info("List \"{}\" requested", reference);
+    @RequestMapping(value = "/list/{name}", method = RequestMethod.GET)
+    public ResponseEntity<DataListRecord> getListByReference(@PathVariable("name") String name) {
+        log.info("List \"{}\" requested", name);
         try {
-            DataListRecord list = service.getListByReference(reference);
+            DataListRecord list = service.getListByName(name);
             return ResponseEntity.ok(list);
         } catch (ListNotFoundException e)
         {
-            log.info("List \"{}\" not found", reference);
+            log.info("List \"{}\" not found", name);
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
-    @RequestMapping(value = "/legacy/list/{reference}", method = RequestMethod.GET)
-    public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference(@PathVariable("reference") String reference) {
-        log.info("List \"{}\" requested", reference);
+    @RequestMapping(value = "/legacy/list/{name}", method = RequestMethod.GET)
+    public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference(@PathVariable("name") String name) {
+        log.info("List \"{}\" requested", name);
         try {
-            LegacyDataListEntityRecord[] list = service.getLegacyListByReference(reference);
+            LegacyDataListEntityRecord[] list = service.getLegacyListByName(name);
             return ResponseEntity.ok(list);
         } catch (ListNotFoundException e)
         {
-            log.info("List \"{}\" not found", reference);
+            log.info("List \"{}\" not found", name);
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
@@ -47,12 +47,12 @@ public class ListResource {
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public ResponseEntity createList(@RequestBody DataList dataList) {
-        log.info("Creating list \"{}\"", dataList.getReference());
+        log.info("Creating list \"{}\"", dataList.getName());
         try {
             service.createList(dataList);
             return ResponseEntity.ok().build();
         } catch (EntityCreationException e) {
-            log.info("List \"{}\" not created", dataList.getReference());
+            log.info("List \"{}\" not created", dataList.getName());
             log.info(e.getMessage());
             return ResponseEntity.badRequest().build();
         }

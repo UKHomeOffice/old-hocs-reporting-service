@@ -11,7 +11,7 @@ import java.util.Set;
 @Table(name = "lists")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
-@EqualsAndHashCode(of = "reference")
+@EqualsAndHashCode(of = "name")
 public class DataList {
 
     @Id
@@ -19,9 +19,9 @@ public class DataList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "reference", nullable = false)
+    @Column(name = "name", nullable = false)
     @Getter
-    private String reference;
+    private String name;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="list_id", referencedColumnName = "id")
@@ -29,8 +29,8 @@ public class DataList {
     private Set<DataListEntity> entities;
 
 
-    public DataList(String reference, Set<DataListEntity> listEntities) {
-        this.reference = reference;
+    public DataList(String name, Set<DataListEntity> listEntities) {
+        this.name = name;
         this.entities = listEntities;
     }
 }

@@ -13,7 +13,7 @@ import java.util.Set;
 @Access(AccessType.FIELD)
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"value", "reference"})
+@EqualsAndHashCode(of = {"text", "value"})
 public class DataListEntity {
 
     @Id
@@ -24,16 +24,15 @@ public class DataListEntity {
     @Column(name = "list_id")
     private Long listId;
 
+    @Column(name = "text", nullable = false)
+    @Getter
+    private String text;
+
     @Column(name = "value", nullable = false)
     @Getter
     private String value;
 
-    @Column(name = "reference", nullable = false)
-    @Getter
-    private String reference;
-
     @Column(name = "parent_entity_id")
-    @Getter
     private Long parentId;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -46,21 +45,22 @@ public class DataListEntity {
     @Getter
     private Set<DataListEntityProperties> properties;
 
-    public DataListEntity(String value, String reference, Set<DataListEntity> subEntities, Set<DataListEntityProperties> properties) {
+
+    public DataListEntity(String text, String value, Set<DataListEntity> subEntities, Set<DataListEntityProperties> properties) {
+        this.text = text;
         this.value = value;
-        this.reference = reference;
         this.subEntities = subEntities;
         this.properties = properties;
     }
 
-    public DataListEntity(String value, String reference, Set<DataListEntity> subEntities) {
+    public DataListEntity(String text, String value, Set<DataListEntity> subEntities) {
+        this.text = text;
         this.value = value;
-        this.reference = reference;
         this.subEntities = subEntities;
     }
 
-    public DataListEntity(String value, String reference) {
+    public DataListEntity(String text, String value) {
+        this.text = text;
         this.value = value;
-        this.reference = reference;
     }
 }

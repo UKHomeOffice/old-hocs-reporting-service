@@ -26,24 +26,24 @@ public class ListServiceTest {
         service = new ListService(mockRepo);
     }
 
-    @Test
-    public void testCollaboratorsGettingList() throws ListNotFoundException {
-        when(mockRepo.findOneByReference("Test List One")).thenReturn(buildDataList());
-
-        DataListRecord dataListRecord = service.getListByReference("Test List One");
-
-        verify(mockRepo).findOneByReference("Test List One");
-
-        assertThat(dataListRecord.getReference()).isEqualTo("Test List One");
-        assertThat(dataListRecord.getEntities()).size().isEqualTo(1);
-        assertThat(dataListRecord.getEntities().get(0).getReference()).isEqualTo("ref");
-        assertThat(dataListRecord.getEntities().get(0).getValue()).isEqualTo("Value");
-    }
-
     private static DataList buildDataList() {
         Set<DataListEntity> dle = new HashSet<>();
-        dle.add(new DataListEntity("Value","ref"));
+        dle.add(new DataListEntity("Text", "Value"));
         return new DataList("Test List One", dle);
+    }
+
+    @Test
+    public void testCollaboratorsGettingList() throws ListNotFoundException {
+        when(mockRepo.findOneByName("Test List One")).thenReturn(buildDataList());
+
+        DataListRecord dataListRecord = service.getListByName("Test List One");
+
+        verify(mockRepo).findOneByName("Test List One");
+
+        assertThat(dataListRecord.getName()).isEqualTo("Test List One");
+        assertThat(dataListRecord.getEntities()).size().isEqualTo(1);
+        assertThat(dataListRecord.getEntities().get(0).getText()).isEqualTo("Text");
+        assertThat(dataListRecord.getEntities().get(0).getValue()).isEqualTo("Value");
     }
 
 }

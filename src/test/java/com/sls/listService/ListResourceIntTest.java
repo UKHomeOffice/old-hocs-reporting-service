@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -26,18 +27,19 @@ public class ListResourceIntTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
+    @Transactional
     @Before
     public void setup() {
         repository.deleteAll();
 
         Set<DataListEntity> subList = new HashSet<>();
-        subList.add(new DataListEntity("SubValue","sub_ref"));
+        subList.add(new DataListEntity("SubText", "sub_val"));
 
         Set<DataListEntityProperties> properties = new HashSet<>();
         properties.add(new DataListEntityProperties("Key", "Value"));
 
         Set<DataListEntity> list = new HashSet<>();
-        list.add(new DataListEntity("TopValue","top_ref", subList, properties));
+        list.add(new DataListEntity("TopText", "top_val", subList, properties));
 
         DataList datalist = new DataList("TestListTwo", list);
 
