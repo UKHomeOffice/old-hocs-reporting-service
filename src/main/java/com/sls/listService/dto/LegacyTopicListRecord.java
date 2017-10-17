@@ -11,7 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class LegacyTopicListItem {
+public class LegacyTopicListRecord {
 
     private String topicName;
     private String topicUnit;

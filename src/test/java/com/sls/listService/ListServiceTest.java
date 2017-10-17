@@ -15,22 +15,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ListResourceTest {
+public class ListServiceTest {
 
     @Mock
     private ListRepository mockRepo;
-    private ListResource resource;
+    private ListService service;
 
     @Before
     public void setUp() {
-        resource = new ListResource(mockRepo);
+        service = new ListService(mockRepo);
     }
 
     @Test
-    public void testCollaboratorsGettingList() {
+    public void testCollaboratorsGettingList() throws ListNotFoundException {
         when(mockRepo.findOneByReference("Test List One")).thenReturn(buildDataList());
 
-        DataListRecord dataListRecord = resource.getListByReference("Test List One");
+        DataListRecord dataListRecord = service.getListByReference("Test List One");
 
         verify(mockRepo).findOneByReference("Test List One");
 

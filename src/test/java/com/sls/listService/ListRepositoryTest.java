@@ -9,10 +9,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -25,20 +25,8 @@ public class ListRepositoryTest {
     @Autowired
     private ListRepository repository;
 
-    @Before
-    public void setup() {
-        repository.deleteAll();
-        Set<DataListEntity> firstEntityList = new HashSet<>();
-        firstEntityList.add(new DataListEntity("Value","ref"));
-        repository.save(new DataList("Test List One", firstEntityList ));
-
-        Set<DataListEntity> secondSubEntityList = new HashSet<>();
-        secondSubEntityList.add(new DataListEntity("SubValue","sub_ref"));
-
-        Set<DataListEntity> secondEntityList = new HashSet<>();
-        secondEntityList.add(new DataListEntity("SecondValue","second_ref",secondSubEntityList));
-        repository.save(new DataList("Test List Two", secondEntityList));
-        repository.save(new DataList("Test List Three", null));
+    private static List<DataListEntity> asList(Set<DataListEntity> set) {
+        return new ArrayList<>(set);
     }
 
     @Test
@@ -91,8 +79,20 @@ public class ListRepositoryTest {
         assertThat(dataList.getEntities()).isNull();
     }
 
-    private static List<DataListEntity> asList(Set<DataListEntity> set)
-    {
-        return set.stream().collect(Collectors.toList());
+    @Before
+    public void setup() {
+        repository.deleteAll();
+
+        Set<DataListEntity> firstEntityList = new HashSet<>();
+        firstEntityList.add(new DataListEntity("Value", "ref"));
+        repository.save(new DataList("Test List One", firstEntityList));
+
+        Set<DataListEntity> secondSubEntityList = new HashSet<>();
+        secondSubEntityList.add(new DataListEntity("SubValue", "sub_ref"));
+
+        Set<DataListEntity> secondEntityList = new HashSet<>();
+        secondEntityList.add(new DataListEntity("SecondValue", "second_ref", secondSubEntityList));
+        repository.save(new DataList("Test List Two", secondEntityList));
+        repository.save(new DataList("Test List Three", null));
     }
 }
