@@ -9,22 +9,18 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 @EqualsAndHashCode
 public class LegacyDataListEntityRecord {
 
-    @Getter
     private String name;
 
-    @Getter
     private String caseType;
 
-    private List<LegacyDataListEntityRecord> topicListItems = new ArrayList<>();
-
     @JsonUnwrapped
-    private Map<String, String> properties = new HashMap<>();
+    private List<HashMap<String, String>> topicListItems = new ArrayList<>();
 
 }

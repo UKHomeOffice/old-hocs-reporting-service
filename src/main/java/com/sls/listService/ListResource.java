@@ -1,7 +1,7 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListRecord;
-import com.sls.listService.dto.LegacyTopicListRecord;
+import com.sls.listService.dto.LegacyDataListEntityRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,14 +29,13 @@ public class ListResource {
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @RequestMapping(value = "/legacy/list/{reference}", method = RequestMethod.GET)
-    public ResponseEntity<LegacyTopicListRecord> getLegacyListByReference(@PathVariable("reference") String reference) {
+    public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference(@PathVariable("reference") String reference) {
         log.info("List \"{}\" requested", reference);
         try {
-            LegacyTopicListRecord list = service.getLegacyListByReference(reference);
+            LegacyDataListEntityRecord[] list = service.getLegacyListByReference(reference);
             return ResponseEntity.ok(list);
         } catch (ListNotFoundException e)
         {
@@ -44,7 +43,6 @@ public class ListResource {
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
-
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
@@ -58,7 +56,5 @@ public class ListResource {
             log.info(e.getMessage());
             return ResponseEntity.badRequest().build();
         }
-
     }
-
 }

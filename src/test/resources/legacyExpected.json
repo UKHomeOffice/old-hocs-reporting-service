@@ -1,0 +1,13 @@
+[
+  {
+    "name": "TopValue",
+    "caseType": "top_ref",
+    "topicListItems": [
+      {
+        "topicUnit": "sub_ref",
+        "topicName": "SubValue",
+        "Key": "Value"
+      }
+    ]
+  }
+]

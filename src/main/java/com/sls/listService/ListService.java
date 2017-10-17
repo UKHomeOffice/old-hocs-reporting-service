@@ -1,6 +1,9 @@
 package com.sls.listService;
 
-import com.sls.listService.dto.*;
+import com.sls.listService.dto.DataListEntityRecord;
+import com.sls.listService.dto.DataListEntityRecordProperties;
+import com.sls.listService.dto.DataListRecord;
+import com.sls.listService.dto.LegacyDataListEntityRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,7 +35,7 @@ public class ListService {
         }
     }
 
-    public LegacyTopicListRecord getLegacyListByReference(String reference) throws ListNotFoundException {
+    public LegacyDataListEntityRecord[] getLegacyListByReference(String reference) throws ListNotFoundException {
         try {
             DataList list = repo.findOneByReference(reference);
             return toLegacyDataList(list);
@@ -68,9 +70,7 @@ public class ListService {
     }
 
     private DataListEntityRecord asRecord(DataListEntity listEntity) {
-        List<DataListEntityRecord> entityRecords = new ArrayList<>();
         List<DataListEntityRecordProperties> properties = new ArrayList<>();
-
         if (listEntity.getProperties() != null) {
             properties = listEntity.getProperties()
                     .stream()
@@ -78,6 +78,7 @@ public class ListService {
                     .collect(Collectors.toList());
         }
 
+        List<DataListEntityRecord> entityRecords = new ArrayList<>();
         if (listEntity.getSubEntities() != null) {
             entityRecords = listEntity.getSubEntities()
                     .stream()
@@ -88,35 +89,32 @@ public class ListService {
         return new DataListEntityRecord(listEntity.getValue(), listEntity.getReference(), entityRecords, properties);
     }
 
-    private LegacyTopicListRecord toLegacyDataList(DataList list) {
+    private LegacyDataListEntityRecord[] toLegacyDataList(DataList list) {
         List<LegacyDataListEntityRecord> entities = new ArrayList<>();
 
         if (list.getEntities() != null) {
             entities = list.getEntities().stream().map(this::asLegacyRecord).collect(Collectors.toList());
         }
-        return new LegacyTopicListRecord(list.getReference(), "UNIT", entities);
+        return entities.toArray(new LegacyDataListEntityRecord[0]);
     }
 
     private LegacyDataListEntityRecord asLegacyRecord(DataListEntity listEntity) {
 
-        List<LegacyDataListEntityRecord> entityRecords = new ArrayList<>();
-        Map<String, String> properties = new HashMap<>();
+        HashMap<String, String> entityRecords = new HashMap<>();
 
-        if (listEntity.getProperties() != null) {
-            properties = listEntity.getProperties()
+        // A constraint, the legacy lists only support one depth.
+        DataListEntity subEntity = new ArrayList<>(listEntity.getSubEntities()).get(0);
+        entityRecords.put("topicName", subEntity.getValue());
+        entityRecords.put("topicUnit", subEntity.getReference());
+        if (subEntity.getProperties() != null) {
+            entityRecords.putAll(subEntity.getProperties()
                     .stream()
                     .map(r -> new DataListEntityRecordProperties(r.getProperty(), r.getValue()))
-                    .collect(Collectors.toMap(DataListEntityRecordProperties::getProperty, DataListEntityRecordProperties::getValue));
+                    .collect(Collectors.toMap(DataListEntityRecordProperties::getProperty, DataListEntityRecordProperties::getValue)));
         }
-
-        if (listEntity.getSubEntities() != null) {
-            entityRecords = listEntity.getSubEntities()
-                    .stream()
-                    .map(this::asLegacyRecord)
-                    .collect(Collectors.toList());
-        }
-
-        return new LegacyDataListEntityRecord(listEntity.getReference(), listEntity.getValue(), entityRecords, properties);
-
+        ArrayList<HashMap<String, String>> entityRecordList = new ArrayList<>();
+        entityRecordList.add(entityRecords);
+        return new LegacyDataListEntityRecord(listEntity.getValue(), listEntity.getReference(), entityRecordList);
     }
+
 }

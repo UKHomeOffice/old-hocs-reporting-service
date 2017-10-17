@@ -52,4 +52,12 @@ public class ListResourceIntTest {
 
         JSONAssert.assertEquals(auditRecords, expectedRecords, false);
     }
+
+    @Test
+    public void shouldRetrieveAllLegacyEntities() throws IOException, JSONException {
+        String auditRecords = restTemplate.getForObject("/legacy/list/TestListTwo", String.class);
+        String expectedRecords = IOUtils.toString(getClass().getResourceAsStream("/legacyExpected.json"));
+
+        JSONAssert.assertEquals(auditRecords, expectedRecords, false);
+    }
 }
