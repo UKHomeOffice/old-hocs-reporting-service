@@ -6,7 +6,9 @@
     "subEntities" : [ {
       "value" : "SubValue",
       "reference" : "sub_ref",
-      "subEntities" : [ ]
-    } ]
+      "subEntities" : [ ],
+      "properties": []
+    } ],
+    "properties": []
   } ]
 }

@@ -1,6 +1,7 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListEntityRecord;
+import com.sls.listService.dto.DataListEntityRecordProperties;
 import com.sls.listService.dto.DataListRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +41,23 @@ public class ListResource {
 
     private DataListEntityRecord asRecord(DataListEntity listEntity){
         List<DataListEntityRecord> entityRecords = new ArrayList<>();
-        if(listEntity.getSubEntities() != null){
-            entityRecords = listEntity.getSubEntities().stream().map(r -> asRecord(r)).collect(Collectors.toList());
+        List<DataListEntityRecordProperties> properties = new ArrayList<>();
+
+        if(listEntity.getProperties() != null) {
+            properties = listEntity.getProperties()
+                    .stream()
+                    .map(r -> new DataListEntityRecordProperties(r.getProperty(), r.getValue()))
+                    .collect(Collectors.toList());
         }
-        return new DataListEntityRecord(listEntity.getValue(), listEntity.getReference(), entityRecords);
+
+        if(listEntity.getSubEntities() != null){
+            entityRecords = listEntity.getSubEntities()
+                    .stream()
+                    .map(r -> asRecord(r))
+                    .collect(Collectors.toList());
+        }
+
+
+        return new DataListEntityRecord(listEntity.getValue(), listEntity.getReference(), entityRecords, properties);
     }
 }

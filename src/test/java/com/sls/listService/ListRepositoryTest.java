@@ -34,7 +34,7 @@ public class ListRepositoryTest {
         secondSubEntityList.add(new DataListEntity("SubValue", "sub_ref"));
 
         List<DataListEntity> secondEntityList = new ArrayList<>();
-        secondEntityList.add(new DataListEntity("SecondValue", "second_ref", secondSubEntityList ));
+        secondEntityList.add(new DataListEntity("SecondValue", "second_ref", secondSubEntityList , null));
         repository.save(new DataList("Test List Two", secondEntityList));
         repository.save(new DataList("Test List Three", null));
     }
