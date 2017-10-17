@@ -37,7 +37,7 @@ public class ListResource {
     }
 
     @RequestMapping(value = "/legacy/list/{reference}", method = RequestMethod.GET)
-    public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference(@PathVariable("reference") String reference) {
+    public ResponseEntity<LegacyTopicListItem> getLegacyListByReference(@PathVariable("reference") String reference) {
         log.info("List \"{}\" requested", reference);
         try {
             DataList list = repo.findOneByReference(reference);
@@ -91,17 +91,35 @@ public class ListResource {
         return new DataListEntityRecord(listEntity.getValue(), listEntity.getReference(), entityRecords, properties);
     }
 
-    private LegacyDataListEntityRecord[] toLegacyDataList(DataList list) {
-        List<LegacyTopicListItem> entities = new ArrayList<>();
+    private LegacyTopicListItem toLegacyDataList(DataList list) {
+        List<LegacyDataListEntityRecord> entities = new ArrayList<>();
 
         if(list.getEntities() != null) {
             entities = list.getEntities().stream().map(r -> asLegacyRecord(r)).collect(Collectors.toList());
         }
-        return entities.toArray(new LegacyDataListEntityRecord[0]);
+        return new LegacyTopicListItem(list.getReference(), "UNIT", entities);
     }
 
-    private LegacyTopicListItem asLegacyRecord(DataListEntity listEntity){
+    private LegacyDataListEntityRecord asLegacyRecord(DataListEntity listEntity){
 
-        return new LegacyTopicListItem(listEntity.getValue(), listEntity.getReference());
+        List<LegacyDataListEntityRecord> entityRecords = new ArrayList<>();
+        List<DataListEntityRecordProperties> properties = new ArrayList<>();
+
+        if(listEntity.getProperties() != null) {
+            properties = listEntity.getProperties()
+                    .stream()
+                    .map(r -> new DataListEntityRecordProperties(r.getProperty(), r.getValue()))
+                    .collect(Collectors.toList());
+        }
+
+        if(listEntity.getSubEntities() != null){
+            entityRecords = listEntity.getSubEntities()
+                    .stream()
+                    .map(r -> asLegacyRecord(r))
+                    .collect(Collectors.toList());
+        }
+
+        return new LegacyDataListEntityRecord(listEntity.getReference(), listEntity.getValue(), entityRecords, properties);
+
     }
 }

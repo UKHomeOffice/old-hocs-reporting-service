@@ -1,7 +1,6 @@
 package com.sls.listService.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sls.listService.DataListEntityProperties;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -12,7 +11,6 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-
 @EqualsAndHashCode
 public class LegacyDataListEntityRecord {
 
@@ -22,10 +20,9 @@ public class LegacyDataListEntityRecord {
     @Getter
     private String caseType;
 
-    @JsonIgnore
-    private List<LegacyTopicListItem> topicListItems = new ArrayList<>();
+    private List<LegacyDataListEntityRecord> topicListItems = new ArrayList<>();
 
-    @JsonIgnore
-    private List<DataListEntityProperties> properties = new ArrayList<>();
+    @JsonUnwrapped
+    private List<DataListEntityRecordProperties> properties = new ArrayList<>();
 
 }
