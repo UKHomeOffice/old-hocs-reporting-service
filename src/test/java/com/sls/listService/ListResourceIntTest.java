@@ -32,10 +32,10 @@ public class ListResourceIntTest {
         repository.deleteAll();
 
         List<DataListEntity> subList = new ArrayList<>();
-        subList.add(new DataListEntity("SubValue", "sub_ref", null ));
+        subList.add(new DataListEntity("SubValue", "sub_ref", null , null));
 
         List<DataListEntity> list = new ArrayList<>();
-        list.add(new DataListEntity("TopValue", "top_ref", subList ));
+        list.add(new DataListEntity("TopValue", "top_ref", subList, null));
 
         DataList datalist = new DataList("TestListTwo", list);
 

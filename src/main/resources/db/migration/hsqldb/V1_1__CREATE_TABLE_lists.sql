@@ -23,3 +23,15 @@ CREATE TABLE IF NOT EXISTS entities
 
 CREATE INDEX idx_list_id ON entities (list_id);
 CREATE INDEX idx_parent_id ON entities (parent_entity_id);
+
+CREATE TABLE IF NOT EXISTS list_properties
+(
+    id          BIGSERIAL       PRIMARY KEY,
+    entity_id   INT             NOT NULL,
+    property    VARCHAR(20)     NOT NULL,
+    value       TEXT,
+
+    CONSTRAINT entity_id_idempotent UNIQUE (entity_id, property, value)
+);
+
+CREATE INDEX idx_property_id ON list_properties (id);

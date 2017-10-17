@@ -1,5 +1,6 @@
 package com.sls.listService;
 
+import com.sls.listService.dto.DataListEntityRecordProperties;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,14 +41,21 @@ public class DataListEntity {
     @Getter
     private List<DataListEntity> subEntities;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name ="entity_id", referencedColumnName = "id")
+    @Getter
+    private List<DataListEntityProperties> properties;
+
     public DataListEntity(String value, String reference) {
         this.value = value;
         this.reference = reference;
     }
 
-    public DataListEntity(String value, String reference, List<DataListEntity> subEntities ) {
+    public DataListEntity(String value, String reference, List<DataListEntity> subEntities, List<DataListEntityProperties> properties) {
         this.value = value;
         this.reference = reference;
         this.subEntities = subEntities;
+        this.properties = properties;
+
    }
 }
