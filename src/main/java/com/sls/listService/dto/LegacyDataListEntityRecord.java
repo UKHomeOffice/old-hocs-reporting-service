@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -23,6 +25,6 @@ public class LegacyDataListEntityRecord {
     private List<LegacyDataListEntityRecord> topicListItems = new ArrayList<>();
 
     @JsonUnwrapped
-    private List<DataListEntityRecordProperties> properties = new ArrayList<>();
+    private Map<String, String> properties = new HashMap<>();
 
 }

@@ -7,7 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -103,13 +105,13 @@ public class ListResource {
     private LegacyDataListEntityRecord asLegacyRecord(DataListEntity listEntity){
 
         List<LegacyDataListEntityRecord> entityRecords = new ArrayList<>();
-        List<DataListEntityRecordProperties> properties = new ArrayList<>();
+        Map<String, String> properties = new HashMap<>();
 
         if(listEntity.getProperties() != null) {
             properties = listEntity.getProperties()
                     .stream()
                     .map(r -> new DataListEntityRecordProperties(r.getProperty(), r.getValue()))
-                    .collect(Collectors.toList());
+                    .collect(Collectors.toMap(DataListEntityRecordProperties::getProperty, DataListEntityRecordProperties::getValue));
         }
 
         if(listEntity.getSubEntities() != null){
