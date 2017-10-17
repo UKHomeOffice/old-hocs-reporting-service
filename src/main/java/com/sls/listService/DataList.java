@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "lists")
@@ -26,10 +26,10 @@ public class DataList {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="list_id", referencedColumnName = "id")
     @Getter
-    private List<DataListEntity> entities;
+    private Set<DataListEntity> entities;
 
 
-    public DataList(String reference, List<DataListEntity> listEntities) {
+    public DataList(String reference, Set<DataListEntity> listEntities) {
         this.reference = reference;
         this.entities = listEntities;
     }

@@ -1,17 +1,18 @@
 package com.sls.listService;
 
-import com.sls.listService.dto.DataListEntityRecordProperties;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "entities")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(of = {"value", "reference"})
 public class DataListEntity {
 
@@ -21,7 +22,6 @@ public class DataListEntity {
     private Long id;
 
     @Column(name = "list_id")
-    @Getter
     private Long listId;
 
     @Column(name = "value", nullable = false)
@@ -39,23 +39,28 @@ public class DataListEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="parent_entity_id", referencedColumnName = "id")
     @Getter
-    private List<DataListEntity> subEntities;
+    private Set<DataListEntity> subEntities;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="entity_id", referencedColumnName = "id")
     @Getter
-    private List<DataListEntityProperties> properties;
+    private Set<DataListEntityProperties> properties;
+
+    public DataListEntity(String value, String reference, Set<DataListEntity> subEntities, Set<DataListEntityProperties> properties) {
+        this.value = value;
+        this.reference = reference;
+        this.subEntities = subEntities;
+        this.properties = properties;
+    }
+
+    public DataListEntity(String value, String reference, Set<DataListEntity> subEntities) {
+        this.value = value;
+        this.reference = reference;
+        this.subEntities = subEntities;
+    }
 
     public DataListEntity(String value, String reference) {
         this.value = value;
         this.reference = reference;
     }
-
-    public DataListEntity(String value, String reference, List<DataListEntity> subEntities, List<DataListEntityProperties> properties) {
-        this.value = value;
-        this.reference = reference;
-        this.subEntities = subEntities;
-        this.properties = properties;
-
-   }
 }

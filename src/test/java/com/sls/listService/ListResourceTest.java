@@ -7,8 +7,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -41,8 +41,8 @@ public class ListResourceTest {
     }
 
     private static DataList buildDataList() {
-        List<DataListEntity> dle = new ArrayList<>();
-        dle.add(new DataListEntity("Value", "ref"));
+        Set<DataListEntity> dle = new HashSet<>();
+        dle.add(new DataListEntity("Value","ref"));
         return new DataList("Test List One", dle);
     }
 

@@ -5,10 +5,11 @@
     "reference" : "top_ref",
     "subEntities" : [ {
       "value" : "SubValue",
-      "reference" : "sub_ref",
-      "subEntities" : [ ],
-      "properties": []
+      "reference" : "sub_ref"
     } ],
-    "properties": []
+    "properties" : [ {
+      "property" : "Key",
+      "value" : "Value"
+    } ]
   } ]
 }

@@ -1,14 +1,10 @@
 package com.sls.listService;
 
-import com.sls.listService.dto.DataListEntityRecord;
-import com.sls.listService.dto.DataListEntityRecordProperties;
-import com.sls.listService.dto.DataListRecord;
+import com.sls.listService.dto.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +21,49 @@ public class ListResource {
     }
 
     @RequestMapping(value = "/list/{reference}", method = RequestMethod.GET)
-    public DataListRecord getListByReference(@PathVariable("reference") String reference) {
+    public ResponseEntity<DataListRecord> getListByReference(@PathVariable("reference") String reference) {
         log.info("List \"{}\" requested", reference);
-        DataList list = repo.findOneByReference(reference);
-        return toDataList(list);
+        try {
+            DataList list = repo.findOneByReference(reference);
+            return ResponseEntity.ok(toDataList(list));
+        }
+        catch(NullPointerException e)
+        {
+            log.info("List \"{}\" not found", reference);
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+
     }
+
+    @RequestMapping(value = "/legacy/list/{reference}", method = RequestMethod.GET)
+    public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference(@PathVariable("reference") String reference) {
+        log.info("List \"{}\" requested", reference);
+        try {
+            DataList list = repo.findOneByReference(reference);
+            return ResponseEntity.ok(toLegacyDataList(list));
+        }
+        catch(NullPointerException e)
+        {
+            log.info("List \"{}\" not found", reference);
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public ResponseEntity<DataListRecord> getListByReference(@RequestBody DataList dataList) {
+
+        repo.save(dataList);
+        return ResponseEntity.ok().build();
+    }
+
+
 
     private DataListRecord toDataList(DataList list) {
         List<DataListEntityRecord> entities = new ArrayList<>();
+
         if(list.getEntities() != null) {
             entities = list.getEntities().stream().map(r -> asRecord(r)).collect(Collectors.toList());
         }
@@ -57,7 +88,20 @@ public class ListResource {
                     .collect(Collectors.toList());
         }
 
-
         return new DataListEntityRecord(listEntity.getValue(), listEntity.getReference(), entityRecords, properties);
+    }
+
+    private LegacyDataListEntityRecord[] toLegacyDataList(DataList list) {
+        List<LegacyTopicListItem> entities = new ArrayList<>();
+
+        if(list.getEntities() != null) {
+            entities = list.getEntities().stream().map(r -> asLegacyRecord(r)).collect(Collectors.toList());
+        }
+        return entities.toArray(new LegacyDataListEntityRecord[0]);
+    }
+
+    private LegacyTopicListItem asLegacyRecord(DataListEntity listEntity){
+
+        return new LegacyTopicListItem(listEntity.getValue(), listEntity.getReference());
     }
 }

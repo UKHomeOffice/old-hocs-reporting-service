@@ -10,11 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -31,11 +30,14 @@ public class ListResourceIntTest {
     public void setup() {
         repository.deleteAll();
 
-        List<DataListEntity> subList = new ArrayList<>();
-        subList.add(new DataListEntity("SubValue", "sub_ref", null , null));
+        Set<DataListEntity> subList = new HashSet<>();
+        subList.add(new DataListEntity("SubValue","sub_ref"));
 
-        List<DataListEntity> list = new ArrayList<>();
-        list.add(new DataListEntity("TopValue", "top_ref", subList, null));
+        Set<DataListEntityProperties> properties = new HashSet<>();
+        properties.add(new DataListEntityProperties("Key", "Value"));
+
+        Set<DataListEntity> list = new HashSet<>();
+        list.add(new DataListEntity("TopValue","top_ref", subList, properties));
 
         DataList datalist = new DataList("TestListTwo", list);
 

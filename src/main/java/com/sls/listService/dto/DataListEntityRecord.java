@@ -1,16 +1,29 @@
 package com.sls.listService.dto;
 
-import lombok.*;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
 @EqualsAndHashCode
+@Getter
 public class DataListEntityRecord {
+
     private String value;
+
     private String reference;
-    private List<DataListEntityRecord> subEntities;
-    private List<DataListEntityRecordProperties> properties;
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<DataListEntityRecord> subEntities = new ArrayList<>();
+
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<DataListEntityRecordProperties> properties = new ArrayList<>();
+
+
 }

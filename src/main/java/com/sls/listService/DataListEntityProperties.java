@@ -30,4 +30,10 @@ public class DataListEntityProperties {
     @Getter
     private String value;
 
+    public DataListEntityProperties(String property, String value)
+    {
+        this.property = property;
+        this.value = value;
+    }
+
 }
