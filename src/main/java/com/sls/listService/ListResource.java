@@ -33,7 +33,7 @@ public class ListResource {
 
     @RequestMapping(value = "/legacy/list/{name}", method = RequestMethod.GET)
     public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference(@PathVariable("name") String name) {
-        log.info("List \"{}\" requested", name);
+        log.info("Legacy List \"{}\" requested", name);
         try {
             LegacyDataListEntityRecord[] list = service.getLegacyListByName(name);
             return ResponseEntity.ok(list);
