@@ -11,47 +11,47 @@ Creates a new list and child entities, supporting a dynamic number of sub entiti
 
 #### Example request body: 
 ```json
-	{
-		"name": "Topics",
-		"entities" : [
-			{
-				"text": "Topic List 1",
-				"value": "Topic Group 1",
-				"properties": [
-					{
-						"key": "Topic List Property",
-						"value": "Topic List Property Value"
-					}
-				],
-				"subEntities": [
-					{
-						"text": "Topic 1",
-						"value": "Topic Value 1",
-						"properties": [
-							{
-								"key": "Topic Property 1",
-								"value": "Topic Property Value 1"								
-							}
-						]
-					}, 
-					{
-                        "text": "Topic 2",
-                        "value": "Topic Value 2",
-                        "properties": [
-                            {
-                                "key": "Topic Property 2",
-                                "value": "Topic Property Value 2"                                
+	{  
+        "name":"Topics",
+        "entities":[  
+            {  
+                "text":"Topic List 1",
+                "value":"Topic Group 1",
+                "properties":[  
+                    {  
+                        "key":"Topic List Property",
+                        "value":"Topic List Property Value"
+                    }
+                ],
+                "subEntities":[  
+                    {  
+                        "text":"Topic 1",
+                        "value":"Topic Value 1",
+                        "properties":[  
+                            {  
+                                "key":"Topic Property 1",
+                                "value":"Topic Property Value 1"
+                            }
+                        ]
+                    },
+                    {  
+                        "text":"Topic 2",
+                        "value":"Topic Value 2",
+                        "properties":[  
+                            {  
+                                "key":"Topic Property 2",
+                                "value":"Topic Property Value 2"
                             }
                         ]
                     }
-				]
-			}, 
-			{
-				"text": "Topic List 2",
-				"value": "Topic Group 2"
-			}
-		]
-	}
+                ]
+            },
+            {  
+                "text":"Topic List 2",
+                "value":"Topic Group 2"
+            }
+        ]
+    }
 ```
 ## GET: /list/{name}
 
