@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Slf4j
 public class ListResource {
-    final ListService service;
+    private final ListService service;
 
     @Autowired
     public ListResource(ListService service) {
