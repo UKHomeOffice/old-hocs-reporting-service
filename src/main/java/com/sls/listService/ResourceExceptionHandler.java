@@ -17,7 +17,7 @@ public class ResourceExceptionHandler {
     @ExceptionHandler(value = ListException.class)
     @ResponseStatus(value = INTERNAL_SERVER_ERROR)
     @ResponseBody
-    public ResponseEntity handleAuditException(ListException e) {
+    public ResponseEntity handleResourceException(ListException e) {
         log.error("ListException: {}", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }

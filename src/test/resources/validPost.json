@@ -1,0 +1,15 @@
+{
+  "name": "Test List",
+  "entities": [
+    {
+      "text": "Entity",
+      "value": "Value 1",
+      "subEntities": [
+        {
+          "text": "SubEntity",
+          "value": "Value 2"
+        }
+      ]
+    }
+  ]
+}

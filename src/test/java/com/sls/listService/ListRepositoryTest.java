@@ -29,8 +29,25 @@ public class ListRepositoryTest {
         return new ArrayList<>(set);
     }
 
+    @Before
+    public void setup() {
+        repository.deleteAll();
+
+        Set<DataListEntity> firstEntityList = new HashSet<>();
+        firstEntityList.add(new DataListEntity("Text", "Value"));
+        repository.save(new DataList("Test List One", firstEntityList));
+
+        Set<DataListEntity> secondSubEntityList = new HashSet<>();
+        secondSubEntityList.add(new DataListEntity("SubText", "sub_val"));
+
+        Set<DataListEntity> secondEntityList = new HashSet<>();
+        secondEntityList.add(new DataListEntity("SecondText", "second_val", secondSubEntityList));
+        repository.save(new DataList("Test List Two", secondEntityList));
+        repository.save(new DataList("Test List Three", null));
+    }
+
     @Test
-    public void shouldRetrieveAllAudit() {
+    public void shouldRetrieveAllEntries() {
         final Iterable<DataList> all = repository.findAll();
         assertThat(all).size().isEqualTo(3);
     }
@@ -77,22 +94,5 @@ public class ListRepositoryTest {
         final DataList dataList = repository.findOneByName("Test List Three");
         assertThat(dataList.getName()).isEqualTo("Test List Three");
         assertThat(dataList.getEntities()).isNull();
-    }
-
-    @Before
-    public void setup() {
-        repository.deleteAll();
-
-        Set<DataListEntity> firstEntityList = new HashSet<>();
-        firstEntityList.add(new DataListEntity("Text", "Value"));
-        repository.save(new DataList("Test List One", firstEntityList));
-
-        Set<DataListEntity> secondSubEntityList = new HashSet<>();
-        secondSubEntityList.add(new DataListEntity("SubText", "sub_val"));
-
-        Set<DataListEntity> secondEntityList = new HashSet<>();
-        secondEntityList.add(new DataListEntity("SecondText", "second_val", secondSubEntityList));
-        repository.save(new DataList("Test List Two", secondEntityList));
-        repository.save(new DataList("Test List Three", null));
     }
 }

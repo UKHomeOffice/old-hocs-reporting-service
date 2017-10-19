@@ -9,6 +9,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @RunWith(SpringRunner.class)
@@ -61,5 +63,29 @@ public class ListResourceIntTest {
         String expectedRecords = IOUtils.toString(getClass().getResourceAsStream("/legacyExpected.json"));
 
         JSONAssert.assertEquals(auditRecords, expectedRecords, false);
+    }
+
+    @Test
+    public void shouldCreateEntityOnValidPost() throws IOException {
+        String jsonString = IOUtils.toString(getClass().getResourceAsStream("/validPost.json"));
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<String> httpEntity = new HttpEntity<>(jsonString, httpHeaders);
+
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("/list", httpEntity, String.class);
+
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        DataList dataList = repository.findOneByName("Test List");
+        assertThat(dataList).isNotNull();
+    }
+
+    @Test
+    public void shouldThrowOnInvalidPost() {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
+        HttpEntity<String> httpEntity = new HttpEntity<>("" , httpHeaders);
+        ResponseEntity<String> responseEntity = restTemplate.postForEntity("/list", httpEntity, String.class);
+
+        assertThat(HttpStatus.BAD_REQUEST).isEqualTo(responseEntity.getStatusCode());
     }
 }
