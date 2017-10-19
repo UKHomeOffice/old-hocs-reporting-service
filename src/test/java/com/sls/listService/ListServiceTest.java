@@ -34,7 +34,12 @@ public class ListServiceTest {
 
     private static DataList buildValidDataList() {
         Set<DataListEntity> dataListEntities = new HashSet<>();
-        dataListEntities.add(new DataListEntity("Text", "Value"));
+        DataListEntityProperty property = new DataListEntityProperty("caseType", "CaseValue");
+        Set<DataListEntityProperty> properties = new HashSet<>();
+        properties.add(property);
+        DataListEntity dataListEntity = new DataListEntity("Text", "Value", null, properties);
+
+        dataListEntities.add(dataListEntity);
         return new DataList(TEST_LIST, dataListEntities);
     }
 
@@ -75,7 +80,7 @@ public class ListServiceTest {
         assertThat(dataListRecord).hasOnlyElementsOfType(LegacyDataListEntityRecord.class);
         assertThat(dataListRecord.length).isEqualTo(1);
         assertThat(dataListRecord[0].getName()).isEqualTo("Text");
-        assertThat(dataListRecord[0].getCaseType()).isEqualTo("Value");
+        assertThat(dataListRecord[0].getCaseType()).isEqualTo("CaseValue");
 
     }
 

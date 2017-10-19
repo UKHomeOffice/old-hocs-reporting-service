@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class DataListEntityRecordProperties {
+public class DataListEntityRecordProperty {
     private String key;
     private String value;
 }

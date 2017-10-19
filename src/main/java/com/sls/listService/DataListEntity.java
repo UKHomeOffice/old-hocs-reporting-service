@@ -43,10 +43,10 @@ public class DataListEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="entity_id", referencedColumnName = "id")
     @Getter
-    private Set<DataListEntityProperties> properties;
+    private Set<DataListEntityProperty> properties;
 
 
-    public DataListEntity(String text, String value, Set<DataListEntity> subEntities, Set<DataListEntityProperties> properties) {
+    public DataListEntity(String text, String value, Set<DataListEntity> subEntities, Set<DataListEntityProperty> properties) {
         this.text = text;
         this.value = value;
         this.subEntities = subEntities;

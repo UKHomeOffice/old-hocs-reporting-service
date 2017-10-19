@@ -1,7 +1,9 @@
+-- noinspection SqlNoDataSourceInspectionForFile
+
 CREATE TABLE IF NOT EXISTS lists
 (
     id          BIGSERIAL       PRIMARY KEY,
-    name VARCHAR(20) NOT NULL,
+    name TEXT NOT NULL,
 
     CONSTRAINT list_name_idempotent UNIQUE (name)
 );
@@ -11,13 +13,13 @@ CREATE INDEX idx_reference
 
 CREATE TABLE IF NOT EXISTS entities
 (
-    id                  BIGSERIAL       PRIMARY KEY,
-    text             VARCHAR(20) NOT NULL,
-    value            VARCHAR(50) NOT NULL,
+    id               BIGSERIAL PRIMARY KEY,
+    text             TEXT NOT NULL,
+    value            TEXT NOT NULL,
     list_id          INT,
     parent_entity_id INT,
 
-    CONSTRAINT entity_name_ref_idempotent UNIQUE (value, text),
+    CONSTRAINT entity_name_ref_idempotent UNIQUE (value, text, list_id),
     CONSTRAINT fk_list_id FOREIGN KEY (list_id) REFERENCES lists(id),
     CONSTRAINT fk_parent_id FOREIGN KEY (parent_entity_id) REFERENCES entities(id)
 );
@@ -27,9 +29,9 @@ CREATE INDEX idx_parent_id ON entities (parent_entity_id);
 
 CREATE TABLE IF NOT EXISTS properties
 (
-    id          BIGSERIAL       PRIMARY KEY,
-    key       VARCHAR(20) NOT NULL,
-    value     VARCHAR(50) NOT NULL,
+    id        BIGSERIAL PRIMARY KEY,
+    key       TEXT NOT NULL,
+    value     TEXT NOT NULL,
     entity_id INT,
 
     CONSTRAINT entity_id_idempotent UNIQUE (entity_id, key, value),

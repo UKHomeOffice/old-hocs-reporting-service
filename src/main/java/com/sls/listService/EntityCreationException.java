@@ -8,4 +8,3 @@ public class EntityCreationException extends DataIntegrityViolationException {
         super(msg);
     }
 }
-

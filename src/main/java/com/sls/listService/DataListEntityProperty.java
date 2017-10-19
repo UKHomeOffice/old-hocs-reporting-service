@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Access(AccessType.FIELD)
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"key", "value"})
-public class DataListEntityProperties {
+public class DataListEntityProperty {
 
     @Id
     @Column(name = "id")
@@ -29,10 +29,9 @@ public class DataListEntityProperties {
     @Getter
     private String value;
 
-    public DataListEntityProperties(String key, String value)
+    public DataListEntityProperty(String key, String value)
     {
         this.key = key;
         this.value = value;
     }
-
 }

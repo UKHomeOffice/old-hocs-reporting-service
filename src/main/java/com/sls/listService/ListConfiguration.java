@@ -26,4 +26,3 @@ public class ListConfiguration extends WebMvcConfigurerAdapter {
         return m;
     }
 }
-

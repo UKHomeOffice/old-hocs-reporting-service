@@ -20,10 +20,10 @@ public class DataListEntityRecord {
     private String value;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<DataListEntityRecord> subEntities = new ArrayList<>();
+    private List<DataListEntityRecordProperty> properties = new ArrayList<>();
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
-    private List<DataListEntityRecordProperties> properties = new ArrayList<>();
+    private List<DataListEntityRecord> subEntities = new ArrayList<>();
 
 
 }

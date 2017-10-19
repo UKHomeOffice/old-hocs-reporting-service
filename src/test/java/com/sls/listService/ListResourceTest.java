@@ -58,10 +58,21 @@ public class ListResourceTest {
     }
 
     @Test
-    public void shouldReturnNotFoundWhenUnableToFindLegacyEntity() throws ListNotFoundException {
+    public void shouldReturnNotFoundWhenUnableToFindLegacyUKVIEntity() throws ListNotFoundException {
 
-        when(listService.getLegacyListByName(TEST_REFERENCE)).thenThrow(new ListNotFoundException());
-        ResponseEntity<LegacyDataListEntityRecord[]> httpResponse = listResource.getLegacyListByReference(TEST_REFERENCE);
+        when(listService.getLegacyListByName("TopicListUKVI")).thenThrow(new ListNotFoundException());
+        ResponseEntity<LegacyDataListEntityRecord[]> httpResponse = listResource.getLegacyListByReference();
+
+        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(httpResponse.getBody()).isNull();
+
+    }
+
+    @Test
+    public void shouldReturnNotFoundWhenUnableToFindLegacyDCUEntity() throws ListNotFoundException {
+
+        when(listService.getLegacyListByName("TopicListDCU")).thenThrow(new ListNotFoundException());
+        ResponseEntity<LegacyDataListEntityRecord[]> httpResponse = listResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
