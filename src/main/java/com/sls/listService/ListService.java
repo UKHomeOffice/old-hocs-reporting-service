@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -90,34 +88,45 @@ public class ListService {
     }
 
     private LegacyDataListEntityRecord[] asLegacyDataListEntityRecordArray(DataList list) {
+
         List<LegacyDataListEntityRecord> entities = new ArrayList<>();
 
         if (list.getEntities() != null && !list.getEntities().isEmpty()) {
-            entities = list.getEntities().stream().map(this::asLegacyDataListEntityRecord).collect(Collectors.toList());
+            entities = list.getEntities()
+                    .stream()
+                    .map(this::asLegacyDataListEntityRecord)
+                    .collect(Collectors.toList());
         }
-        return entities.toArray(new LegacyDataListEntityRecord[0]);
+
+        return  entities.toArray(new LegacyDataListEntityRecord[0]);
+
     }
 
     private LegacyDataListEntityRecord asLegacyDataListEntityRecord(DataListEntity listEntity) {
 
-        HashMap<String, String> entityRecords = new HashMap<>();
+        ArrayList<HashMap<String, String>> entityRecordList = new ArrayList<>();
 
         // A constraint, the legacy lists only support one depth.
         if(listEntity.getSubEntities() != null && !listEntity.getSubEntities().isEmpty()) {
-            DataListEntity subEntity = new ArrayList<>(listEntity.getSubEntities()).get(0);
-            entityRecords.put("topicName", subEntity.getText());
-            entityRecords.put("topicUnit", subEntity.getValue());
-            if (listEntity.getSubEntities() != null && !listEntity.getSubEntities().isEmpty()) {
+            List<DataListEntity> entityList = new ArrayList<>(listEntity.getSubEntities());
+            for (DataListEntity subEntity:
+                 entityList) {
+
+                HashMap<String, String> entityRecords = new HashMap<>();
+                entityRecords.put("topicName", subEntity.getText());
+                entityRecords.put("topicUnit", subEntity.getValue());
                 entityRecords.putAll(subEntity.getProperties()
                         .stream()
                         .map(r -> new DataListEntityRecordProperties(r.getKey(), r.getValue()))
                         .collect(Collectors.toMap(DataListEntityRecordProperties::getKey, DataListEntityRecordProperties::getValue)));
+
+                entityRecordList.add(entityRecords);
+
             }
         }
 
-        ArrayList<HashMap<String, String>> entityRecordList = new ArrayList<>();
-        entityRecordList.add(entityRecords);
         return new LegacyDataListEntityRecord(listEntity.getText(), listEntity.getValue(), entityRecordList);
+
     }
 
 }
