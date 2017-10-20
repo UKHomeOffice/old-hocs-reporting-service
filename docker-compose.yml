@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+
+  database:
+    image: postgres
+
+    ports:
+      - 5432:5432
+
+    networks:
+      - sls-network
+
+    environment:
+     POSTGRES_USER: root
+     POSTGRES_PASSWORD: dev
+
+    volumes:
+      - dbdata:/var/lib/postgresql
+
+  sls:
+    build:
+      context: .
+
+    environment:
+      spring.profiles.active: postgres
+      server.port: 8080
+      sls.db.hostname: database
+      sls.db.username: root
+      sls.db.password: dev
+      sls.db.name: postgres
+      sls.db.port: 5432
+      sls.schema.name: public
+
+    depends_on:
+      - database
+
+    ports:
+      - 9001:8080
+
+    networks:
+      - sls-network
+
+    command: /app/run.sh
+
+networks:
+  sls-network:
+
+volumes:
+  dbdata: {}
