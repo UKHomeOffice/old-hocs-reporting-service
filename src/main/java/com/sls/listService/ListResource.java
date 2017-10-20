@@ -14,10 +14,12 @@ import java.util.Arrays;
 @Slf4j
 public class ListResource {
     private final ListService service;
+    private final LegacyService legacyService;
 
     @Autowired
-    public ListResource(ListService service) {
+    public ListResource(ListService service, LegacyService legacyService) {
         this.service = service;
+        this.legacyService = legacyService;
     }
 
     @RequestMapping(value = "/list/{name}", method = RequestMethod.GET)
@@ -47,12 +49,6 @@ public class ListResource {
         }
     }
 
-    private static <T> T[] concat(T[] first, T[] second) {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
-    }
-
     @RequestMapping(value = "/legacy/list/TopicList", method = RequestMethod.GET)
     public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference() {
         log.info("List \"Legacy TopicList\" requested");
@@ -68,12 +64,18 @@ public class ListResource {
         }
     }
 
+    private static <T> T[] concat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
+
     @RequestMapping(value = "/legacy/list/TopicList/DCU", method = RequestMethod.POST)
-    public ResponseEntity createTopicsListFromCSV(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity createTopicsListFromDCU(@RequestParam("file") MultipartFile file) {
         log.info("Parsing list \"TopicListDCU\"");
         if (!file.isEmpty()) {
-            DataList dataList = service.createDCUTopicsListFromCSV(file, "TopicListDCU", "DCU");
-            return createList(dataList);
+            DataList dataListDCU = legacyService.createDCUTopicsListFromCSV(file, "TopicListDCU", "DCU");
+            return createList(dataListDCU);
         }
         return ResponseEntity.badRequest().build();
     }
@@ -82,8 +84,8 @@ public class ListResource {
     public ResponseEntity createTopicsListFromUKVI(@RequestParam("file") MultipartFile file) {
         log.info("Parsing list \"TopicListUKVI\"");
         if (!file.isEmpty()) {
-            DataList dataList = service.createUKVITopicsListFromCSV(file, "TopicListUKVI", "UKVI");
-            return createList(dataList);
+            DataList dataListUKVI = legacyService.createUKVITopicsListFromCSV(file, "TopicListUKVI", "UKVI");
+            return createList(dataListUKVI);
         }
         return ResponseEntity.badRequest().build();
     }

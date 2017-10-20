@@ -25,11 +25,14 @@ public class ListResourceTest {
 
     @Mock
     private ListService listService;
+    @Mock
+    private LegacyService legacyService;
+
     private ListResource listResource;
 
     @Before
     public void setUp() {
-        listResource = new ListResource(listService);
+        listResource = new ListResource(listService, legacyService);
     }
 
     @Test

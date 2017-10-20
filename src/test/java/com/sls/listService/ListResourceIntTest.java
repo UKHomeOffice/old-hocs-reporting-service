@@ -43,7 +43,7 @@ public class ListResourceIntTest {
         Set<DataListEntity> list = new HashSet<>();
         list.add(new DataListEntity("TopText", "top_val", subList, properties));
 
-        DataList datalist = new DataList("TestListTwo", list);
+        DataList datalist = new DataList("TopicList", list);
 
         repository.save(datalist);
 
@@ -51,16 +51,8 @@ public class ListResourceIntTest {
 
     @Test
     public void shouldRetrieveAllEntities() throws IOException, JSONException {
-        String auditRecords = restTemplate.getForObject("/list/TestListTwo", String.class);
+        String auditRecords = restTemplate.getForObject("/list/TopicList", String.class);
         String expectedRecords = IOUtils.toString(getClass().getResourceAsStream("/expected.json"));
-
-        JSONAssert.assertEquals(auditRecords, expectedRecords, false);
-    }
-
-    @Test
-    public void shouldRetrieveAllLegacyEntities() throws IOException, JSONException {
-        String auditRecords = restTemplate.getForObject("/legacy/list/TestListTwo", String.class);
-        String expectedRecords = IOUtils.toString(getClass().getResourceAsStream("/legacyExpected.json"));
 
         JSONAssert.assertEquals(auditRecords, expectedRecords, false);
     }

@@ -1,5 +1,5 @@
 {
-  "name": "TestListTwo",
+  "name": "TopicList",
   "entities" : [ {
     "text": "TopText",
     "value": "top_val",
