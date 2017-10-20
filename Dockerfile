@@ -1,4 +1,4 @@
-FROM jdk-alpine
+FROM quay.io/ukhomeofficedigital/openjdk8
 
 ENV USER user_sls_data
 ENV GROUP group_sls_data
@@ -21,7 +21,7 @@ COPY run.sh /app
 
 RUN chmod a+x /app/run.sh
 
-EXPOSE 8081
+EXPOSE 8080
 
 USER ${USER}
 
