@@ -41,7 +41,7 @@ services:
     networks:
       - sls-network
 
-    command: /app/run.sh
+    command: /app/scripts/run.sh
 
 networks:
   sls-network:

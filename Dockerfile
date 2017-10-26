@@ -17,12 +17,14 @@ RUN groupadd -r ${GROUP} && \
     chown -R ${USER}:${GROUP} /app
 
 COPY ${JAR_PATH}/${NAME}*.jar /app
-COPY run.sh /app
 
-RUN chmod a+x /app/run.sh
+ADD scripts /app/scripts
+ADD data /app/data
+
+RUN chmod a+x /app/scripts/*
 
 EXPOSE 8080
 
 USER ${USER}
 
-ENTRYPOINT /app/run.sh
+CMD /app/scripts/start.sh
