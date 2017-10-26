@@ -26,10 +26,12 @@ public class ListServiceTest {
     @Mock
     private ListRepository mockRepo;
     private ListService service;
+    private LegacyService legacyService;
 
     @Before
     public void setUp() {
         service = new ListService(mockRepo);
+        legacyService = new LegacyService(mockRepo);
     }
 
     private static DataList buildValidDataList() {
@@ -72,7 +74,7 @@ public class ListServiceTest {
     public void testCollaboratorsGettingLegacyList() throws ListNotFoundException {
         when(mockRepo.findOneByName(TEST_LIST)).thenReturn(buildValidDataList());
 
-        TopicListEntityRecord[] dataListRecord = service.getLegacyTopicListByName(TEST_LIST);
+        TopicListEntityRecord[] dataListRecord = legacyService.getLegacyTopicListByName(TEST_LIST);
 
         verify(mockRepo).findOneByName(TEST_LIST);
 
@@ -87,7 +89,7 @@ public class ListServiceTest {
     @Test(expected = ListNotFoundException.class)
     public void testLegacyListNotFoundThrowsListNotFoundException() throws ListNotFoundException {
 
-        TopicListEntityRecord[] dataListRecord = service.getLegacyTopicListByName(UNAVAILABLE_RESOURCE);
+        TopicListEntityRecord[] dataListRecord = legacyService.getLegacyTopicListByName(UNAVAILABLE_RESOURCE);
         verify(mockRepo).findOneByName(UNAVAILABLE_RESOURCE);
         assertThat(dataListRecord).isNull();
 
