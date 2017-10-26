@@ -41,7 +41,7 @@ public class ListRepositoryTest {
         secondSubEntityList.add(new DataListEntity("SubText", "sub_val"));
 
         Set<DataListEntity> secondEntityList = new HashSet<>();
-        secondEntityList.add(new DataListEntity("SecondText", "second_val", secondSubEntityList));
+        secondEntityList.add(new DataListEntity("\"SecondText\"", "se!c,ond va,l", secondSubEntityList));
         repository.save(new DataList("Test List Two", secondEntityList));
         repository.save(new DataList("Test List Three", null));
     }
@@ -70,7 +70,7 @@ public class ListRepositoryTest {
         assertThat(dataList.getName()).isEqualTo("Test List One");
         assertThat(dataList.getEntities()).size().isEqualTo(1);
         assertThat(asList(dataList.getEntities()).get(0).getText()).isEqualTo("Text");
-        assertThat(asList(dataList.getEntities()).get(0).getValue()).isEqualTo("Value");
+        assertThat(asList(dataList.getEntities()).get(0).getValue()).isEqualTo("VALUE");
     }
 
     @Test
@@ -81,12 +81,12 @@ public class ListRepositoryTest {
 
         DataListEntity dataListEntityOne = asList(dataList.getEntities()).get(0);
         assertThat(dataListEntityOne.getText()).isEqualTo("SecondText");
-        assertThat(dataListEntityOne.getValue()).isEqualTo("second_val");
+        assertThat(dataListEntityOne.getValue()).isEqualTo("SECOND_VAL");
 
         assertThat(dataListEntityOne.getSubEntities()).size().isEqualTo(1);
         DataListEntity dataListEntitySub = asList(dataListEntityOne.getSubEntities()).get(0);
         assertThat(dataListEntitySub.getText()).isEqualTo("SubText");
-        assertThat(dataListEntitySub.getValue()).isEqualTo("sub_val");
+        assertThat(dataListEntitySub.getValue()).isEqualTo("SUB_VAL");
     }
 
     @Test

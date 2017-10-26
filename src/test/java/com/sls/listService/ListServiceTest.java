@@ -1,7 +1,7 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListRecord;
-import com.sls.listService.dto.LegacyDataListEntityRecord;
+import com.sls.listService.dto.legacy.TopicListEntityRecord;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +56,7 @@ public class ListServiceTest {
         assertThat(dataListRecord.getEntities()).size().isEqualTo(1);
         assertThat(dataListRecord.getName()).isEqualTo(TEST_LIST);
         assertThat(dataListRecord.getEntities().get(0).getText()).isEqualTo("Text");
-        assertThat(dataListRecord.getEntities().get(0).getValue()).isEqualTo("Value");
+        assertThat(dataListRecord.getEntities().get(0).getValue()).isEqualTo("VALUE");
     }
 
     @Test(expected = ListNotFoundException.class)
@@ -72,12 +72,12 @@ public class ListServiceTest {
     public void testCollaboratorsGettingLegacyList() throws ListNotFoundException {
         when(mockRepo.findOneByName(TEST_LIST)).thenReturn(buildValidDataList());
 
-        LegacyDataListEntityRecord[] dataListRecord = service.getLegacyListByName(TEST_LIST);
+        TopicListEntityRecord[] dataListRecord = service.getLegacyTopicListByName(TEST_LIST);
 
         verify(mockRepo).findOneByName(TEST_LIST);
 
         assertThat(dataListRecord).isNotNull();
-        assertThat(dataListRecord).hasOnlyElementsOfType(LegacyDataListEntityRecord.class);
+        assertThat(dataListRecord).hasOnlyElementsOfType(TopicListEntityRecord.class);
         assertThat(dataListRecord.length).isEqualTo(1);
         assertThat(dataListRecord[0].getName()).isEqualTo("Text");
         assertThat(dataListRecord[0].getCaseType()).isEqualTo("CaseValue");
@@ -87,7 +87,7 @@ public class ListServiceTest {
     @Test(expected = ListNotFoundException.class)
     public void testLegacyListNotFoundThrowsListNotFoundException() throws ListNotFoundException {
 
-        LegacyDataListEntityRecord[] dataListRecord = service.getLegacyListByName(UNAVAILABLE_RESOURCE);
+        TopicListEntityRecord[] dataListRecord = service.getLegacyTopicListByName(UNAVAILABLE_RESOURCE);
         verify(mockRepo).findOneByName(UNAVAILABLE_RESOURCE);
         assertThat(dataListRecord).isNull();
 

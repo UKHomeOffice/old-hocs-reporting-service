@@ -1,5 +1,6 @@
-package com.sls.listService.legacy;
+package com.sls.listService.legacy.topics;
 
+import com.sls.listService.legacy.AbstractFilePasrer;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,17 +11,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DCUCSVList implements CSVList {
+public class DCUFileParser extends AbstractFilePasrer<CSVTopicLine> {
 
     @Getter
-    private final List<CSVLine> lines;
+    private final List<CSVTopicLine> lines;
 
-    public DCUCSVList(MultipartFile file) {
+    public DCUFileParser(MultipartFile file) {
         this.lines = parseDCUFile(file);
     }
 
-    private static List<CSVLine> parseDCUFile(MultipartFile file) {
-        List<CSVLine> result = new ArrayList<>();
+    private static List<CSVTopicLine> parseDCUFile(MultipartFile file) {
+        List<CSVTopicLine> result = new ArrayList<>();
 
         BufferedReader br;
         try {
@@ -28,12 +29,12 @@ public class DCUCSVList implements CSVList {
             InputStream is = file.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
             while ((line = br.readLine()) != null) {
-                String[] lineArray = CSVLine.splitLine(line);
+                String[] lineArray = splitLine(line);
                 String parentTopic = lineArray[1].trim();
                 String topicName = lineArray[0].trim();
                 String topicTeam = lineArray[2].trim();
                 String topicUnit = lineArray[4].trim();
-                result.add(new CSVLine(parentTopic, topicName, topicUnit, topicTeam));
+                result.add(new CSVTopicLine(parentTopic, topicName, topicUnit, topicTeam));
             }
 
         } catch (IOException e) {

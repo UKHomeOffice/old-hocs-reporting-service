@@ -47,20 +47,30 @@ public class DataListEntity {
 
 
     public DataListEntity(String text, String value, Set<DataListEntity> subEntities, Set<DataListEntityProperty> properties) {
-        this.text = text;
-        this.value = value;
-        this.subEntities = subEntities;
+        this(text, value, subEntities);
         this.properties = properties;
     }
 
     public DataListEntity(String text, String value, Set<DataListEntity> subEntities) {
-        this.text = text;
-        this.value = value;
+        this(text, value);
         this.subEntities = subEntities;
     }
 
     public DataListEntity(String text, String value) {
-        this.text = text;
-        this.value = value;
+        this.text = toListText(text);
+        this.value = toListValue(value);
+    }
+
+    private static String toListText(String text) {
+        text = text.startsWith("\"") ? text.substring(1) : text;
+        text = text.endsWith("\"") ? text.substring(0, text.length() - 1) : text;
+        return text;
+    }
+
+    private static String toListValue(String value) {
+        return value.replaceAll(" ", "_")
+                .replaceAll("[^a-zA-Z0-9_]+", "")
+                .replaceAll("__", "_")
+                .toUpperCase();
     }
 }

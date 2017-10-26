@@ -1,7 +1,8 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListRecord;
-import com.sls.listService.dto.LegacyDataListEntityRecord;
+import com.sls.listService.dto.legacy.TopicListEntityRecord;
+import com.sls.listService.dto.legacy.UnitCreateRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -49,21 +50,6 @@ public class ListResource {
         }
     }
 
-    @RequestMapping(value = "/legacy/list/TopicList", method = RequestMethod.GET)
-    public ResponseEntity<LegacyDataListEntityRecord[]> getLegacyListByReference() {
-        log.info("List \"Legacy TopicList\" requested");
-        try {
-            LegacyDataListEntityRecord[] dcuList = service.getLegacyListByName("TopicListDCU");
-            LegacyDataListEntityRecord[] ukviList = service.getLegacyListByName("TopicListUKVI");
-
-            return ResponseEntity.ok(concat(dcuList, ukviList));
-        } catch (ListNotFoundException e) {
-            log.info("List \"Legacy TopicList\" not found");
-            log.info(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     private static <T> T[] concat(T[] first, T[] second) {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
@@ -89,4 +75,46 @@ public class ListResource {
         }
         return ResponseEntity.badRequest().build();
     }
+
+    // 'service/homeoffice/...' path is legacy alfresco endpoint used by frontend consumers
+    @RequestMapping(value = {"/legacy/list/TopicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
+    public ResponseEntity<TopicListEntityRecord[]> getLegacyListByReference() {
+        log.info("List \"Legacy TopicList\" requested");
+        try {
+            TopicListEntityRecord[] dcuList = legacyService.getLegacyTopicListByName("TopicListDCU");
+            TopicListEntityRecord[] ukviList = legacyService.getLegacyTopicListByName("TopicListUKVI");
+
+            return ResponseEntity.ok(concat(dcuList, ukviList));
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy TopicList\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //This is a create script, to be used once per new environment
+    @RequestMapping(value = "/legacy/units/UnitTeams", method = RequestMethod.GET)
+    public ResponseEntity<UnitCreateRecord> getLegacyUnitsByReference() {
+        log.info("List \"Legacy UnitTeams\" requested");
+        try {
+            UnitCreateRecord units = legacyService.getLegacyUnitCreateListByName("UnitTeams");
+
+            return ResponseEntity.ok(units);
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy UnitTeams\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @RequestMapping(value = "/legacy/units", method = RequestMethod.POST)
+    public ResponseEntity createUnitsAndGroups(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"Teams and Units\"");
+        if (!file.isEmpty()) {
+            DataList dataListTeamsUnits = legacyService.createTeamsUnitsFromCSV(file, "UnitTeams");
+            return createList(dataListTeamsUnits);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
 }

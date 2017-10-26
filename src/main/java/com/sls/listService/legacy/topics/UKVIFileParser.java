@@ -1,5 +1,6 @@
-package com.sls.listService.legacy;
+package com.sls.listService.legacy.topics;
 
+import com.sls.listService.legacy.AbstractFilePasrer;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -13,18 +14,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-public class UKVICSVList implements CSVList {
+public class UKVIFileParser extends AbstractFilePasrer<CSVTopicLine> {
 
     @Getter
-    private final List<CSVLine> lines;
+    private final List<CSVTopicLine> lines;
 
-    public UKVICSVList(MultipartFile file) {
+    public UKVIFileParser(MultipartFile file) {
         this.lines = parseUKVIFile(file);
 
     }
 
-    private static List<CSVLine> parseUKVIFile(MultipartFile file) {
-        List<CSVLine> result = new ArrayList<>();
+    private static List<CSVTopicLine> parseUKVIFile(MultipartFile file) {
+        List<CSVTopicLine> result = new ArrayList<>();
 
         List<String> lines = new ArrayList<>();
         BufferedReader br;
@@ -42,7 +43,6 @@ public class UKVICSVList implements CSVList {
         // Remove the heading.
         lines.remove(0);
 
-        // This relies on there being a distinct set of parent topics, you will miss data if there isn't.
         Map<String, String> parentTopics = lines.stream().collect(Collectors.toMap(l -> getColumn(l, 0), l -> getColumn(l, 1)));
 
         List<String> erListOne = lines.stream().map(l -> getColumn(l, 3)).filter(l -> !l.isEmpty()).collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class UKVICSVList implements CSVList {
             }
 
             for (String subTopic : listToAdd) {
-                result.add(new CSVLine(entity.getKey(), subTopic, "GROUP_UKVI", ""));
+                result.add(new CSVTopicLine(entity.getKey(), subTopic, "GROUP_UKVI", ""));
             }
 
         }
@@ -83,7 +83,7 @@ public class UKVICSVList implements CSVList {
     }
 
     private static String getColumn(String line, int column) {
-        return CSVLine.splitLine(line)[column];
+        return splitLine(line)[column];
     }
 
 }

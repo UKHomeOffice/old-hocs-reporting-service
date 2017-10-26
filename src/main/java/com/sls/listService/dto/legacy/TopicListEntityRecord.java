@@ -1,9 +1,10 @@
-package com.sls.listService.dto;
+package com.sls.listService.dto.legacy;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.sls.listService.DataList;
 import com.sls.listService.DataListEntity;
 import com.sls.listService.DataListEntityProperty;
+import com.sls.listService.dto.DataListEntityRecordProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 @EqualsAndHashCode
-public class LegacyDataListEntityRecord {
+public class TopicListEntityRecord {
 
     private String name;
 
@@ -27,7 +28,7 @@ public class LegacyDataListEntityRecord {
     @JsonUnwrapped
     private List<HashMap<String, String>> topicListItems = new ArrayList<>();
 
-    public static LegacyDataListEntityRecord create(DataListEntity listEntity) {
+    public static TopicListEntityRecord create(DataListEntity listEntity) {
 
         ArrayList<HashMap<String, String>> entityRecordList = new ArrayList<>();
         if (listEntity.getSubEntities() != null && !listEntity.getSubEntities().isEmpty()) {
@@ -54,21 +55,21 @@ public class LegacyDataListEntityRecord {
                     .filter(p -> p.getKey().equals("caseType"))
                     .findFirst().orElse(new DataListEntityProperty());
 
-        return new LegacyDataListEntityRecord(listEntity.getText(), property.getValue(), entityRecordList);
+        return new TopicListEntityRecord(listEntity.getText(), property.getValue(), entityRecordList);
     }
 
 
-    public static LegacyDataListEntityRecord[] asArray(DataList list) {
+    public static TopicListEntityRecord[] asArray(DataList list) {
 
-        List<LegacyDataListEntityRecord> entities = new ArrayList<>();
+        List<TopicListEntityRecord> entities = new ArrayList<>();
         if (list.getEntities() != null && !list.getEntities().isEmpty()) {
             entities = list.getEntities()
                     .stream()
-                    .map(LegacyDataListEntityRecord::create)
+                    .map(TopicListEntityRecord::create)
                     .collect(Collectors.toList());
         }
 
-        return entities.toArray(new LegacyDataListEntityRecord[0]);
+        return entities.toArray(new TopicListEntityRecord[0]);
 
     }
 

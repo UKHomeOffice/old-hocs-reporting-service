@@ -2,10 +2,10 @@
   "name": "TopicList",
   "entities" : [ {
     "text": "TopText",
-    "value": "top_val",
+    "value": "TOP_VAL",
     "subEntities" : [ {
       "text": "SubText",
-      "value": "sub_val"
+      "value": "SUB_VAL"
     } ],
     "properties" : [ {
       "key": "Key",

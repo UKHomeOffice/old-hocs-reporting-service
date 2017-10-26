@@ -1,10 +1,12 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListRecord;
-import com.sls.listService.dto.LegacyDataListEntityRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ public class ListService {
         this.repo = repo;
     }
 
+    @Cacheable(value = "list", key = "#name")
     public DataListRecord getListByName(String name) throws ListNotFoundException {
         try {
             DataList list = repo.findOneByName(name);
@@ -27,15 +30,9 @@ public class ListService {
         }
     }
 
-    public LegacyDataListEntityRecord[] getLegacyListByName(String name) throws ListNotFoundException {
-        try {
-            DataList list = repo.findOneByName(name);
-            return LegacyDataListEntityRecord.asArray(list);
-        } catch (NullPointerException e) {
-            throw new ListNotFoundException();
-        }
-    }
-
+    @Caching(evict = {
+            @CacheEvict(value = "list", key = "#dataList.getName()", beforeInvocation = true),
+            @CacheEvict(value = "legacyList", key = "#dataList.getName()", beforeInvocation = true)})
     public void createList(DataList dataList) throws EntityCreationException {
         try {
             repo.save(dataList);
