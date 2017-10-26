@@ -31,6 +31,7 @@ services:
       sls.db.name: postgres
       sls.db.port: 5432
       sls.schema.name: public
+      hostname: sls:8080
 
     depends_on:
       - database
