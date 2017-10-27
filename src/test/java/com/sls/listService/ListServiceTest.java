@@ -39,7 +39,8 @@ public class ListServiceTest {
         DataListEntityProperty property = new DataListEntityProperty("caseType", "CaseValue");
         Set<DataListEntityProperty> properties = new HashSet<>();
         properties.add(property);
-        DataListEntity dataListEntity = new DataListEntity("Text", "Value", null, properties);
+        DataListEntity dataListEntity = new DataListEntity("Text", "Value");
+        dataListEntity.setProperties(properties);
 
         dataListEntities.add(dataListEntity);
         return new DataList(TEST_LIST, dataListEntities);

@@ -21,9 +21,10 @@ public class UKVIFileParser extends AbstractFilePasrer<CSVTopicLine> {
 
     public UKVIFileParser(MultipartFile file) {
         this.lines = parseUKVIFile(file);
-
     }
 
+    // This looks more convoluted than the DCU file parser, but we're trying to build an identical result structure to the
+    // the DCU file parser in order to re-use the same code further on.
     private static List<CSVTopicLine> parseUKVIFile(MultipartFile file) {
         List<CSVTopicLine> result = new ArrayList<>();
 
@@ -43,14 +44,17 @@ public class UKVIFileParser extends AbstractFilePasrer<CSVTopicLine> {
         // Remove the heading.
         lines.remove(0);
 
+        // This list defines the parent topic and references a sub list of topics by string name
         Map<String, String> parentTopics = lines.stream().collect(Collectors.toMap(l -> getColumn(l, 0), l -> getColumn(l, 1)));
 
+        // These are lists of sub topics which may be referenced by the above.
         List<String> erListOne = lines.stream().map(l -> getColumn(l, 3)).filter(l -> !l.isEmpty()).collect(Collectors.toList());
         List<String> erListTwo = lines.stream().map(l -> getColumn(l, 4)).filter(l -> !l.isEmpty()).collect(Collectors.toList());
         List<String> erListThree = lines.stream().map(l -> getColumn(l, 5)).filter(l -> !l.isEmpty()).collect(Collectors.toList());
         List<String> erListFour = lines.stream().map(l -> getColumn(l, 6)).filter(l -> !l.isEmpty()).collect(Collectors.toList());
         List<String> erListFive = lines.stream().map(l -> getColumn(l, 7)).filter(l -> !l.isEmpty()).collect(Collectors.toList());
 
+        // Replace the string references with the actual lists
         for (Map.Entry<String, String> entity : parentTopics.entrySet()) {
             String erListReference = entity.getValue().trim();
 

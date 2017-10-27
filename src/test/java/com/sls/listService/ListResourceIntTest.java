@@ -41,7 +41,10 @@ public class ListResourceIntTest {
         properties.add(new DataListEntityProperty("Key", "Value"));
 
         Set<DataListEntity> list = new HashSet<>();
-        list.add(new DataListEntity("TopText", "top_val", subList, properties));
+        DataListEntity dle = new DataListEntity("TopText", "top_val");
+        dle.setProperties(properties);
+        dle.setSubEntities(subList);
+        list.add(dle);
 
         DataList datalist = new DataList("TopicList", list);
 

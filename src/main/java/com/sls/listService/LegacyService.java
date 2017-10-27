@@ -8,13 +8,18 @@ import com.sls.listService.legacy.topics.DCUFileParser;
 import com.sls.listService.legacy.topics.UKVIFileParser;
 import com.sls.listService.legacy.units.CSVUnitLine;
 import com.sls.listService.legacy.units.UnitFileParser;
+import com.sls.listService.legacy.users.CSVUserLine;
+import com.sls.listService.legacy.users.UserFileParser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -28,47 +33,6 @@ public class LegacyService {
     }
 
 
-    private static DataList createTopicsListFromCSV(CSVList list, String listName, String caseType) {
-        Map<String, Set<DataListEntity>> topics = new HashMap<>();
-
-        List<CSVTopicLine> lines = list.getLines();
-        for (CSVTopicLine line : lines) {
-            if (!topics.containsKey(line.getParentTopicName())) {
-                Set<DataListEntity> entityList = new HashSet<>();
-                topics.put(line.getParentTopicName(), entityList);
-            }
-            Set<DataListEntityProperty> properties = new HashSet<>();
-            properties.add(new DataListEntityProperty("topicUnit", line.getTopicUnit()));
-            if (!line.getTopicTeam().isEmpty()) {
-                properties.add(new DataListEntityProperty("topicTeam", line.getTopicTeam()));
-            }
-            DataListEntity entity = new DataListEntity(line.getTopicName(), CSVTopicLine.toSubListValue(caseType, line.getParentTopicName(), line.getTopicName()), new HashSet<>(), properties);
-            topics.get(line.getParentTopicName()).add(entity);
-        }
-
-        Set<DataListEntity> dataListEntities = new HashSet<>();
-        for (Map.Entry<String, Set<DataListEntity>> entity : topics.entrySet()) {
-            String parentTopic = entity.getKey();
-
-            Set<DataListEntityProperty> properties = new HashSet<>();
-            properties.add(new DataListEntityProperty("caseType", caseType));
-
-            dataListEntities.add(new DataListEntity(parentTopic, parentTopic, entity.getValue(), properties));
-        }
-
-        return new DataList(listName, dataListEntities);
-    }
-
-    @Cacheable(value = "legacylist", key = "#name")
-    public UnitCreateRecord getLegacyUnitCreateListByName(String name) throws ListNotFoundException {
-        try {
-            DataList list = repo.findOneByName(name);
-            return UnitCreateRecord.create(list);
-        } catch (NullPointerException e) {
-            throw new ListNotFoundException();
-        }
-    }
-
     @Cacheable(value = "legacylist", key = "#name")
     public TopicListEntityRecord[] getLegacyTopicListByName(String name) throws ListNotFoundException {
         try {
@@ -79,12 +43,61 @@ public class LegacyService {
         }
     }
 
+    private static DataList createTopicsListFromCSV(CSVList list, String listName, String caseType) {
+        Map<String, Set<DataListEntity>> topics = new HashMap<>();
+
+        List<CSVTopicLine> lines = list.getLines();
+        for (CSVTopicLine line : lines) {
+            topics.putIfAbsent(line.getParentTopicName(), new HashSet<>());
+            Set<DataListEntityProperty> properties = new HashSet<>();
+            properties.add(new DataListEntityProperty("topicUnit", line.getTopicUnit()));
+            if (!line.getTopicTeam().isEmpty()) {
+                properties.add(new DataListEntityProperty("topicTeam", line.getTopicTeam()));
+            }
+            DataListEntity dle = new DataListEntity(line.getTopicName(), line.getTopicValue(caseType));
+            dle.setProperties(properties);
+            topics.get(line.getParentTopicName()).add(dle);
+        }
+
+        Set<DataListEntity> dataListEntities = new HashSet<>();
+        for (Map.Entry<String, Set<DataListEntity>> entity : topics.entrySet()) {
+            String parentTopic = entity.getKey();
+
+            Set<DataListEntityProperty> properties = new HashSet<>();
+            properties.add(new DataListEntityProperty("caseType", caseType));
+
+            DataListEntity dle = new DataListEntity(parentTopic, parentTopic);
+            dle.setSubEntities(entity.getValue());
+            dle.setProperties(properties);
+            dataListEntities.add(dle);
+        }
+
+        return new DataList(listName, dataListEntities);
+    }
+
+    @Caching(evict = {
+            @CacheEvict(value = "list", key = "#listName", beforeInvocation = true),
+            @CacheEvict(value = "legacyList", key = "#listName", beforeInvocation = true)})
     public DataList createDCUTopicsListFromCSV(MultipartFile file, String listName, String caseType) {
         return createTopicsListFromCSV(new DCUFileParser(file), listName, caseType);
     }
 
+    // Below this line are not @Caching because they are 'create' scripts, likely only called once.
+
+    @Caching(evict = {
+            @CacheEvict(value = "list", key = "#listName", beforeInvocation = true),
+            @CacheEvict(value = "legacyList", key = "#listName", beforeInvocation = true)})
     public DataList createUKVITopicsListFromCSV(MultipartFile file, String listName, String caseType) {
         return createTopicsListFromCSV(new UKVIFileParser(file), listName, caseType);
+    }
+
+    public UnitCreateRecord getLegacyUnitCreateListByName(String name) throws ListNotFoundException {
+        try {
+            DataList list = repo.findOneByName(name);
+            return UnitCreateRecord.create(list);
+        } catch (NullPointerException e) {
+            throw new ListNotFoundException();
+        }
     }
 
     public DataList createTeamsUnitsFromCSV(MultipartFile file, String listName) {
@@ -93,23 +106,34 @@ public class LegacyService {
         Map<String, Set<DataListEntity>> units = new HashMap<>();
 
         List<CSVUnitLine> lines = list.getLines();
-
         for (CSVUnitLine line : lines) {
-            if (!units.containsKey(line.getUnit())) {
-                Set<DataListEntity> entityList = new HashSet<>();
-                units.put(line.getUnit(), entityList);
-            }
-            DataListEntity entity = new DataListEntity(line.getTeam(), CSVUnitLine.toSubListValue(line.getUnit(), line.getTeam()));
-            units.get(line.getUnit()).add(entity);
+            units.putIfAbsent(line.getUnit(), new HashSet<>());
+            units.get(line.getUnit()).add(new DataListEntity(line.getTeam(), line.getTeamValue()));
         }
 
         Set<DataListEntity> dataListEntities = new HashSet<>();
         for (Map.Entry<String, Set<DataListEntity>> entity : units.entrySet()) {
-            String unit = entity.getKey();
-
-            dataListEntities.add(new DataListEntity(unit, unit, entity.getValue()));
+            DataListEntity dle = new DataListEntity(entity.getKey());
+            dle.setSubEntities(entity.getValue());
+            dataListEntities.add(dle);
         }
 
+        return new DataList(listName, dataListEntities);
+    }
+
+    public DataList createUsersFromCSV(MultipartFile file, String listName) {
+        CSVList list = new UserFileParser(file);
+
+        Set<DataListEntity> dataListEntities = new HashSet<>();
+
+        List<CSVUserLine> lines = list.getLines();
+        for (CSVUserLine line : lines) {
+            Set<DataListEntityProperty> properties = line.getGroups().stream().map(g -> new DataListEntityProperty(g)).collect(Collectors.toSet());
+
+            DataListEntity dataListEntity = new DataListEntity(line.getName(), line.getEmail(), false);
+            dataListEntity.setProperties(properties);
+            dataListEntities.add(dataListEntity);
+        }
 
         return new DataList(listName, dataListEntities);
     }

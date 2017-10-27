@@ -50,12 +50,6 @@ public class ListResource {
         }
     }
 
-    private static <T> T[] concat(T[] first, T[] second) {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
-    }
-
     @RequestMapping(value = "/legacy/list/TopicList/DCU", method = RequestMethod.POST)
     public ResponseEntity createTopicsListFromDCU(@RequestParam("file") MultipartFile file) {
         log.info("Parsing list \"TopicListDCU\"");
@@ -92,7 +86,23 @@ public class ListResource {
         }
     }
 
-    //This is a create script, to be used once per new environment
+    private static <T> T[] concat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
+
+    @RequestMapping(value = "/legacy/units", method = RequestMethod.POST)
+    public ResponseEntity createUnitsAndGroups(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"Teams and Units\"");
+        if (!file.isEmpty()) {
+            DataList dataListTeamsUnits = legacyService.createTeamsUnitsFromCSV(file, "UnitTeams");
+            return createList(dataListTeamsUnits);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
     @RequestMapping(value = "/legacy/units/UnitTeams", method = RequestMethod.GET)
     public ResponseEntity<UnitCreateRecord> getLegacyUnitsByReference() {
         log.info("List \"Legacy UnitTeams\" requested");
@@ -107,12 +117,40 @@ public class ListResource {
         }
     }
 
-    @RequestMapping(value = "/legacy/units", method = RequestMethod.POST)
-    public ResponseEntity createUnitsAndGroups(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"Teams and Units\"");
+    @RequestMapping(value = "/legacy/users/DCU", method = RequestMethod.POST)
+    public ResponseEntity createUsersDCU(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"DCU Users\"");
+        return parseUserFile(file, "UsersDCU");
+    }
+
+    @RequestMapping(value = "/legacy/users/FOI", method = RequestMethod.POST)
+    public ResponseEntity createUsersFOI(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"FOI Users\"");
+        return parseUserFile(file, "UsersFOI");
+    }
+
+    @RequestMapping(value = "/legacy/users/HMPOCCC", method = RequestMethod.POST)
+    public ResponseEntity createUsersHMPOCCC(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"HMPOCCC Users\"");
+        return parseUserFile(file, "UsersHMPOCCC");
+    }
+
+    @RequestMapping(value = "/legacy/users/HMPOCOL", method = RequestMethod.POST)
+    public ResponseEntity createUsersHMPOCOL(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"HMPOCOL Users\"");
+        return parseUserFile(file, "UsersHMPOCOL");
+    }
+
+    @RequestMapping(value = "/legacy/users/UKVI", method = RequestMethod.POST)
+    public ResponseEntity createUsersUKVI(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"UKVI Users\"");
+        return parseUserFile(file, "UsersUKVI");
+    }
+
+    private ResponseEntity parseUserFile(MultipartFile file, String listName) {
         if (!file.isEmpty()) {
-            DataList dataListTeamsUnits = legacyService.createTeamsUnitsFromCSV(file, "UnitTeams");
-            return createList(dataListTeamsUnits);
+            DataList users = legacyService.createUsersFromCSV(file, listName);
+            return createList(users);
         }
         return ResponseEntity.badRequest().build();
     }

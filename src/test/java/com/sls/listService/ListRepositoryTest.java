@@ -41,7 +41,9 @@ public class ListRepositoryTest {
         secondSubEntityList.add(new DataListEntity("SubText", "sub_val"));
 
         Set<DataListEntity> secondEntityList = new HashSet<>();
-        secondEntityList.add(new DataListEntity("\"SecondText\"", "se!c,ond va,l", secondSubEntityList));
+        DataListEntity dle = new DataListEntity("\"SecondText\"", "se!c,ond va,l");
+        dle.setSubEntities(secondSubEntityList);
+        secondEntityList.add(dle);
         repository.save(new DataList("Test List Two", secondEntityList));
         repository.save(new DataList("Test List Three", null));
     }

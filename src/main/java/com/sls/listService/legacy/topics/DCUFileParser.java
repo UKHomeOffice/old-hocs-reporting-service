@@ -36,7 +36,6 @@ public class DCUFileParser extends AbstractFilePasrer<CSVTopicLine> {
                 String topicUnit = lineArray[4].trim();
                 result.add(new CSVTopicLine(parentTopic, topicName, topicUnit, topicTeam));
             }
-
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }

@@ -1,9 +1,6 @@
 package com.sls.listService;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -38,27 +35,31 @@ public class DataListEntity {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="parent_entity_id", referencedColumnName = "id")
     @Getter
+    @Setter
     private Set<DataListEntity> subEntities;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="entity_id", referencedColumnName = "id")
     @Getter
+    @Setter
     private Set<DataListEntityProperty> properties;
 
-
-    public DataListEntity(String text, String value, Set<DataListEntity> subEntities, Set<DataListEntityProperty> properties) {
-        this(text, value, subEntities);
-        this.properties = properties;
-    }
-
-    public DataListEntity(String text, String value, Set<DataListEntity> subEntities) {
-        this(text, value);
-        this.subEntities = subEntities;
+    public DataListEntity(String text) {
+        this(text, text);
     }
 
     public DataListEntity(String text, String value) {
-        this.text = toListText(text);
-        this.value = toListValue(value);
+        this(text, value, true);
+    }
+
+    public DataListEntity(String text, String value, boolean parseInput) {
+        if (parseInput) {
+            this.text = toListText(text);
+            this.value = toListValue(value);
+        } else {
+            this.text = text;
+            this.value = value;
+        }
     }
 
     private static String toListText(String text) {

@@ -17,7 +17,7 @@ public class CSVUnitLine {
     @Getter
     private String team;
 
-    public static String toSubListValue(String unit, String team) {
+    public String getTeamValue() {
         return String.format("%s_%s", unit, team);
     }
 

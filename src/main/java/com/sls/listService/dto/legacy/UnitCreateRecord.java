@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,11 +23,12 @@ public class UnitCreateRecord {
         List<UnitCreateEntityRecord> manageGroups = new ArrayList<>();
 
         if (list.getEntities() != null && !list.getEntities().isEmpty()) {
-            manageGroups = list.getEntities().stream().map(UnitCreateRecord::createUnit).flatMap(a -> a.stream()).collect(Collectors.toList());
+            manageGroups = list.getEntities().stream().map(UnitCreateRecord::createUnit).flatMap(Collection::stream).collect(Collectors.toList());
         }
         return new UnitCreateRecord(manageGroups);
     }
 
+    // Units and Teams are added at the same level, all in one manageGroups object.
     private static List<UnitCreateEntityRecord> createUnit(DataListEntity unit) {
         List<UnitCreateEntityRecord> list = new ArrayList<>();
         list.add(UnitCreateEntityRecord.createGroup("addUnit", unit.getText(), unit.getValue(), null, null));

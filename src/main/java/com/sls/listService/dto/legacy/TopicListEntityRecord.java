@@ -29,48 +29,47 @@ public class TopicListEntityRecord {
     private List<HashMap<String, String>> topicListItems = new ArrayList<>();
 
     public static TopicListEntityRecord create(DataListEntity listEntity) {
+        ArrayList<HashMap<String, String>> topicListItems = new ArrayList<>();
 
-        ArrayList<HashMap<String, String>> entityRecordList = new ArrayList<>();
+        // subEntities are called topicListItems
         if (listEntity.getSubEntities() != null && !listEntity.getSubEntities().isEmpty()) {
-            List<DataListEntity> entityList = new ArrayList<>(listEntity.getSubEntities());
-            for (DataListEntity subEntity : entityList) {
+            for (DataListEntity subEntity : listEntity.getSubEntities()) {
 
-                HashMap<String, String> entityRecords = new HashMap<>();
-                entityRecords.put("topicName", subEntity.getText());
-                entityRecords.put("topicUnit", subEntity.getValue());
-                entityRecords.putAll(subEntity.getProperties()
+                // They have one sub level with many fields so combine the sub entity and properties into one map
+                HashMap<String, String> topicListItem = new HashMap<>();
+                topicListItem.put("topicName", subEntity.getText());
+                topicListItem.put("topicUnit", subEntity.getValue());
+
+                topicListItem.putAll(subEntity.getProperties()
                         .stream()
                         .map(r -> new DataListEntityRecordProperty(r.getKey(), r.getValue()))
                         .collect(Collectors.toMap(DataListEntityRecordProperty::getKey, DataListEntityRecordProperty::getValue)));
-
-                entityRecordList.add(entityRecords);
-
+                topicListItems.add(topicListItem);
             }
         }
 
+        // a topiclist must have a caseType which we store as a property at the top level
         DataListEntityProperty property = new DataListEntityProperty();
-        if (listEntity.getProperties() != null && !listEntity.getProperties().isEmpty())
+        if (listEntity.getProperties() != null && !listEntity.getProperties().isEmpty()) {
             property = listEntity.getProperties()
                     .stream()
                     .filter(p -> p.getKey().equals("caseType"))
                     .findFirst().orElse(new DataListEntityProperty());
+        }
 
-        return new TopicListEntityRecord(listEntity.getText(), property.getValue(), entityRecordList);
+        return new TopicListEntityRecord(listEntity.getText(), property.getValue(), topicListItems);
     }
 
-
+    // TopicList is only an array of records, no top level object.
     public static TopicListEntityRecord[] asArray(DataList list) {
-
-        List<TopicListEntityRecord> entities = new ArrayList<>();
+        List<TopicListEntityRecord> topicList = new ArrayList<>();
         if (list.getEntities() != null && !list.getEntities().isEmpty()) {
-            entities = list.getEntities()
+            topicList = list.getEntities()
                     .stream()
                     .map(TopicListEntityRecord::create)
                     .collect(Collectors.toList());
         }
 
-        return entities.toArray(new TopicListEntityRecord[0]);
-
+        return topicList.toArray(new TopicListEntityRecord[0]);
     }
-
 }

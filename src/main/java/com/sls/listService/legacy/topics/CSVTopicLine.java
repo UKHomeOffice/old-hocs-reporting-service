@@ -21,7 +21,7 @@ public class CSVTopicLine {
     @Getter
     private String topicTeam;
 
-    public static String toSubListValue(String caseType, String parentText, String subText) {
-        return String.format("%s_%s_%s", caseType, parentText, subText);
+    public String getTopicValue(String caseType) {
+        return String.format("%s_%s_%s", caseType, parentTopicName, topicName);
     }
 }

@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class UnitFileParser extends AbstractFilePasrer<CSVUnitLine> {
 
     @Getter

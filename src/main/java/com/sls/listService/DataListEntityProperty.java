@@ -29,6 +29,10 @@ public class DataListEntityProperty {
     @Getter
     private String value;
 
+    public DataListEntityProperty(String key) {
+        this(key, key);
+    }
+
     public DataListEntityProperty(String key, String value)
     {
         this.key = key;

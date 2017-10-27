@@ -27,23 +27,24 @@ public class DataListEntityRecord {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private List<DataListEntityRecord> subEntities = new ArrayList<>();
 
-    public static DataListEntityRecord create(DataListEntity listEntity) {
+    public static DataListEntityRecord create(DataListEntity dle) {
         List<DataListEntityRecordProperty> properties = new ArrayList<>();
-        if (listEntity.getProperties() != null && !listEntity.getProperties().isEmpty()) {
-            properties = listEntity.getProperties()
+        if (dle.getProperties() != null && !dle.getProperties().isEmpty()) {
+            properties = dle.getProperties()
                     .stream()
-                    .map(r -> new DataListEntityRecordProperty(r.getKey(), r.getValue()))
+                    .map(DataListEntityRecordProperty::create)
                     .collect(Collectors.toList());
         }
 
-        List<DataListEntityRecord> entityRecords = new ArrayList<>();
-        if (listEntity.getSubEntities() != null && !listEntity.getSubEntities().isEmpty()) {
-            entityRecords = listEntity.getSubEntities()
+        List<DataListEntityRecord> subEntities = new ArrayList<>();
+        if (dle.getSubEntities() != null && !dle.getSubEntities().isEmpty()) {
+            subEntities = dle.getSubEntities()
                     .stream()
                     .map(DataListEntityRecord::create)
                     .collect(Collectors.toList());
         }
 
-        return new DataListEntityRecord(listEntity.getText(), listEntity.getValue(), properties, entityRecords);
+        return new DataListEntityRecord(dle.getText(), dle.getValue(), properties, subEntities);
     }
+
 }
