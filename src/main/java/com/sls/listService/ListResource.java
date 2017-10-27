@@ -54,46 +54,26 @@ public class ListResource {
         }
     }
 
-    @RequestMapping(value = "/legacy/list/TopicList/DCU", method = RequestMethod.POST)
-    public ResponseEntity createTopicsListFromDCU(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"TopicListDCU\"");
-        if (!file.isEmpty()) {
-            DataList dataListDCU = legacyService.createDCUTopicsListFromCSV(file, "TopicListDCU", "DCU");
-            return createList(dataListDCU);
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
-    @RequestMapping(value = "/legacy/list/TopicList/UKVI", method = RequestMethod.POST)
-    public ResponseEntity createTopicsListFromUKVI(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"TopicListUKVI\"");
-        if (!file.isEmpty()) {
-            DataList dataListUKVI = legacyService.createUKVITopicsListFromCSV(file, "TopicListUKVI", "UKVI");
-            return createList(dataListUKVI);
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
-    // 'service/homeoffice/...' path is legacy alfresco endpoint used by frontend consumers
-    @RequestMapping(value = {"/legacy/list/TopicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
-    public ResponseEntity<TopicListEntityRecord[]> getLegacyListByReference() {
-        log.info("List \"Legacy TopicList\" requested");
-        try {
-            TopicListEntityRecord[] dcuList = legacyService.getLegacyTopicListByName("TopicListDCU");
-            TopicListEntityRecord[] ukviList = legacyService.getLegacyTopicListByName("TopicListUKVI");
-
-            return ResponseEntity.ok(concat(dcuList, ukviList));
-        } catch (ListNotFoundException e) {
-            log.info("List \"Legacy TopicList\" not found");
-            log.info(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     private static <T> T[] concat(T[] first, T[] second) {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
+    }
+
+    @RequestMapping(value = "/legacy/topic/{name}", method = RequestMethod.POST)
+    public ResponseEntity createTopicsListFromDCU(@RequestParam("file") MultipartFile file, @PathVariable("name") String name) {
+        log.info("Parsing list \"TopicListDCU\"");
+        if (!file.isEmpty()) {
+            switch (name) {
+                case "DCU":
+                    DataList dataListDCU = legacyService.createDCUTopicsListFromCSV(file, "DCU_Topics", "DCU");
+                    return createList(dataListDCU);
+                case "UKVI":
+                    DataList dataListUKVI = legacyService.createUKVITopicsListFromCSV(file, "UKVI_Topics", "UKVI");
+                    return createList(dataListUKVI);
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @RequestMapping(value = "/legacy/units", method = RequestMethod.POST)
@@ -106,8 +86,24 @@ public class ListResource {
         return ResponseEntity.badRequest().build();
     }
 
+    // 'service/homeoffice/...' path is legacy alfresco endpoint used by frontend consumers
+    @RequestMapping(value = {"/legacy/topic/TopicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
+    public ResponseEntity<TopicListEntityRecord[]> getLegacyListByReference() {
+        log.info("List \"Legacy TopicList\" requested");
+        try {
+            TopicListEntityRecord[] dcuList = legacyService.getLegacyTopicListByName("DCU_Topics");
+            TopicListEntityRecord[] ukviList = legacyService.getLegacyTopicListByName("UKVI_Topics");
+
+            return ResponseEntity.ok(concat(dcuList, ukviList));
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy TopicList\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
-    @RequestMapping(value = "/legacy/units/UnitTeams", method = RequestMethod.GET)
+    @RequestMapping(value = "/legacy/units/CreateUnitTeams", method = RequestMethod.GET)
     public ResponseEntity<UnitCreateRecord> getLegacyUnitsByReference() {
         log.info("List \"Legacy UnitTeams\" requested");
         try {
@@ -121,47 +117,28 @@ public class ListResource {
         }
     }
 
-    @RequestMapping(value = "/legacy/users/DCU", method = RequestMethod.POST)
-    public ResponseEntity createUsersDCU(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"DCU Users\"");
-        return parseUserFile(file, "UsersDCU");
+    @RequestMapping(value = "/legacy/users/{name}", method = RequestMethod.POST)
+    public ResponseEntity createUsersDCU(@RequestParam("file") MultipartFile file, @PathVariable("name") String name) {
+        log.info("Parsing list \"{} Users\"", name);
+        if (!file.isEmpty()) {
+            DataList users = legacyService.createUsersFromCSV(file, name + "_Users");
+            return createList(users);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
-    @RequestMapping(value = "/legacy/users/FOI", method = RequestMethod.POST)
-    public ResponseEntity createUsersFOI(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"FOI Users\"");
-        return parseUserFile(file, "UsersFOI");
-    }
-
-    @RequestMapping(value = "/legacy/users/HMPOCCC", method = RequestMethod.POST)
-    public ResponseEntity createUsersHMPOCCC(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"HMPOCCC Users\"");
-        return parseUserFile(file, "UsersHMPOCCC");
-    }
-
-    @RequestMapping(value = "/legacy/users/HMPOCOL", method = RequestMethod.POST)
-    public ResponseEntity createUsersHMPOCOL(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"HMPOCOL Users\"");
-        return parseUserFile(file, "UsersHMPOCOL");
-    }
-
-    @RequestMapping(value = "/legacy/users/UKVI", method = RequestMethod.POST)
-    public ResponseEntity createUsersUKVI(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"UKVI Users\"");
-        return parseUserFile(file, "UsersUKVI");
-    }
-
-    @RequestMapping(value = "/legacy/users/AllUsers", method = RequestMethod.GET)
+    //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
+    @RequestMapping(value = "/legacy/users/CreateUsers", method = RequestMethod.GET)
     public ResponseEntity<UserCreateRecord> getLegacyUsersByReference() {
         log.info("List \"Legacy Users\" requested");
         try {
             List<UserCreateEntityRecord> ret = new ArrayList<>();
 
-            ret.addAll(legacyService.getLegacyUsersListByName("UsersDCU").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("UsersFOI").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("UsersHMPOCCC").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("UsersHMPOCOL").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("UsersUKVI").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("DCU_Users").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("FOI_Users").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("HMPOCCC_Users").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("HMPOCOL_Users").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("UKVI_Users").getUsers());
 
             return ResponseEntity.ok(new UserCreateRecord(ret));
         } catch (ListNotFoundException e) {
@@ -171,24 +148,16 @@ public class ListResource {
         }
     }
 
-    @RequestMapping(value = "/legacy/users/TestUsers", method = RequestMethod.GET)
+    @RequestMapping(value = "/legacy/users/CreateTestUsers", method = RequestMethod.GET)
     public ResponseEntity<UserCreateRecord> getLegacyTestUsersByReference() {
         log.info("List \"Legacy TestUsers\" requested");
         try {
-            return ResponseEntity.ok(legacyService.getLegacyTestUsersListByName("UsersTest"));
+            return ResponseEntity.ok(legacyService.getLegacyTestUsersListByName("Test_Users"));
         } catch (ListNotFoundException e) {
             log.info("List \"Legacy TestUsers\" not found");
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
-    }
-
-    private ResponseEntity parseUserFile(MultipartFile file, String listName) {
-        if (!file.isEmpty()) {
-            DataList users = legacyService.createUsersFromCSV(file, listName);
-            return createList(users);
-        }
-        return ResponseEntity.badRequest().build();
     }
 
 }
