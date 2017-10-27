@@ -1,7 +1,7 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListRecord;
-import com.sls.listService.dto.legacy.TopicListEntityRecord;
+import com.sls.listService.dto.legacy.topics.TopicListEntityRecord;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;

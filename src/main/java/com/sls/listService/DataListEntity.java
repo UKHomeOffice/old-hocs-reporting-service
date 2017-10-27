@@ -48,6 +48,10 @@ public class DataListEntity {
         this(text, text);
     }
 
+    public DataListEntity(String text, boolean parseInput) {
+        this(text, text, parseInput);
+    }
+
     public DataListEntity(String text, String value) {
         this(text, value, true);
     }

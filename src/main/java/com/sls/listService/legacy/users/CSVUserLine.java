@@ -12,7 +12,10 @@ import java.util.List;
 public class CSVUserLine {
 
     @Getter
-    private String name;
+    private String first;
+
+    @Getter
+    private String last;
 
     @Getter
     private String email;

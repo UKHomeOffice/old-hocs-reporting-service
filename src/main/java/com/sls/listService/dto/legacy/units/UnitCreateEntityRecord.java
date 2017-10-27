@@ -1,4 +1,4 @@
-package com.sls.listService.dto.legacy;
+package com.sls.listService.dto.legacy.units;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

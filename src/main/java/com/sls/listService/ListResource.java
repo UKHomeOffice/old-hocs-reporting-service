@@ -1,15 +1,19 @@
 package com.sls.listService;
 
 import com.sls.listService.dto.DataListRecord;
-import com.sls.listService.dto.legacy.TopicListEntityRecord;
-import com.sls.listService.dto.legacy.UnitCreateRecord;
+import com.sls.listService.dto.legacy.topics.TopicListEntityRecord;
+import com.sls.listService.dto.legacy.units.UnitCreateRecord;
+import com.sls.listService.dto.legacy.users.UserCreateEntityRecord;
+import com.sls.listService.dto.legacy.users.UserCreateRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -145,6 +149,38 @@ public class ListResource {
     public ResponseEntity createUsersUKVI(@RequestParam("file") MultipartFile file) {
         log.info("Parsing list \"UKVI Users\"");
         return parseUserFile(file, "UsersUKVI");
+    }
+
+    @RequestMapping(value = "/legacy/users/AllUsers", method = RequestMethod.GET)
+    public ResponseEntity<UserCreateRecord> getLegacyUsersByReference() {
+        log.info("List \"Legacy Users\" requested");
+        try {
+            List<UserCreateEntityRecord> ret = new ArrayList<>();
+
+            ret.addAll(legacyService.getLegacyUsersListByName("UsersDCU").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("UsersFOI").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("UsersHMPOCCC").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("UsersHMPOCOL").getUsers());
+            ret.addAll(legacyService.getLegacyUsersListByName("UsersUKVI").getUsers());
+
+            return ResponseEntity.ok(new UserCreateRecord(ret));
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy Users\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @RequestMapping(value = "/legacy/users/TestUsers", method = RequestMethod.GET)
+    public ResponseEntity<UserCreateRecord> getLegacyTestUsersByReference() {
+        log.info("List \"Legacy TestUsers\" requested");
+        try {
+            return ResponseEntity.ok(legacyService.getLegacyTestUsersListByName("UsersTest"));
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy TestUsers\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     private ResponseEntity parseUserFile(MultipartFile file, String listName) {

@@ -1,4 +1,4 @@
-package com.sls.listService.dto.legacy;
+package com.sls.listService.dto.legacy.units;
 
 import com.sls.listService.DataList;
 import com.sls.listService.DataListEntity;

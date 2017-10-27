@@ -35,7 +35,6 @@ public class UserFileParser extends AbstractFilePasrer<CSVUserLine> {
                 String first = lineArray[0].trim();
                 String last = lineArray[1].trim();
                 String email = lineArray[2].trim();
-                String name = String.format("%s %s", first, last);
 
                 List<String> groups = new ArrayList<>();
                 int i = 3;
@@ -44,7 +43,7 @@ public class UserFileParser extends AbstractFilePasrer<CSVUserLine> {
                     i++;
                 }
 
-                users.add(new CSVUserLine(name, email, groups));
+                users.add(new CSVUserLine(first, last, email, groups));
             }
 
             // Swap the ticks in the truth table for the real group names

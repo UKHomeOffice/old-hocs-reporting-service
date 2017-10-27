@@ -44,6 +44,10 @@ echo "Posting UKVI Users"
 curl -sX POST http://${hostname}/legacy/users/UKVI -F "file=@/app/data/UKVI_Users.csv" \
  -H "Content-Type: multipart/form-data"
 
+echo "Posting Test Users"
+curl -sX POST http://${hostname}/list/ -d "@/app/data/Test_Users.JSON" \
+ -H "Content-Type: application/json"
+
 # Perform a series of GETs to prime the cache for the seeded data
 echo "Priming cache on resources"
 

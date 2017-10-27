@@ -1,7 +1,8 @@
 package com.sls.listService;
 
-import com.sls.listService.dto.legacy.TopicListEntityRecord;
-import com.sls.listService.dto.legacy.UnitCreateRecord;
+import com.sls.listService.dto.legacy.topics.TopicListEntityRecord;
+import com.sls.listService.dto.legacy.units.UnitCreateRecord;
+import com.sls.listService.dto.legacy.users.UserCreateRecord;
 import com.sls.listService.legacy.CSVList;
 import com.sls.listService.legacy.topics.CSVTopicLine;
 import com.sls.listService.legacy.topics.DCUFileParser;
@@ -31,7 +32,6 @@ public class LegacyService {
     public LegacyService(ListRepository repo) {
         this.repo = repo;
     }
-
 
     @Cacheable(value = "legacylist", key = "#name")
     public TopicListEntityRecord[] getLegacyTopicListByName(String name) throws ListNotFoundException {
@@ -75,6 +75,8 @@ public class LegacyService {
         return new DataList(listName, dataListEntities);
     }
 
+    // Below this line are not @Caching because they are 'create' scripts, likely only called once.
+
     @Caching(evict = {
             @CacheEvict(value = "list", key = "#listName", beforeInvocation = true),
             @CacheEvict(value = "legacyList", key = "#listName", beforeInvocation = true)})
@@ -82,13 +84,29 @@ public class LegacyService {
         return createTopicsListFromCSV(new DCUFileParser(file), listName, caseType);
     }
 
-    // Below this line are not @Caching because they are 'create' scripts, likely only called once.
-
     @Caching(evict = {
             @CacheEvict(value = "list", key = "#listName", beforeInvocation = true),
             @CacheEvict(value = "legacyList", key = "#listName", beforeInvocation = true)})
     public DataList createUKVITopicsListFromCSV(MultipartFile file, String listName, String caseType) {
         return createTopicsListFromCSV(new UKVIFileParser(file), listName, caseType);
+    }
+
+    public UserCreateRecord getLegacyUsersListByName(String name) throws ListNotFoundException {
+        try {
+            DataList list = repo.findOneByName(name);
+            return UserCreateRecord.create(list);
+        } catch (NullPointerException e) {
+            throw new ListNotFoundException();
+        }
+    }
+
+    public UserCreateRecord getLegacyTestUsersListByName(String name) throws ListNotFoundException {
+        try {
+            DataList list = repo.findOneByName(name);
+            return UserCreateRecord.createTest(list);
+        } catch (NullPointerException e) {
+            throw new ListNotFoundException();
+        }
     }
 
     public UnitCreateRecord getLegacyUnitCreateListByName(String name) throws ListNotFoundException {
@@ -130,7 +148,10 @@ public class LegacyService {
         for (CSVUserLine line : lines) {
             Set<DataListEntityProperty> properties = line.getGroups().stream().map(g -> new DataListEntityProperty(g)).collect(Collectors.toSet());
 
-            DataListEntity dataListEntity = new DataListEntity(line.getName(), line.getEmail(), false);
+            properties.add(new DataListEntityProperty("firstName", line.getFirst()));
+            properties.add(new DataListEntityProperty("lastName", line.getLast()));
+
+            DataListEntity dataListEntity = new DataListEntity(line.getEmail(), false);
             dataListEntity.setProperties(properties);
             dataListEntities.add(dataListEntity);
         }
