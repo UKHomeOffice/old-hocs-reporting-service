@@ -45,7 +45,7 @@ services:
     command: /app/scripts/run.sh
 
     volumes:
-      - ../Hocs-Data/data/:/app/data/
+      - ../hocs-data/data/:/app/data/
 
 networks:
   sls-network:
