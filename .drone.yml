@@ -33,7 +33,7 @@ pipeline:
     when:
       branch: master
       event: push
-§
+
   tag-docker-image-with-git-tag:
     image: docker:1.11
     environment:
