@@ -1,4 +1,4 @@
-# Simple List Service
+# Hocs Data Service
 Very simple data service for caseworking systems
 
 ---

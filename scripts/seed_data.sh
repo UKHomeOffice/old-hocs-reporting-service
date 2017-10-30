@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# Wait for the Simple-List-Service to become available
+# Wait for the hocs data service to become available
 until curl -s http://${hostname}/healthz
 do
-    echo "Waiting for Simple-List-Service to come up"
+    echo "Waiting for hocs-data-service to come up"
     sleep 5
 done
 
 # Begin POSTs to the service to seed data
-echo "Simple-List-Service is up! Seeding data"
+echo "hocs-data-service is up! Seeding data"
 
 sleep 5
 
