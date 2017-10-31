@@ -19,7 +19,6 @@ RUN groupadd -r ${GROUP} && \
 COPY ${JAR_PATH}/${NAME}*.jar /app
 
 ADD scripts /app/scripts
-ADD data /app/data
 
 RUN chmod a+x /app/scripts/*
 
