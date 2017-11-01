@@ -31,7 +31,7 @@ public class UnitCreateRecord {
     // Units and Teams are added at the same level, all in one manageGroups object.
     private static List<UnitCreateEntityRecord> createUnit(DataListEntity unit) {
         List<UnitCreateEntityRecord> list = new ArrayList<>();
-        list.add(UnitCreateEntityRecord.createGroup("addUnit", unit.getText(), unit.getValue(), null, null));
+        list.add(UnitCreateEntityRecord.createUnit(unit));
         for (DataListEntity team : unit.getSubEntities()) {
             list.add(createTeam(team, unit.getValue()));
         }
@@ -39,6 +39,6 @@ public class UnitCreateRecord {
     }
 
     private static UnitCreateEntityRecord createTeam(DataListEntity team, String unitRefName) {
-        return UnitCreateEntityRecord.createGroup("addTeam", null, unitRefName, team.getText(), team.getValue());
+        return UnitCreateEntityRecord.createTeam(team, unitRefName);
     }
 }

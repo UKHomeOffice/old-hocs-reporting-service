@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import uk.gov.digital.ho.hocs.DataListEntity;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,9 +27,26 @@ public class UnitCreateEntityRecord {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String teamRefName;
 
+    public static UnitCreateEntityRecord createUnit(DataListEntity unit) {
 
-    public static UnitCreateEntityRecord createGroup(String action, String unitDisplayName, String unitRefName, String teamDisplayName, String teamRefName) {
+       String action = "addUnit";
+       String unitDisplayName = unit.getText();
+       String unitRefName = unit.getValue();
+       String teamDisplayName = null;
+       String teamRefName = null;
 
         return new UnitCreateEntityRecord(action, unitDisplayName, unitRefName, teamDisplayName, teamRefName);
     }
+
+    public static UnitCreateEntityRecord createTeam(DataListEntity team, String unitReferenceName) {
+
+        String action = "addTeam";
+        String unitDisplayName = null;
+        String unitRefName = unitReferenceName;
+        String teamDisplayName = team.getText();
+        String teamRefName = team.getValue();
+
+        return new UnitCreateEntityRecord(action, unitDisplayName, unitRefName, teamDisplayName, teamRefName);
+    }
+
 }

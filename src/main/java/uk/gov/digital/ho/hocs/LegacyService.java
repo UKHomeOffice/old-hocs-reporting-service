@@ -1,7 +1,15 @@
 package uk.gov.digital.ho.hocs;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicListEntityRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.units.UnitCreateRecord;
+import uk.gov.digital.ho.hocs.dto.legacy.units.UnitRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateRecord;
 import uk.gov.digital.ho.hocs.legacy.CSVList;
 import uk.gov.digital.ho.hocs.legacy.topics.CSVTopicLine;
@@ -11,13 +19,6 @@ import uk.gov.digital.ho.hocs.legacy.units.CSVUnitLine;
 import uk.gov.digital.ho.hocs.legacy.units.UnitFileParser;
 import uk.gov.digital.ho.hocs.legacy.users.CSVUserLine;
 import uk.gov.digital.ho.hocs.legacy.users.UserFileParser;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -104,6 +105,15 @@ public class LegacyService {
         try {
             DataList list = repo.findOneByName(name);
             return UserCreateRecord.createTest(list);
+        } catch (NullPointerException e) {
+            throw new ListNotFoundException();
+        }
+    }
+
+    public UnitRecord getLegacyUnitListByName(String name) throws ListNotFoundException {
+        try {
+            DataList list = repo.findOneByName(name);
+            return UnitRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
         }

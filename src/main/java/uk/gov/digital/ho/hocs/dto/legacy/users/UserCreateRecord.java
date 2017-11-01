@@ -37,10 +37,10 @@ public class UserCreateRecord {
     }
 
     private static UserCreateEntityRecord createUser(DataListEntity user) {
-        return UserCreateEntityRecord.createUser(user.getValue(), user.getValue(), user.getProperties());
+        return UserCreateEntityRecord.createUser(user);
     }
 
     private static UserCreateEntityRecord createTestUser(DataListEntity user) {
-        return UserCreateEntityRecord.createTestUser(user.getValue(), user.getProperties());
+        return UserCreateEntityRecord.createTestUser(user);
     }
 }

@@ -1,5 +1,6 @@
 package uk.gov.digital.ho.hocs.dto.legacy.users;
 
+import uk.gov.digital.ho.hocs.DataListEntity;
 import uk.gov.digital.ho.hocs.DataListEntityProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -29,7 +30,12 @@ public class UserCreateEntityRecord {
 
     private List<String> groupNameArray;
 
-    public static UserCreateEntityRecord createUser(String userName, String email, Set<DataListEntityProperty> userProperties) {
+    public static UserCreateEntityRecord createUser(DataListEntity user) {
+
+        Set<DataListEntityProperty> userProperties = user.getProperties();
+        String userName =  user.getValue();
+        String email = user.getValue();
+
         DataListEntityProperty firstName = userProperties.stream()
                 .filter(p -> p.getKey().equals("firstName"))
                 .findFirst().orElse(new DataListEntityProperty());
@@ -46,7 +52,11 @@ public class UserCreateEntityRecord {
         return new UserCreateEntityRecord(userName, firstName.getValue(), lastName.getValue(), email, "Password1", groups);
     }
 
-    public static UserCreateEntityRecord createTestUser(String email, Set<DataListEntityProperty> userProperties) {
+    public static UserCreateEntityRecord createTestUser(DataListEntity user) {
+
+        String email =user.getValue();
+        Set<DataListEntityProperty> userProperties = user.getProperties();
+
         DataListEntityProperty firstName = userProperties.stream()
                 .filter(p -> p.getKey().equals("firstName"))
                 .findFirst().orElse(new DataListEntityProperty());
