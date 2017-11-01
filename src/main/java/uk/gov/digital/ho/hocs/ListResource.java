@@ -9,12 +9,9 @@ import uk.gov.digital.ho.hocs.dto.DataListRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicListEntityRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.units.UnitCreateRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.units.UnitRecord;
-import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateEntityRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateRecord;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 @RestController
 @Slf4j
@@ -26,6 +23,19 @@ public class ListResource {
     public ListResource(ListService service, LegacyService legacyService) {
         this.service = service;
         this.legacyService = legacyService;
+    }
+
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    public ResponseEntity createList(@RequestBody DataList dataList) {
+        log.info("Creating list \"{}\"", dataList.getName());
+        try {
+            service.createList(dataList);
+            return ResponseEntity.ok().build();
+        } catch (EntityCreationException e) {
+            log.info("List \"{}\" not created", dataList.getName());
+            log.info(e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @RequestMapping(value = "/list/{name}", method = RequestMethod.GET)
@@ -42,26 +52,7 @@ public class ListResource {
         }
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public ResponseEntity createList(@RequestBody DataList dataList) {
-        log.info("Creating list \"{}\"", dataList.getName());
-        try {
-            service.createList(dataList);
-            return ResponseEntity.ok().build();
-        } catch (EntityCreationException e) {
-            log.info("List \"{}\" not created", dataList.getName());
-            log.info(e.getMessage());
-            return ResponseEntity.badRequest().build();
-        }
-    }
-
-    private static <T> T[] concat(T[] first, T[] second) {
-        T[] result = Arrays.copyOf(first, first.length + second.length);
-        System.arraycopy(second, 0, result, first.length, second.length);
-        return result;
-    }
-
-    @RequestMapping(value = "/legacy/topic/{name}", method = RequestMethod.POST)
+    @RequestMapping(value = {"/legacy/topic/DCU", "/legacy/topic/UKVI"}, method = RequestMethod.POST)
     public ResponseEntity createTopicsListFromDCU(@RequestParam("file") MultipartFile file, @PathVariable("name") String name) {
         log.info("Parsing list \"TopicListDCU\"");
         if (!file.isEmpty()) {
@@ -76,17 +67,6 @@ public class ListResource {
         }
         return ResponseEntity.badRequest().build();
     }
-
-    @RequestMapping(value = "/legacy/units", method = RequestMethod.POST)
-    public ResponseEntity createUnitsAndGroups(@RequestParam("file") MultipartFile file) {
-        log.info("Parsing list \"Teams and Units\"");
-        if (!file.isEmpty()) {
-            DataList dataListTeamsUnits = legacyService.createTeamsUnitsFromCSV(file, "Units");
-            return createList(dataListTeamsUnits);
-        }
-        return ResponseEntity.badRequest().build();
-    }
-
 
     @RequestMapping(value = {"/legacy/topic/TopicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
     public ResponseEntity<TopicListEntityRecord[]> getLegacyListByReference() {
@@ -103,6 +83,16 @@ public class ListResource {
         }
     }
 
+    @RequestMapping(value = "/legacy/units", method = RequestMethod.POST)
+    public ResponseEntity createUnitsAndGroups(@RequestParam("file") MultipartFile file) {
+        log.info("Parsing list \"Teams and Units\"");
+        if (!file.isEmpty()) {
+            DataList dataListTeamsUnits = legacyService.createTeamsUnitsFromCSV(file, "Units");
+            return createList(dataListTeamsUnits);
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
     @RequestMapping(value = {"/legacy/units", "/s/homeoffice/cts/allTeams"}, method = RequestMethod.GET)
     public ResponseEntity<UnitRecord> getLegacyUnits(){
         log.info("List \"Legacy All Units\" requested");
@@ -112,22 +102,6 @@ public class ListResource {
             return ResponseEntity.ok(units);
         } catch (ListNotFoundException e) {
             log.info("List \"Legacy All Units\" not found");
-            log.info(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-    }
-
-
-    //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
-    @RequestMapping(value = "/legacy/units/CreateUnits", method = RequestMethod.GET)
-    public ResponseEntity<UnitCreateRecord> getLegacyUnitsByReference() {
-        log.info("List \"Legacy Create Units Script\" requested");
-        try {
-            UnitCreateRecord units = legacyService.getLegacyUnitCreateListByName("CreateUnits");
-
-            return ResponseEntity.ok(units);
-        } catch (ListNotFoundException e) {
-            log.info("List \"Legacy Create Units Script\" not found");
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
@@ -144,19 +118,27 @@ public class ListResource {
     }
 
     //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
-    @RequestMapping(value = "/legacy/users/CreateUsers", method = RequestMethod.GET)
-    public ResponseEntity<UserCreateRecord> getLegacyUsersByReference() {
+    @RequestMapping(value = "/legacy/units/export", method = RequestMethod.GET)
+    public ResponseEntity<UnitCreateRecord> getLegacyUnitsByReference() {
+        log.info("List \"Legacy Create Units Script\" requested");
+        try {
+            UnitCreateRecord units = legacyService.getLegacyUnitCreateListByName("CreateUnits");
+
+            return ResponseEntity.ok(units);
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy Create Units Script\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
+    @RequestMapping(value = "/legacy/users/{name}/export", method = RequestMethod.GET)
+    public ResponseEntity<UserCreateRecord> getLegacyUsersByReference(@PathVariable("name") String name) {
         log.info("List \"Legacy Users\" requested");
         try {
-            List<UserCreateEntityRecord> ret = new ArrayList<>();
-
-            ret.addAll(legacyService.getLegacyUsersListByName("DCU_Users").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("FOI_Users").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("HMPOCCC_Users").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("HMPOCOL_Users").getUsers());
-            ret.addAll(legacyService.getLegacyUsersListByName("UKVI_Users").getUsers());
-
-            return ResponseEntity.ok(new UserCreateRecord(ret));
+            UserCreateRecord users = legacyService.getLegacyUsersListByName(name + "_Users");
+            return ResponseEntity.ok(users);
         } catch (ListNotFoundException e) {
             log.info("List \"Legacy Users\" not found");
             log.info(e.getMessage());
@@ -164,19 +146,7 @@ public class ListResource {
         }
     }
 
-   /* @RequestMapping(value = {"/legacy/users/{$user}/teams","s/homeoffice/cts/teamUsers"}, method = RequestMethod.GET)
-    public ResponseEntity<UserCreateRecord> getLegacyTestUsersByReference(String name) {
-        log.info("List \"Legacy user teams\" requested");
-        try {
-            return ResponseEntity.ok(legacyService.getLegacyTeamsByUserName(name));
-        } catch (ListNotFoundException e) {
-            log.info("List \"Legacy user teams\" not found");
-            log.info(e.getMessage());
-            return ResponseEntity.notFound().build();
-        }
-    }*/
-
-    @RequestMapping(value = "/legacy/users/CreateTestUsers", method = RequestMethod.GET)
+    @RequestMapping(value = "/legacy/users/test/export", method = RequestMethod.GET)
     public ResponseEntity<UserCreateRecord> getLegacyTestUsersByReference() {
         log.info("List \"Legacy TestUsers\" requested");
         try {
@@ -188,4 +158,21 @@ public class ListResource {
         }
     }
 
+       /* @RequestMapping(value = {"/legacy/users/{$user}/teams","s/homeoffice/cts/teamUsers"}, method = RequestMethod.GET)
+    public ResponseEntity<UserCreateRecord> getLegacyTestUsersByReference(String name) {
+        log.info("List \"Legacy user teams\" requested");
+        try {
+            return ResponseEntity.ok(legacyService.getLegacyTeamsByUserName(name));
+        } catch (ListNotFoundException e) {
+            log.info("List \"Legacy user teams\" not found");
+            log.info(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }*/
+
+    private <T> T[] concat(T[] first, T[] second) {
+        T[] result = Arrays.copyOf(first, first.length + second.length);
+        System.arraycopy(second, 0, result, first.length, second.length);
+        return result;
+    }
 }
