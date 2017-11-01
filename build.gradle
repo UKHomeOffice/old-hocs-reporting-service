@@ -25,7 +25,7 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 
 jar {
-  baseName = 'sls-data'
+  baseName = 'hocs-data-service'
   if (System.getenv('GIT_COMMIT')) {
     version = version + '.' + System.getenv('GIT_COMMIT')
   }
