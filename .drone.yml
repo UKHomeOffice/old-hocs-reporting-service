@@ -25,7 +25,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - docker login -u="ukhomeofficedigital+hocs_robot" -p=${DOCKER_PASSWORD} quay.io
+      - docker login -u="ukhomeofficedigital+hocs_data_service" -p=${DOCKER_PASSWORD} quay.io
       - docker tag hocs-data-service quay.io/ukhomeofficedigital/hocs-data-service
       - docker tag hocs-data-service quay.io/ukhomeofficedigital/hocs-data-service:build-${DRONE_BUILD_NUMBER}
       - docker push quay.io/ukhomeofficedigital/hocs-data-service:latest
@@ -39,7 +39,7 @@ pipeline:
     environment:
       - DOCKER_HOST=tcp://127.0.0.1:2375
     commands:
-      - docker login -u="ukhomeofficedigital+hocs_robot" -p=${DOCKER_PASSWORD} quay.io
+      - docker login -u="ukhomeofficedigital+hocs_data_service" -p=${DOCKER_PASSWORD} quay.io
       - docker tag hocs-data-service quay.io/ukhomeofficedigital/hocs-data-service:${DRONE_TAG}
       - docker push quay.io/ukhomeofficedigital/hocs-data-service:${DRONE_TAG}
     when:
