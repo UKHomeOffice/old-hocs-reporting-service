@@ -1,8 +1,8 @@
 FROM quay.io/ukhomeofficedigital/openjdk8
 
-ENV USER user_sls_data
-ENV GROUP group_sls_data
-ENV NAME sls-data
+ENV USER user_hocs_data
+ENV GROUP group_hocs_data
+ENV NAME hocs-data-service
 ENV JAR_PATH build/libs
 
 RUN yum update -y glibc && \
