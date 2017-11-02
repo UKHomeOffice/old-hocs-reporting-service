@@ -1,6 +1,6 @@
 [![Build Status](https://drone.digital.homeoffice.gov.uk/api/badges/UKHomeOffice/hocs-data-service/status.svg)](https://drone.digital.homeoffice.gov.uk/UKHomeOffice/hocs-data-service)
 
-# Hocs Data Service
+# Hocs Data Service.
 
 Very simple data service for caseworking systems
 
