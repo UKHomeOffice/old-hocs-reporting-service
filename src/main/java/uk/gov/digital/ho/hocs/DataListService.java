@@ -9,14 +9,17 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import uk.gov.digital.ho.hocs.exception.EntityCreationException;
+import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
+import uk.gov.digital.ho.hocs.model.DataList;
 
 @Service
 @Slf4j
-public class ListService {
-    private final ListRepository repo;
+public class DataListService {
+    private final DataListRepository repo;
 
     @Autowired
-    public ListService(ListRepository repo) {
+    public DataListService(DataListRepository repo) {
         this.repo = repo;
     }
 

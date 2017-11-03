@@ -10,6 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.DataIntegrityViolationException;
+import uk.gov.digital.ho.hocs.exception.EntityCreationException;
+import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
+import uk.gov.digital.ho.hocs.model.DataList;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,19 +24,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ListServiceTest {
+public class DataListServiceTest {
 
     private final static String TEST_LIST = "Test List One";
     private final static String UNAVAILABLE_RESOURCE = "Unavailable Resource";
 
     @Mock
-    private ListRepository mockRepo;
-    private ListService service;
+    private DataListRepository mockRepo;
+    private DataListService service;
     private LegacyService legacyService;
 
     @Before
     public void setUp() {
-        service = new ListService(mockRepo);
+        service = new DataListService(mockRepo);
         legacyService = new LegacyService(mockRepo);
     }
 

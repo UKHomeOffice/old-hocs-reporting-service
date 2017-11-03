@@ -4,8 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import uk.gov.digital.ho.hocs.DataList;
-import uk.gov.digital.ho.hocs.DataListEntity;
+import uk.gov.digital.ho.hocs.model.BusinessGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +17,15 @@ import java.util.stream.Collectors;
 public class UnitRecord {
     private List<UnitEntityRecord> units;
 
-    public static UnitRecord create(DataList list) {
+    public static UnitRecord create(List<BusinessGroup> list) {
         List<UnitEntityRecord> units = new ArrayList<>();
 
-        if (list.getEntities() != null && !list.getEntities().isEmpty()) {
-            units = list.getEntities().stream().map(UnitRecord::create).collect(Collectors.toList());
+        for(BusinessGroup group : list) {
+            if (group.getSubGroups() != null && !group.getSubGroups().isEmpty()) {
+                units.addAll(group.getSubGroups().stream().map(UnitEntityRecord::create).collect(Collectors.toList()));
+            }
         }
         return new UnitRecord(units);
-    }
-
-    private static UnitEntityRecord create(DataListEntity unit) {
-        return UnitEntityRecord.create(unit);
     }
 
 }

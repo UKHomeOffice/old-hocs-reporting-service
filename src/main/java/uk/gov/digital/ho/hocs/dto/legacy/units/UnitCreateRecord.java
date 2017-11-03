@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.hocs.dto.legacy.units;
 
-import uk.gov.digital.ho.hocs.DataList;
-import uk.gov.digital.ho.hocs.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataList;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,12 +33,8 @@ public class UnitCreateRecord {
         List<UnitCreateEntityRecord> list = new ArrayList<>();
         list.add(UnitCreateEntityRecord.createUnit(unit));
         for (DataListEntity team : unit.getSubEntities()) {
-            list.add(createTeam(team, unit.getValue()));
+            list.add(UnitCreateEntityRecord.createTeam(team, unit.getValue()));
         }
         return list;
-    }
-
-    private static UnitCreateEntityRecord createTeam(DataListEntity team, String unitRefName) {
-        return UnitCreateEntityRecord.createTeam(team, unitRefName);
     }
 }

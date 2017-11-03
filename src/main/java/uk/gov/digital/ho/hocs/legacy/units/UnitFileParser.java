@@ -11,17 +11,17 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnitFileParser extends AbstractFilePasrer<CSVUnitLine> {
+public class UnitFileParser extends AbstractFilePasrer<CSVGroupLine> {
 
     @Getter
-    private final List<CSVUnitLine> lines;
+    private final List<CSVGroupLine> lines;
 
     public UnitFileParser(MultipartFile file) {
         this.lines = parseUnitTeamsFile(file);
     }
 
-    private static List<CSVUnitLine> parseUnitTeamsFile(MultipartFile file) {
-        List<CSVUnitLine> groups = new ArrayList<>();
+    private static List<CSVGroupLine> parseUnitTeamsFile(MultipartFile file) {
+        List<CSVGroupLine> groups = new ArrayList<>();
 
         BufferedReader br;
         try {
@@ -32,7 +32,7 @@ public class UnitFileParser extends AbstractFilePasrer<CSVUnitLine> {
                 String[] lineArray = splitLine(line);
                 String unit = lineArray[1].trim();
                 String team = lineArray[2].trim();
-                groups.add(new CSVUnitLine(unit, team));
+                groups.add(new CSVGroupLine(unit, team));
             }
 
         } catch (IOException e) {

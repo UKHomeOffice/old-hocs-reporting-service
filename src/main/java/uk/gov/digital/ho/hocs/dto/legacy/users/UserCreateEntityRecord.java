@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.hocs.dto.legacy.users;
 
-import uk.gov.digital.ho.hocs.DataListEntity;
-import uk.gov.digital.ho.hocs.DataListEntityProperty;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

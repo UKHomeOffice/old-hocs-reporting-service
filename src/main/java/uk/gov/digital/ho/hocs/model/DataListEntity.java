@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.hocs;
+package uk.gov.digital.ho.hocs.model;
 
 import lombok.*;
 

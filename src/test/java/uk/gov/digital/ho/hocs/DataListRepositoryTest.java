@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.digital.ho.hocs.model.DataList;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,10 +22,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @SpringBootTest
 @Profile("logtoconsole")
-public class ListRepositoryTest {
+public class DataListRepositoryTest {
 
     @Autowired
-    private ListRepository repository;
+    private DataListRepository repository;
 
     private static List<DataListEntity> asList(Set<DataListEntity> set) {
         return new ArrayList<>(set);

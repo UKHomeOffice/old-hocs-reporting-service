@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import uk.gov.digital.ho.hocs.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
 
 @NoArgsConstructor
 @AllArgsConstructor

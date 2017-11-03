@@ -1,4 +1,4 @@
-package uk.gov.digital.ho.hocs;
+package uk.gov.digital.ho.hocs.exception;
 
 import org.springframework.dao.DataIntegrityViolationException;
 

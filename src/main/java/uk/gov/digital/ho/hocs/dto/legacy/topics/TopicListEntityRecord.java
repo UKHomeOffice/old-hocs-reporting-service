@@ -1,9 +1,9 @@
 package uk.gov.digital.ho.hocs.dto.legacy.topics;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import uk.gov.digital.ho.hocs.DataList;
-import uk.gov.digital.ho.hocs.DataListEntity;
-import uk.gov.digital.ho.hocs.DataListEntityProperty;
+import uk.gov.digital.ho.hocs.model.DataList;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
 import uk.gov.digital.ho.hocs.dto.DataListEntityRecordProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;

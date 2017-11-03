@@ -21,7 +21,7 @@ curl -sX POST http://${hostname}/legacy/topic/UKVI -F "file=@/app/data/UKVI_Topi
  -H "Content-Type: multipart/form-data"
 
 echo "Posting Unit and Team structures"
-curl -sX POST http://${hostname}/legacy/units -F "file=@/app/data/Unit_Team_Structure.csv" \
+curl -sX POST http://${hostname}/units -F "file=@/app/data/Unit_Team_Structure.csv" \
  -H "Content-Type: multipart/form-data"
 
 echo "Posting DCU Users"

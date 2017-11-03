@@ -1,6 +1,6 @@
 package uk.gov.digital.ho.hocs.dto;
 
-import uk.gov.digital.ho.hocs.DataList;
+import uk.gov.digital.ho.hocs.model.DataList;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

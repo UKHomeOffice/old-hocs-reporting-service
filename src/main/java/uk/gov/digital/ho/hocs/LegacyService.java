@@ -8,17 +8,18 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicListEntityRecord;
-import uk.gov.digital.ho.hocs.dto.legacy.units.UnitCreateRecord;
-import uk.gov.digital.ho.hocs.dto.legacy.units.UnitRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateRecord;
+import uk.gov.digital.ho.hocs.dto.legacy.users.UserRecord;
+import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
 import uk.gov.digital.ho.hocs.legacy.CSVList;
 import uk.gov.digital.ho.hocs.legacy.topics.CSVTopicLine;
 import uk.gov.digital.ho.hocs.legacy.topics.DCUFileParser;
 import uk.gov.digital.ho.hocs.legacy.topics.UKVIFileParser;
-import uk.gov.digital.ho.hocs.legacy.units.CSVUnitLine;
-import uk.gov.digital.ho.hocs.legacy.units.UnitFileParser;
 import uk.gov.digital.ho.hocs.legacy.users.CSVUserLine;
 import uk.gov.digital.ho.hocs.legacy.users.UserFileParser;
+import uk.gov.digital.ho.hocs.model.DataList;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,10 +28,10 @@ import java.util.stream.Collectors;
 @Slf4j
 public class LegacyService {
 
-    private final ListRepository repo;
+    private final DataListRepository repo;
 
     @Autowired
-    public LegacyService(ListRepository repo) {
+    public LegacyService(DataListRepository repo) {
         this.repo = repo;
     }
 
@@ -110,43 +111,13 @@ public class LegacyService {
         }
     }
 
-    public UnitRecord getLegacyUnitListByName(String name) throws ListNotFoundException {
+    public UserRecord getLegacyTeamsByGroupName(String group) throws ListNotFoundException {
         try {
-            DataList list = repo.findOneByName(name);
-            return UnitRecord.create(list);
+            DataList list = repo.findOneByName(group);
+            return UserRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
         }
-    }
-
-    public UnitCreateRecord getLegacyUnitCreateListByName(String name) throws ListNotFoundException {
-        try {
-            DataList list = repo.findOneByName(name);
-            return UnitCreateRecord.create(list);
-        } catch (NullPointerException e) {
-            throw new ListNotFoundException();
-        }
-    }
-
-    public DataList createTeamsUnitsFromCSV(MultipartFile file, String listName) {
-        CSVList list = new UnitFileParser(file);
-
-        Map<String, Set<DataListEntity>> units = new HashMap<>();
-
-        List<CSVUnitLine> lines = list.getLines();
-        for (CSVUnitLine line : lines) {
-            units.putIfAbsent(line.getUnit(), new HashSet<>());
-            units.get(line.getUnit()).add(new DataListEntity(line.getTeam(), line.getTeamValue()));
-        }
-
-        Set<DataListEntity> dataListEntities = new HashSet<>();
-        for (Map.Entry<String, Set<DataListEntity>> entity : units.entrySet()) {
-            DataListEntity dle = new DataListEntity(entity.getKey());
-            dle.setSubEntities(entity.getValue());
-            dataListEntities.add(dle);
-        }
-
-        return new DataList(listName, dataListEntities);
     }
 
     public DataList createUsersFromCSV(MultipartFile file, String listName) {

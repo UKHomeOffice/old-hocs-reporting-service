@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.hocs.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import uk.gov.digital.ho.hocs.DataListEntity;
+import uk.gov.digital.ho.hocs.model.DataListEntity;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

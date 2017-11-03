@@ -10,6 +10,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import uk.gov.digital.ho.hocs.exception.EntityCreationException;
+import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
+import uk.gov.digital.ho.hocs.model.DataList;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,20 +22,20 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ListResourceTest {
+public class DataListResourceTest {
 
     private static final String TEST_REFERENCE = "Reference";
 
     @Mock
-    private ListService listService;
+    private DataListService dataListService;
     @Mock
     private LegacyService legacyService;
 
-    private ListResource listResource;
+    private DataListResource dataListResource;
 
     @Before
     public void setUp() {
-        listResource = new ListResource(listService, legacyService);
+        dataListResource = new DataListResource(dataListService, legacyService);
     }
 
     @Test
@@ -40,8 +43,8 @@ public class ListResourceTest {
 
         DataListRecord dataList = new DataListRecord(TEST_REFERENCE, new ArrayList<>());
 
-        when(listService.getListByName(TEST_REFERENCE)).thenReturn(dataList);
-        ResponseEntity<DataListRecord> httpResponse = listResource.getListByReference(TEST_REFERENCE);
+        when(dataListService.getListByName(TEST_REFERENCE)).thenReturn(dataList);
+        ResponseEntity<DataListRecord> httpResponse = dataListResource.getListByReference(TEST_REFERENCE);
 
         assertThat(httpResponse.getBody()).isEqualTo(dataList);
         assertThat(httpResponse.getBody().getName()).isEqualTo(TEST_REFERENCE);
@@ -52,8 +55,8 @@ public class ListResourceTest {
     @Test
     public void shouldReturnNotFoundWhenUnableToFindEntity() throws ListNotFoundException {
 
-        when(listService.getListByName(TEST_REFERENCE)).thenThrow(new ListNotFoundException());
-        ResponseEntity<DataListRecord> httpResponse = listResource.getListByReference(TEST_REFERENCE);
+        when(dataListService.getListByName(TEST_REFERENCE)).thenThrow(new ListNotFoundException());
+        ResponseEntity<DataListRecord> httpResponse = dataListResource.getListByReference(TEST_REFERENCE);
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -64,7 +67,7 @@ public class ListResourceTest {
     public void shouldReturnNotFoundWhenUnableToFindLegacyUKVIEntity() throws ListNotFoundException {
 
         when(legacyService.getLegacyTopicListByName("UKVI_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<TopicListEntityRecord[]> httpResponse = listResource.getLegacyListByReference();
+        ResponseEntity<TopicListEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -75,7 +78,7 @@ public class ListResourceTest {
     public void shouldReturnNotFoundWhenUnableToFindLegacyDCUEntity() throws ListNotFoundException {
 
         when(legacyService.getLegacyTopicListByName("DCU_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<TopicListEntityRecord[]> httpResponse = listResource.getLegacyListByReference();
+        ResponseEntity<TopicListEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -87,8 +90,8 @@ public class ListResourceTest {
 
         DataList emptyDataList = new DataList();
 
-        doThrow(new EntityCreationException("")).when(listService).createList(emptyDataList);
-        ResponseEntity httpResponse = listResource.createList(emptyDataList);
+        doThrow(new EntityCreationException("")).when(dataListService).createList(emptyDataList);
+        ResponseEntity httpResponse = dataListResource.createList(emptyDataList);
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
