@@ -8,7 +8,6 @@ import uk.gov.digital.ho.hocs.model.BusinessGroup;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,14 +17,11 @@ public class UnitRecord {
     private List<UnitEntityRecord> units;
 
     public static UnitRecord create(List<BusinessGroup> list) {
-        List<UnitEntityRecord> units = new ArrayList<>();
+        List<UnitEntityRecord> records = new ArrayList<>();
 
-        for(BusinessGroup group : list) {
-            if (group.getSubGroups() != null && !group.getSubGroups().isEmpty()) {
-                units.addAll(group.getSubGroups().stream().map(UnitEntityRecord::create).collect(Collectors.toList()));
-            }
-        }
-        return new UnitRecord(units);
+        list.forEach( g -> records.add(UnitEntityRecord.create(g)));
+
+        return new UnitRecord(records);
     }
 
 }
