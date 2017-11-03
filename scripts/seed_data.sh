@@ -44,6 +44,10 @@ echo "Posting UKVI Users"
 curl -sX POST http://${hostname}/legacy/users/UKVI -F "file=@/app/data/UKVI_Users.csv" \
  -H "Content-Type: multipart/form-data"
 
+echo "Posting Minister List"
+curl -sX POST http://${hostname}/list/ -d "@/app/data/Minister_List.JSON" \
+ -H "Content-Type: application/json"
+
 echo "Posting Test Users"
 curl -sX POST http://${hostname}/list/ -d "@/app/data/Test_Users.JSON" \
  -H "Content-Type: application/json"
