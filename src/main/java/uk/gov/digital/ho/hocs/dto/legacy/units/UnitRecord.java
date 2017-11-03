@@ -17,8 +17,8 @@ public class UnitRecord {
     private List<UnitEntityRecord> units;
 
     public static UnitRecord create(List<BusinessGroup> list) {
-        List<UnitEntityRecord> records = list.stream().map(g -> UnitEntityRecord.create(g)).collect(Collectors.toList());
-        return new UnitRecord(records);
+        List<UnitEntityRecord> units = list.stream().map(g -> UnitEntityRecord.create(g)).collect(Collectors.toList());
+        return new UnitRecord(units);
     }
 
 }

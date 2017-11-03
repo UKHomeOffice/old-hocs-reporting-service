@@ -7,11 +7,6 @@ import uk.gov.digital.ho.hocs.model.BusinessGroup;
 import java.util.List;
 
 @Repository
-public interface GroupRepository extends CrudRepository<BusinessGroup, Long> {
-    BusinessGroup findOneByReferenceName(String referenceName);
-
+public interface BusinessGroupRepository extends CrudRepository<BusinessGroup, Long> {
     List<BusinessGroup> findAllBy();
-
-
-
 }

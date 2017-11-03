@@ -25,7 +25,6 @@ public class UnitEntityRecord {
 
     public static UnitEntityRecord create(BusinessGroup unit) {
         List<UnitEntityRecord> teams = unit.getSubGroups().stream().map(UnitEntityRecord::create).collect(Collectors.toList());
-
         return new UnitEntityRecord("GROUP_" + unit.getReferenceName(), unit.getDisplayName(), teams);
     }
 }

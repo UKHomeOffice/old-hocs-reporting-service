@@ -5,7 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import uk.gov.digital.ho.hocs.model.DataListEntity;
+import uk.gov.digital.ho.hocs.model.BusinessGroup;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -27,26 +30,35 @@ public class UnitCreateEntityRecord {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String teamRefName;
 
-    public static UnitCreateEntityRecord createUnit(DataListEntity unit) {
+    public static UnitCreateEntityRecord createUnit(BusinessGroup unit) {
 
        String action = "addUnit";
-       String unitDisplayName = unit.getText();
-       String unitRefName = unit.getValue();
+       String unitDisplayName = unit.getDisplayName();
+       String unitRefName = unit.getReferenceName();
        String teamDisplayName = null;
        String teamRefName = null;
 
         return new UnitCreateEntityRecord(action, unitDisplayName, unitRefName, teamDisplayName, teamRefName);
     }
 
-    public static UnitCreateEntityRecord createTeam(DataListEntity team, String unitReferenceName) {
+    public static UnitCreateEntityRecord createTeam(BusinessGroup team, String unitReferenceName) {
 
         String action = "addTeam";
         String unitDisplayName = null;
         String unitRefName = unitReferenceName;
-        String teamDisplayName = team.getText();
-        String teamRefName = team.getValue();
+        String teamDisplayName = team.getDisplayName();
+        String teamRefName = team.getReferenceName();
 
         return new UnitCreateEntityRecord(action, unitDisplayName, unitRefName, teamDisplayName, teamRefName);
     }
 
+    // Units and Teams are added at the same level, all in one manageGroups object.
+    public static List<UnitCreateEntityRecord> createGroups(BusinessGroup unit) {
+        List<UnitCreateEntityRecord> list = new ArrayList<>();
+        list.add(UnitCreateEntityRecord.createUnit(unit));
+        for (BusinessGroup team : unit.getSubGroups()) {
+            list.add(UnitCreateEntityRecord.createTeam(team, unit.getReferenceName()));
+        }
+        return list;
+    }
 }

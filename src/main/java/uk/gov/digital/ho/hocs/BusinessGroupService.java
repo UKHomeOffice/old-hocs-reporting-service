@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uk.gov.digital.ho.hocs.dto.legacy.units.UnitCreateRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.units.UnitRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
@@ -19,11 +20,11 @@ import java.util.*;
 
 @Service
 @Slf4j
-public class GroupService {
-    private final GroupRepository repo;
+public class BusinessGroupService {
+    private final BusinessGroupRepository repo;
 
     @Autowired
-    public GroupService(GroupRepository repo) {
+    public BusinessGroupService(BusinessGroupRepository repo) {
         this.repo = repo;
     }
 
@@ -64,14 +65,14 @@ public class GroupService {
         createGroup(groups);
     }
 
-//    public UnitCreateRecord getLegacyUnitCreateListByName(String name) throws ListNotFoundException {
-//        try {
-//            DataList list = repo.findOneByName(name);
-//            return UnitCreateRecord.create(list);
-//        } catch (NullPointerException e) {
-//            throw new ListNotFoundException();
-//        }
-//    }
+    public UnitCreateRecord getLegacyUnitCreateList() throws ListNotFoundException {
+        try {
+            List<BusinessGroup> list = repo.findAllBy();
+            return UnitCreateRecord.create(list);
+        } catch (NullPointerException e) {
+            throw new ListNotFoundException();
+        }
+    }
 
     private void createGroup(Set<BusinessGroup> groups) {
         try {
