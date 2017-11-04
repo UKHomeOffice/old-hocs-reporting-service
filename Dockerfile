@@ -22,7 +22,7 @@ ADD scripts /app/scripts
 
 RUN chmod a+x /app/scripts/*
 
-EXPOSE 8080
+EXPOSE 8000
 
 USER ${USER}
 
