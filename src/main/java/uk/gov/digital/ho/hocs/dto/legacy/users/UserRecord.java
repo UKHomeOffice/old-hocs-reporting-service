@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import uk.gov.digital.ho.hocs.model.DataList;
 import uk.gov.digital.ho.hocs.model.DataListEntity;
+import uk.gov.digital.ho.hocs.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,16 +18,12 @@ import java.util.stream.Collectors;
 public class UserRecord {
     private List<UserEntityRecord> users;
 
-    public static UserRecord create(DataList list) {
+    public static UserRecord create(List<User> list) {
         List<UserEntityRecord> users = new ArrayList<>();
 
-        if (list.getEntities() != null && !list.getEntities().isEmpty()) {
-            users = list.getEntities().stream().map(UserRecord::createUser).collect(Collectors.toList());
+        if (list != null && !list.isEmpty()) {
+            users = list.stream().map(UserEntityRecord::createUser).collect(Collectors.toList());
         }
         return new UserRecord(users);
-    }
-
-    private static UserEntityRecord createUser(DataListEntity user) {
-        return UserEntityRecord.createUser(user);
     }
 }

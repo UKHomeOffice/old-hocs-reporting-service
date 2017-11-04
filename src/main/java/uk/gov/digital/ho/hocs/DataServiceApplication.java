@@ -7,9 +7,9 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @EnableCaching
 @SpringBootApplication
-public class ListServiceApplication {
+public class DataServiceApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ListServiceApplication.class, args);
+        SpringApplication.run(DataServiceApplication.class, args);
     }
 }

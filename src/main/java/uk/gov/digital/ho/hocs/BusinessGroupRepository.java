@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface BusinessGroupRepository extends CrudRepository<BusinessGroup, Long> {
     List<BusinessGroup> findAllBy();
+
+    BusinessGroup findByReferenceName(String referenceName);
 }

@@ -7,11 +7,13 @@ CREATE TABLE IF NOT EXISTS users
     last_name        TEXT           NOT NULL,
     user_name        TEXT           NOT NULL,
     email            TEXT           NOT NULL,
+    department       TEXT           NOT NULL,
 
     CONSTRAINT user_name_idempotent UNIQUE (user_name)
 );
 
-CREATE INDEX idx_users_reference ON users (user_name);
+CREATE INDEX idx_users_user_name ON users (user_name);
+CREATE INDEX idx_users_department ON users (department);
 
 CREATE TABLE IF NOT EXISTS groups
 (
@@ -24,8 +26,8 @@ CREATE TABLE IF NOT EXISTS groups
     CONSTRAINT fk_parent_group_id FOREIGN KEY (parent_group_id) REFERENCES groups(id)
 );
 
-CREATE INDEX idx_reference_name_id ON groups (reference_name);
-CREATE INDEX idx_parent_group__id ON groups (parent_group_id);
+CREATE INDEX idx_reference_name ON groups (reference_name);
+CREATE INDEX idx_parent_group_id ON groups (parent_group_id);
 
 CREATE TABLE IF NOT EXISTS users_groups
 (

@@ -28,7 +28,7 @@ public class BusinessGroupService {
         this.repo = repo;
     }
 
-    @Cacheable(value = "group")
+    @Cacheable(value = "groups")
     public UnitRecord getAllGroups() throws ListNotFoundException {
         try {
             List<BusinessGroup> list = repo.findAllBy();
@@ -38,14 +38,14 @@ public class BusinessGroupService {
         }
     }
 
-    @CacheEvict(value = "group", key = "#businessGroup.referenceName()", beforeInvocation = true)
+    @CacheEvict(value = "groups", key = "#businessGroup.referenceName()", beforeInvocation = true)
     public void createGroup(BusinessGroup businessGroup) throws EntityCreationException {
         Set<BusinessGroup> groups = new HashSet<>();
         groups.add(businessGroup);
-        createGroup(groups);
+        createGroups(groups);
     }
 
-    @CacheEvict(value = "group", allEntries = true, beforeInvocation = true)
+    @CacheEvict(value = "groups", allEntries = true, beforeInvocation = true)
     public void createGroupsFromCSV(MultipartFile file) {
         List<CSVGroupLine> lines = new UnitFileParser(file).getLines();
 
@@ -62,7 +62,7 @@ public class BusinessGroupService {
             groups.add(group);
         }
 
-        createGroup(groups);
+        createGroups(groups);
     }
 
     public UnitCreateRecord getLegacyUnitCreateList() throws ListNotFoundException {
@@ -74,13 +74,12 @@ public class BusinessGroupService {
         }
     }
 
-    private void createGroup(Set<BusinessGroup> groups) {
+    private void createGroups(Set<BusinessGroup> groups) {
         try {
             repo.save(groups);
         } catch (DataIntegrityViolationException e) {
 
             if (e.getCause() instanceof ConstraintViolationException &&
-                    ((ConstraintViolationException) e.getCause()).getConstraintName().toLowerCase().contains("user_name_idempotent") ||
                     ((ConstraintViolationException) e.getCause()).getConstraintName().toLowerCase().contains("group_name_ref_idempotent")) {
                 throw new EntityCreationException("Identified an attempt to recreate existing entity, rolling back");
             }

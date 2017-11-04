@@ -56,7 +56,7 @@ public class BusinessGroup {
     }
 
     private static String toReferenceName(String value) {
-        return value.replaceAll(" ", "_")
+        return "GROUP_" + value.replaceAll(" ", "_")
                 .replaceAll("[^a-zA-Z0-9_]+", "")
                 .replaceAll("__", "_")
                 .toUpperCase();
