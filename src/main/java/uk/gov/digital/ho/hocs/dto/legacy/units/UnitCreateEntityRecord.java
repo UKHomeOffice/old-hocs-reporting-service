@@ -2,17 +2,13 @@ package uk.gov.digital.ho.hocs.dto.legacy.units;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import uk.gov.digital.ho.hocs.model.BusinessGroup;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @Getter
 public class UnitCreateEntityRecord {
 

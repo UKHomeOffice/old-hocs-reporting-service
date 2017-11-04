@@ -1,7 +1,7 @@
 package uk.gov.digital.ho.hocs;
 
 import uk.gov.digital.ho.hocs.dto.DataListRecord;
-import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicListEntityRecord;
+import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicEntityRecord;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +16,7 @@ import uk.gov.digital.ho.hocs.model.DataList;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
@@ -67,7 +68,7 @@ public class DataListResourceTest {
     public void shouldReturnNotFoundWhenUnableToFindLegacyUKVIEntity() throws ListNotFoundException {
 
         when(legacyService.getLegacyTopicListByName("UKVI_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<TopicListEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
+        ResponseEntity<TopicEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -78,7 +79,7 @@ public class DataListResourceTest {
     public void shouldReturnNotFoundWhenUnableToFindLegacyDCUEntity() throws ListNotFoundException {
 
         when(legacyService.getLegacyTopicListByName("DCU_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<TopicListEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
+        ResponseEntity<TopicEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -88,7 +89,7 @@ public class DataListResourceTest {
     @Test
     public void shouldReturnBadRequestWhenUnableCreate() throws EntityCreationException {
 
-        DataList emptyDataList = new DataList();
+        DataList emptyDataList = new DataList("", new HashSet<>());
 
         doThrow(new EntityCreationException("")).when(dataListService).createList(emptyDataList);
         ResponseEntity httpResponse = dataListResource.createList(emptyDataList);

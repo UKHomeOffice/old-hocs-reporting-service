@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "users")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
-@EqualsAndHashCode(of = "userName")
+@EqualsAndHashCode
 public class User {
 
     @Id

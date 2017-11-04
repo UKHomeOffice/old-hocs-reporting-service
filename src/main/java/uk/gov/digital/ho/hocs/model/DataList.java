@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,7 @@ public class DataList {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="list_id", referencedColumnName = "id")
     @Getter
-    private Set<DataListEntity> entities;
+    private Set<DataListEntity> entities = new HashSet<>();
 
 
     public DataList(String name, Set<DataListEntity> listEntities) {

@@ -1,25 +1,20 @@
 package uk.gov.digital.ho.hocs.dto.legacy.topics;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import uk.gov.digital.ho.hocs.model.DataList;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import uk.gov.digital.ho.hocs.dto.DataListEntityRecordProperty;
 import uk.gov.digital.ho.hocs.model.DataListEntity;
 import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
-import uk.gov.digital.ho.hocs.dto.DataListEntityRecordProperty;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode
-public class TopicListEntityRecord {
+public class TopicEntityRecord {
 
     private String name;
 
@@ -28,7 +23,7 @@ public class TopicListEntityRecord {
     @JsonUnwrapped
     private List<HashMap<String, String>> topicListItems = new ArrayList<>();
 
-    public static TopicListEntityRecord create(DataListEntity listEntity) {
+    public static TopicEntityRecord create(DataListEntity listEntity) {
         ArrayList<HashMap<String, String>> topicListItems = new ArrayList<>();
 
         // subEntities are called topicListItems
@@ -57,19 +52,7 @@ public class TopicListEntityRecord {
                     .findFirst().orElse(new DataListEntityProperty());
         }
 
-        return new TopicListEntityRecord(listEntity.getText(), property.getValue(), topicListItems);
+        return new TopicEntityRecord(listEntity.getText(), property.getValue(), topicListItems);
     }
 
-    // TopicList is only an array of records, no top level object.
-    public static TopicListEntityRecord[] asArray(DataList list) {
-        List<TopicListEntityRecord> topicList = new ArrayList<>();
-        if (list.getEntities() != null && !list.getEntities().isEmpty()) {
-            topicList = list.getEntities()
-                    .stream()
-                    .map(TopicListEntityRecord::create)
-                    .collect(Collectors.toList());
-        }
-
-        return topicList.toArray(new TopicListEntityRecord[0]);
-    }
 }

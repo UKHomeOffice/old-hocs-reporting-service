@@ -3,6 +3,7 @@ package uk.gov.digital.ho.hocs.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -36,34 +37,21 @@ public class DataListEntity {
     @JoinColumn(name ="parent_entity_id", referencedColumnName = "id")
     @Getter
     @Setter
-    private Set<DataListEntity> subEntities;
+    private Set<DataListEntity> subEntities = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name ="entity_id", referencedColumnName = "id")
     @Getter
     @Setter
-    private Set<DataListEntityProperty> properties;
+    private Set<DataListEntityProperty> properties = new HashSet<>();
 
     public DataListEntity(String text) {
         this(text, text);
     }
 
-    public DataListEntity(String text, boolean parseInput) {
-        this(text, text, parseInput);
-    }
-
-    public DataListEntity(String text, String value) {
-        this(text, value, true);
-    }
-
-    public DataListEntity(String text, String value, boolean parseInput) {
-        if (parseInput) {
-            this.text = toListText(text);
-            this.value = toListValue(value);
-        } else {
-            this.text = text;
-            this.value = value;
-        }
+    public DataListEntity(String text, String value){
+        this.text = toListText(text);
+        this.value = toListValue(value);
     }
 
     private static String toListText(String text) {

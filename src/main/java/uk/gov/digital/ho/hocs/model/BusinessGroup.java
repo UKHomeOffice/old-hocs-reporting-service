@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "groups")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
-@EqualsAndHashCode(of = "referenceName")
+@EqualsAndHashCode()
 public class BusinessGroup {
 
     @Id
@@ -38,7 +38,7 @@ public class BusinessGroup {
     @JoinColumn(name ="parent_group_id", referencedColumnName = "id")
     @Getter
     @Setter
-    private Set<BusinessGroup> subGroups;
+    private Set<BusinessGroup> subGroups = new HashSet<>();
 
     public BusinessGroup(String displayName) {
         this(displayName,displayName);

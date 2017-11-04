@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.digital.ho.hocs.dto.DataListRecord;
-import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicListEntityRecord;
+import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicEntityRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
 import uk.gov.digital.ho.hocs.model.DataList;
@@ -69,11 +69,11 @@ public class DataListResource {
     }
 
     @RequestMapping(value = {"/legacy/topic/TopicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
-    public ResponseEntity<TopicListEntityRecord[]> getLegacyListByReference() {
+    public ResponseEntity<TopicEntityRecord[]> getLegacyListByReference() {
         log.info("List \"Legacy TopicList\" requested");
         try {
-            TopicListEntityRecord[] dcuList = legacyService.getLegacyTopicListByName("DCU_Topics");
-            TopicListEntityRecord[] ukviList = legacyService.getLegacyTopicListByName("UKVI_Topics");
+            TopicEntityRecord[] dcuList = legacyService.getLegacyTopicListByName("DCU_Topics");
+            TopicEntityRecord[] ukviList = legacyService.getLegacyTopicListByName("UKVI_Topics");
 
             return ResponseEntity.ok(concat(dcuList, ukviList));
         } catch (ListNotFoundException e) {

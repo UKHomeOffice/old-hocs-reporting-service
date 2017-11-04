@@ -1,15 +1,12 @@
 package uk.gov.digital.ho.hocs.dto;
 
-import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import uk.gov.digital.ho.hocs.model.DataListEntityProperty;
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@EqualsAndHashCode
 public class DataListEntityRecordProperty {
     private String key;
     private String value;
