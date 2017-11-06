@@ -13,7 +13,7 @@ public class UserCreateRecord {
     private List<UserCreateEntityRecord> users;
 
     public static UserCreateRecord create(List<User> list) {
-        List<UserCreateEntityRecord> users = list.stream().map(UserCreateEntityRecord::createUser).collect(Collectors.toList());
+        List<UserCreateEntityRecord> users = list.stream().map(UserCreateEntityRecord::create).collect(Collectors.toList());
         return new UserCreateRecord(users);
     }
 }

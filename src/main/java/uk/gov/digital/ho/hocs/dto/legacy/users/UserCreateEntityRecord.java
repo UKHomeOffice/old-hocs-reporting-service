@@ -24,7 +24,7 @@ public class UserCreateEntityRecord {
 
     private List<String> groupNameArray;
 
-    public static UserCreateEntityRecord createUser(User user) {
+    public static UserCreateEntityRecord create(User user) {
         List<String> groups = user.getGroups().stream().map(g -> g.getReferenceName()).collect(Collectors.toList());
         return new UserCreateEntityRecord(user.getFirstName(), user.getLastName(), user.getUserName(), user.getEmailAddress(), "Password1", groups);
     }

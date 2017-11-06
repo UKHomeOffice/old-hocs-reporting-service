@@ -18,4 +18,11 @@ public class UnitCreateRecordTest {
         assertThat(record.getManageGroups()).hasSize(1);
     }
 
+    @Test
+    public void createWithoutEntities() throws Exception {
+        List<BusinessGroup> unitList = new ArrayList<>();
+        UnitCreateRecord record = UnitCreateRecord.create(unitList);
+        assertThat(record.getManageGroups()).hasSize(0);
+    }
+
 }

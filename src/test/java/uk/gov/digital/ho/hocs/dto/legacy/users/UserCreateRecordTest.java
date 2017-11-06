@@ -17,4 +17,11 @@ public class UserCreateRecordTest {
         UserCreateRecord record = UserCreateRecord.create(userList);
         assertThat(record.getUsers()).hasSize(1);
     }
+
+    @Test
+    public void createWithoutEntities() throws Exception {
+        List<User> userList = new ArrayList<>();
+        UserCreateRecord record = UserCreateRecord.create(userList);
+        assertThat(record.getUsers()).hasSize(0);
+    }
 }

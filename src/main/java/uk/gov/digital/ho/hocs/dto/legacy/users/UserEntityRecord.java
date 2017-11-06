@@ -16,7 +16,7 @@ public class UserEntityRecord {
 
     private String email;
 
-    public static UserEntityRecord createUser(User user) {
+    public static UserEntityRecord create(User user) {
         return new UserEntityRecord(user.getUserName(), user.getFirstName(), user.getLastName(), user.getEmailAddress());
     }
 }
