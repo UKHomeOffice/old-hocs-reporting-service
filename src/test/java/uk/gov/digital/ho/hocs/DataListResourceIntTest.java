@@ -58,14 +58,14 @@ public class DataListResourceIntTest {
     @Test
     public void shouldRetrieveAllEntities() throws IOException, JSONException {
         String auditRecords = restTemplate.getForObject("/list/TopicList", String.class);
-        String expectedRecords = IOUtils.toString(getClass().getResourceAsStream("/expected.json"));
+        String expectedRecords = IOUtils.toString(getClass().getResourceAsStream("/DataListResourceIntExpected.json"));
 
         JSONAssert.assertEquals(auditRecords, expectedRecords, false);
     }
 
     @Test
     public void shouldCreateEntityOnValidPost() throws IOException {
-        String jsonString = IOUtils.toString(getClass().getResourceAsStream("/validPost.json"));
+        String jsonString = IOUtils.toString(getClass().getResourceAsStream("/DataListResourceIntValidPost.json"));
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         HttpEntity<String> httpEntity = new HttpEntity<>(jsonString, httpHeaders);

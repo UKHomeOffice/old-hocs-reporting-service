@@ -45,7 +45,7 @@ public class UserService {
 
     public UserRecord getLegacyTeamsByGroupName(String group) throws ListNotFoundException {
         try {
-            List<User> list = userRepository.findAllByReferenceName(group);
+            List<User> list = userRepository.findAllByBusinessGroupReferenceName(group);
             return UserRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
