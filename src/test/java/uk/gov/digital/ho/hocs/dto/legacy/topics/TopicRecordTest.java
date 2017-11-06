@@ -17,7 +17,7 @@ public class TopicRecordTest {
         DataList dataList = new DataList("TEST List", entities);
 
         TopicRecord record = TopicRecord.create(dataList);
-        assertThat(record.getTopics()).hasSize(1);
+        assertThat(record.getTopics()).hasSize(0);
     }
 
 }

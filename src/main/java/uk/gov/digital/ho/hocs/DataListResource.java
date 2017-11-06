@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.digital.ho.hocs.dto.DataListRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicEntityRecord;
+import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
 import uk.gov.digital.ho.hocs.model.DataList;
 
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -69,13 +71,15 @@ public class DataListResource {
     }
 
     @RequestMapping(value = {"/legacy/topic/TopicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
-    public ResponseEntity<TopicEntityRecord[]> getLegacyListByReference() {
+    public ResponseEntity<List<TopicEntityRecord>> getLegacyListByReference() {
         log.info("List \"Legacy TopicList\" requested");
         try {
-            TopicEntityRecord[] dcuList = legacyService.getLegacyTopicListByName("DCU_Topics");
-            TopicEntityRecord[] ukviList = legacyService.getLegacyTopicListByName("UKVI_Topics");
+            TopicRecord dcu = legacyService.getLegacyTopicListByName("DCU_Topics");
+            TopicRecord ukvi = legacyService.getLegacyTopicListByName("UKVI_Topics");
 
-            return ResponseEntity.ok(concat(dcuList, ukviList));
+            List<TopicEntityRecord> retList = dcu.getTopics();
+            retList.addAll(ukvi.getTopics());
+            return ResponseEntity.ok(retList);
         } catch (ListNotFoundException e) {
             log.info("List \"Legacy TopicList\" not found");
             log.info(e.getMessage());

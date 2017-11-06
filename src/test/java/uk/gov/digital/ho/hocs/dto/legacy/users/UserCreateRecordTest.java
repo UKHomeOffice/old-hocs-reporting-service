@@ -8,14 +8,13 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class UserRecordTest {
+public class UserCreateRecordTest {
 
     @Test
     public void createWithEntities() throws Exception {
         List<User> userList = new ArrayList<>();
         userList.add(new User());
-        UserRecord record = UserRecord.create(userList);
+        UserCreateRecord record = UserCreateRecord.create(userList);
         assertThat(record.getUsers()).hasSize(1);
     }
-
 }

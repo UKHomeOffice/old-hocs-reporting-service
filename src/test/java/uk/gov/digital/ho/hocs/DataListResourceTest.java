@@ -1,7 +1,5 @@
 package uk.gov.digital.ho.hocs;
 
-import uk.gov.digital.ho.hocs.dto.DataListRecord;
-import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicEntityRecord;
 import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import uk.gov.digital.ho.hocs.dto.DataListRecord;
+import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicEntityRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
 import uk.gov.digital.ho.hocs.model.DataList;
@@ -17,6 +17,7 @@ import uk.gov.digital.ho.hocs.model.DataList;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
@@ -68,7 +69,7 @@ public class DataListResourceTest {
     public void shouldReturnNotFoundWhenUnableToFindLegacyUKVIEntity() throws ListNotFoundException {
 
         when(legacyService.getLegacyTopicListByName("UKVI_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<TopicEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
+        ResponseEntity<List<TopicEntityRecord>> httpResponse = dataListResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -79,7 +80,7 @@ public class DataListResourceTest {
     public void shouldReturnNotFoundWhenUnableToFindLegacyDCUEntity() throws ListNotFoundException {
 
         when(legacyService.getLegacyTopicListByName("DCU_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<TopicEntityRecord[]> httpResponse = dataListResource.getLegacyListByReference();
+        ResponseEntity<List<TopicEntityRecord>> httpResponse = dataListResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();

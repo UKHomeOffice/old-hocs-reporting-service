@@ -7,7 +7,6 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicEntityRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicRecord;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
 import uk.gov.digital.ho.hocs.legacy.CSVList;
@@ -32,10 +31,10 @@ public class LegacyService {
     }
 
     @Cacheable(value = "legacylist", key = "#name")
-    public List<TopicEntityRecord> getLegacyTopicListByName(String name) throws ListNotFoundException {
+    public TopicRecord getLegacyTopicListByName(String name) throws ListNotFoundException {
         try {
             DataList list = repo.findOneByName(name);
-            return TopicRecord.create(list).getTopics();
+            return TopicRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
         }
