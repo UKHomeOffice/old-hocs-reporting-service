@@ -24,7 +24,7 @@ public class LegacyResource {
         this.legacyService = legacyService;
     }
 
-    @RequestMapping(value = {"/legacy/topic/DCU", "/legacy/topic/UKVI"}, method = RequestMethod.POST)
+    @RequestMapping(value = "/legacy/topic/{name}", method = RequestMethod.POST)
     public ResponseEntity createTopicsListFromDCU(@RequestParam("file") MultipartFile file, @PathVariable("name") String name) {
         log.info("Parsing list \"TopicListDCU\"");
         if (!file.isEmpty()) {
