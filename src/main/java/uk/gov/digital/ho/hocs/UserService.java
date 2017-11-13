@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,26 +35,27 @@ public class UserService {
         this.groupRepository = groupRepository;
     }
 
-
-    public UserCreateRecord getLegacyUsersByDepartment(String name) throws ListNotFoundException {
+    @Cacheable(value = "usersByDeptName", key = "#departmentName")
+    public UserCreateRecord getUsersByDepartmentName(String departmentName) throws ListNotFoundException {
         try {
-            List<User> list = userRepository.findAllByDepartment(name);
+            List<User> list = userRepository.findAllByDepartment(departmentName);
             return UserCreateRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
         }
     }
 
-    public UserRecord getLegacyTeamsByGroupName(String group) throws ListNotFoundException {
+    @Cacheable(value = "usersByGroupName", key = "#groupName")
+    public UserRecord getUsersByGroupName(String groupName) throws ListNotFoundException {
         try {
-            List<User> list = userRepository.findAllByBusinessGroupReferenceName(group);
+            List<User> list = userRepository.findAllByBusinessGroupReferenceName(groupName);
             return UserRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
         }
     }
-
-    @CacheEvict(value = "users", allEntries = true, beforeInvocation = true)
+    @Caching( evict = {@CacheEvict(value = "usersByDeptName", allEntries = true),
+                       @CacheEvict(value = "usersByGroupName", allEntries = true)})
     public void createUsersFromCSV(MultipartFile file, String department) {
         List<CSVUserLine> lines = new UserFileParser(file).getLines();
 

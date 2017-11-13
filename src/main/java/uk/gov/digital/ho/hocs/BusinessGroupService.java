@@ -38,14 +38,7 @@ public class BusinessGroupService {
         }
     }
 
-    @CacheEvict(value = "groups", key = "#businessGroup.referenceName()", beforeInvocation = true)
-    public void createGroup(BusinessGroup businessGroup) throws EntityCreationException {
-        Set<BusinessGroup> groups = new HashSet<>();
-        groups.add(businessGroup);
-        createGroups(groups);
-    }
-
-    @CacheEvict(value = "groups", allEntries = true, beforeInvocation = true)
+    @CacheEvict(value = "groups", allEntries = true)
     public void createGroupsFromCSV(MultipartFile file) {
         List<CSVGroupLine> lines = new UnitFileParser(file).getLines();
 
@@ -65,7 +58,7 @@ public class BusinessGroupService {
         createGroups(groups);
     }
 
-    public UnitCreateRecord getLegacyUnitCreateList() throws ListNotFoundException {
+    public UnitCreateRecord getGroupsCreateList() throws ListNotFoundException {
         try {
             List<BusinessGroup> list = repo.findAllBy();
             return UnitCreateRecord.create(list);

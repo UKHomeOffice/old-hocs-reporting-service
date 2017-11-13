@@ -13,7 +13,7 @@ import java.util.Set;
 @Table(name = "groups")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
-@EqualsAndHashCode()
+@EqualsAndHashCode(exclude = "users")
 public class BusinessGroup {
 
     @Id
@@ -34,7 +34,7 @@ public class BusinessGroup {
     @Setter
     private String parentGroup;
 
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)
     @Getter
     @Setter
     private Set<User> users = new HashSet<>();
