@@ -49,7 +49,7 @@ public class LegacyResource {
             TopicRecord dcu = legacyService.getLegacyTopicListByName("DCU_Topics");
             TopicRecord ukvi = legacyService.getLegacyTopicListByName("UKVI_Topics");
 
-            List<TopicEntityRecord> retList = Stream.concat(dcu.getTopics().stream(), ukvi.getTopics().stream()).collect(Collectors.toList());
+            List<TopicEntityRecord> retList = Stream.concat(dcu.getTopicListItems().stream(), ukvi.getTopicListItems().stream()).collect(Collectors.toList());
             return ResponseEntity.ok(retList);
         } catch (ListNotFoundException e) {
             log.info("List \"Legacy TopicList\" not found");

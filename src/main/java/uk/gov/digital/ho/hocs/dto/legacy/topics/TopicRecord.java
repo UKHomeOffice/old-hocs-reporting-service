@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Getter
 public class TopicRecord {
-    private List<TopicEntityRecord> topics;
+    private List<TopicEntityRecord> topicListItems;
 
     public static TopicRecord create(DataList list) {
         List<TopicEntityRecord> topicList = list.getEntities().stream().map(TopicEntityRecord::create).collect(Collectors.toList());
