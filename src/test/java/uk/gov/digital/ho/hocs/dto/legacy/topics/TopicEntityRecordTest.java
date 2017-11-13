@@ -26,7 +26,7 @@ public class TopicEntityRecordTest {
 
         assertThat(topicEntityRecord.getName()).isEqualTo("TopicName");
         assertThat(topicEntityRecord.getCaseType()).isEqualTo("Type");
-        assertThat(topicEntityRecord.getTopics()).hasSize(1);
+        assertThat(topicEntityRecord.getTopicListItems()).hasSize(1);
     }
 
     @Test
@@ -41,7 +41,7 @@ public class TopicEntityRecordTest {
 
         assertThat(topicEntityRecord.getName()).isEqualTo("TopicName");
         assertThat(topicEntityRecord.getCaseType()).isEqualTo("");
-        assertThat(topicEntityRecord.getTopics()).hasSize(1);
+        assertThat(topicEntityRecord.getTopicListItems()).hasSize(1);
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TopicEntityRecordTest {
 
         assertThat(topicEntityRecord.getName()).isEqualTo("TopicName");
         assertThat(topicEntityRecord.getCaseType()).isEqualTo("");
-        assertThat(topicEntityRecord.getTopics()).hasSize(0);
+        assertThat(topicEntityRecord.getTopicListItems()).hasSize(0);
     }
 
     @Test
@@ -67,6 +67,6 @@ public class TopicEntityRecordTest {
 
         assertThat(topicEntityRecord.getName()).isEqualTo("TopicName");
         assertThat(topicEntityRecord.getCaseType()).isEqualTo("Type");
-        assertThat(topicEntityRecord.getTopics()).hasSize(1);
+        assertThat(topicEntityRecord.getTopicListItems()).hasSize(1);
     }
 }

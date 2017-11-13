@@ -19,7 +19,7 @@ public class TopicEntityRecord {
     private String caseType;
 
     @JsonUnwrapped
-    private List<HashMap<String, String>> topics = new ArrayList<>();
+    private List<HashMap<String, String>> topicListItems = new ArrayList<>();
 
     public static TopicEntityRecord create(DataListEntity listEntity) {
         ArrayList<HashMap<String, String>> topicListItems = new ArrayList<>();
