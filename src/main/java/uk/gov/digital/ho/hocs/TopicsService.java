@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicGroupRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
-import uk.gov.digital.ho.hocs.legacy.CSVList;
 import uk.gov.digital.ho.hocs.legacy.topics.CSVTopicLine;
 import uk.gov.digital.ho.hocs.model.Topic;
 import uk.gov.digital.ho.hocs.model.TopicGroup;
@@ -31,19 +30,18 @@ public class TopicsService {
 
     @Cacheable(value = "topics", key = "#caseType")
     public List<TopicGroupRecord> getTopicByCaseType(String caseType) throws ListNotFoundException {
-        try {
-            List<TopicGroup> list = repo.findAllByCaseType(caseType);
-            return list.stream().map(TopicGroupRecord::create).collect(Collectors.toList());
-        } catch (NullPointerException e) {
+        Set<TopicGroup> list = repo.findAllByCaseType(caseType);
+        if(list.size() == 0)
+        {
             throw new ListNotFoundException();
         }
+        return list.stream().map(TopicGroupRecord::create).collect(Collectors.toList());
     }
 
     @CacheEvict(value = "topics", key = "#caseType")
-    public void createTopicsListFromCSV(CSVList list, String caseType) {
+    public void createTopics(Set<CSVTopicLine> lines, String caseType) {
         Map<String, Set<Topic>> topics = new HashMap<>();
 
-        List<CSVTopicLine> lines = list.getLines();
         for (CSVTopicLine line : lines) {
             topics.putIfAbsent(line.getParentTopicName(), new HashSet<>());
 
@@ -61,10 +59,13 @@ public class TopicsService {
             topicGroups.add(topicGroup);
         }
 
-        createTopics(topicGroups);
+        if(topicGroups.size() > 0) {
+            createTopicGroups(topicGroups);
+        }
     }
 
-    private void createTopics(Set<TopicGroup> topicGroups) {
+    private void createTopicGroups(Set<TopicGroup> topicGroups) {
+
         try {
             repo.save(topicGroups);
         } catch (DataIntegrityViolationException e) {
@@ -77,6 +78,7 @@ public class TopicsService {
 
             throw e;
         }
+
     }
 
 }

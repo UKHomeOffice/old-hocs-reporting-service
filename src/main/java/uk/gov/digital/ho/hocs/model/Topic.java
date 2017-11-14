@@ -3,7 +3,6 @@ package uk.gov.digital.ho.hocs.model;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -33,7 +32,6 @@ public class Topic {
 
     @Column(name = "parent_topic_id", nullable = false)
     @Getter
-    @Setter
     private String parentTopic;
 
     public Topic(String name, String owningUnit, String owningTeam) {

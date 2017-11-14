@@ -12,6 +12,8 @@ import uk.gov.digital.ho.hocs.legacy.topics.DCUFileParser;
 import uk.gov.digital.ho.hocs.legacy.topics.UKVIFileParser;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @Slf4j
@@ -30,10 +32,10 @@ public class TopicsResource {
             try {
                 switch (name) {
                     case "DCU":
-                        topicsService.createTopicsListFromCSV(new DCUFileParser(file), "DCU");
+                        topicsService.createTopics(new DCUFileParser(file).getLines(), "DCU");
                         return ResponseEntity.ok().build();
                     case "UKVI":
-                        topicsService.createTopicsListFromCSV(new UKVIFileParser(file), "UKVI");
+                        topicsService.createTopics(new UKVIFileParser(file).getLines(), "UKVI");
                         return ResponseEntity.ok().build();
                 }
             } catch (EntityCreationException e) {
@@ -52,8 +54,8 @@ public class TopicsResource {
             List<TopicGroupRecord> dcu = topicsService.getTopicByCaseType("DCU");
             List<TopicGroupRecord> ukvi = topicsService.getTopicByCaseType("UKVI");
 
-            dcu.addAll(ukvi);
-            return ResponseEntity.ok(dcu);
+            List<TopicGroupRecord> jointList = Stream.concat(dcu.stream(),ukvi.stream()).collect(Collectors.toList());
+            return ResponseEntity.ok(jointList);
         } catch (ListNotFoundException e) {
             log.info("List \"Legacy TopicList\" not found");
             log.info(e.getMessage());

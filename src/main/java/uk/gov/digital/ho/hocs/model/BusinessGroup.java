@@ -31,7 +31,6 @@ public class BusinessGroup {
 
     @Column(name = "parent_group_id", nullable = false)
     @Getter
-    @Setter
     private String parentGroup;
 
     @ManyToMany(mappedBy = "groups", fetch = FetchType.LAZY)

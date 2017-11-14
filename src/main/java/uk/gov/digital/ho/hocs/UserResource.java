@@ -10,6 +10,7 @@ import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
+import uk.gov.digital.ho.hocs.legacy.users.UserFileParser;
 
 @RestController
 @Slf4j
@@ -22,11 +23,11 @@ public class UserResource {
     }
 
     @RequestMapping(value = "/users/{group}", method = RequestMethod.POST)
-    public ResponseEntity postUsersByGroup(@PathVariable("group") String group, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity postUsersByGroup(@PathVariable("group") String group, @RequestParam("file") MultipartFile file) throws ListNotFoundException {
         if (!file.isEmpty()) {
             log.info("Parsing \"{}\" Users File", group);
             try {
-                userService.createUsersFromCSV(file, group);
+                userService.createUsersFromCSV(new UserFileParser(file).getLines(), group);
                 return ResponseEntity.ok().build();
             } catch (EntityCreationException e) {
                 log.info("{} Users not created", group);

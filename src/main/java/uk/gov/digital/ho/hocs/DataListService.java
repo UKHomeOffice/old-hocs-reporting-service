@@ -11,9 +11,6 @@ import uk.gov.digital.ho.hocs.dto.DataListRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
 import uk.gov.digital.ho.hocs.model.DataList;
-import uk.gov.digital.ho.hocs.model.DataListEntity;
-
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -35,11 +32,6 @@ public class DataListService {
             throw new ListNotFoundException();
         }
     }
-
-    public void createList(String name, Set<DataListEntity> dataListEntities) throws EntityCreationException {
-        createList(new DataList(name,dataListEntities));
-    }
-
 
     @CacheEvict(value = "list", key = "#dataList.getName()")
     public void createList(DataList dataList) throws EntityCreationException {

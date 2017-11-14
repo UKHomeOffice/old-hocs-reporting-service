@@ -31,8 +31,17 @@ public class BusinessGroupService {
     @Cacheable(value = "groups")
     public UnitRecord getAllGroups() throws ListNotFoundException {
         try {
-            List<BusinessGroup> list = repo.findAllBy();
+            List<BusinessGroup> list = repo.findAll();
             return UnitRecord.create(list);
+        } catch (NullPointerException e) {
+            throw new ListNotFoundException();
+        }
+    }
+
+    public BusinessGroup getGroupByReference(String referenceName) throws ListNotFoundException {
+        try {
+            BusinessGroup businessGroup = repo.findByReferenceName(referenceName);
+            return businessGroup;
         } catch (NullPointerException e) {
             throw new ListNotFoundException();
         }
@@ -40,7 +49,7 @@ public class BusinessGroupService {
 
     @CacheEvict(value = "groups", allEntries = true)
     public void createGroupsFromCSV(MultipartFile file) {
-        List<CSVGroupLine> lines = new UnitFileParser(file).getLines();
+        Set<CSVGroupLine> lines = new UnitFileParser(file).getLines();
 
         Map<String, Set<BusinessGroup>> groupMap = new HashMap<>();
         for (CSVGroupLine line : lines) {
@@ -60,7 +69,7 @@ public class BusinessGroupService {
 
     public UnitCreateRecord getGroupsCreateList() throws ListNotFoundException {
         try {
-            List<BusinessGroup> list = repo.findAllBy();
+            List<BusinessGroup> list = repo.findAll();
             return UnitCreateRecord.create(list);
         } catch (NullPointerException e) {
             throw new ListNotFoundException();

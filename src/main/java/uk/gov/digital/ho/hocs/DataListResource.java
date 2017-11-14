@@ -41,7 +41,7 @@ public class DataListResource {
     public ResponseEntity postListByName(@PathVariable("name") String name, @RequestBody Set<DataListEntity> dataListEntities) {
         log.info("Creating list \"{}\"", name);
         try {
-            dataListService.createList(name, dataListEntities);
+            dataListService.createList(new DataList(name,dataListEntities));
             return ResponseEntity.ok().build();
         } catch (EntityCreationException e) {
             log.info("List \"{}\" not created", name);

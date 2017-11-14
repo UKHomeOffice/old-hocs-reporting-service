@@ -1,9 +1,26 @@
 package uk.gov.digital.ho.hocs;
 
+import org.json.JSONException;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import uk.gov.digital.ho.hocs.dto.legacy.topics.TopicGroupRecord;
+import uk.gov.digital.ho.hocs.exception.ListNotFoundException;
+import uk.gov.digital.ho.hocs.model.Topic;
+import uk.gov.digital.ho.hocs.model.TopicGroup;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TopicsResourceTest {
@@ -21,16 +38,21 @@ public class TopicsResourceTest {
         topicsResource = new TopicsResource(topicsService);
     }
 
-/*    @Test
+    @Test
     public void shouldRetrieveAllEntitiesLegacy() throws IOException, JSONException, ListNotFoundException {
-        Set<DataListEntity> topicList = new HashSet<>();
-        topicList.add(new DataListEntity());
-        DataList dataList = new DataList("TEST List", topicList);
-        TopicGroupRecord record = TopicGroupRecord.create(dataList);
+        TopicGroup topicGroup = new TopicGroup("TopicName", "CaseType");
 
-        when(topicsService.getLegacyTopicListByName("DCU_Topics")).thenReturn(record);
-        when(topicsService.getLegacyTopicListByName("UKVI_Topics")).thenReturn(record);
-        ResponseEntity<List<TopicRecord>> httpResponse = topicsResource.getLegacyListByReference();
+        Set<Topic> topics = new HashSet<>();
+        topics.add(new Topic("TopicName", "OwningUnit","OwningTeam"));
+        topicGroup.setTopicListItems(topics);
+
+        TopicGroupRecord record = TopicGroupRecord.create(topicGroup);
+        List<TopicGroupRecord> records = new ArrayList<>();
+        records.add(record);
+
+        when(topicsService.getTopicByCaseType("DCU")).thenReturn(records);
+        when(topicsService.getTopicByCaseType("UKVI")).thenReturn(records);
+        ResponseEntity<List<TopicGroupRecord>> httpResponse = topicsResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(httpResponse.getBody()).hasSize(2);
@@ -39,11 +61,11 @@ public class TopicsResourceTest {
 
     @Test
     public void shouldReturnNotFoundWhenUnableToFindLegacyUKVIEntity() throws ListNotFoundException {
-        TopicGroupRecord dataList = new TopicGroupRecord(new ArrayList<>());
+        List<TopicGroupRecord> records = new ArrayList<>();
 
-        when(topicsService.getLegacyTopicListByName("UKVI_Topics")).thenThrow(new ListNotFoundException());
-        when(topicsService.getLegacyTopicListByName("DCU_Topics")).thenReturn(dataList);
-        ResponseEntity<List<TopicRecord>> httpResponse = topicsResource.getLegacyListByReference();
+        when(topicsService.getTopicByCaseType("UKVI")).thenThrow(new ListNotFoundException());
+        when(topicsService.getTopicByCaseType("DCU")).thenReturn(records);
+        ResponseEntity<List<TopicGroupRecord>> httpResponse = topicsResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
@@ -52,14 +74,14 @@ public class TopicsResourceTest {
 
     @Test
     public void shouldReturnNotFoundWhenUnableToFindLegacyDCUEntity() throws ListNotFoundException {
-        TopicGroupRecord dataList = new TopicGroupRecord(new ArrayList<>());
+        List<TopicGroupRecord> records = new ArrayList<>();
 
-        when(topicsService.getLegacyTopicListByName("UKVI_Topics")).thenReturn(dataList);
-        when(topicsService.getLegacyTopicListByName("DCU_Topics")).thenThrow(new ListNotFoundException());
-        ResponseEntity<List<TopicRecord>> httpResponse = topicsResource.getLegacyListByReference();
+        when(topicsService.getTopicByCaseType("UKVI")).thenReturn(records);
+        when(topicsService.getTopicByCaseType("DCU")).thenThrow(new ListNotFoundException());
+        ResponseEntity<List<TopicGroupRecord>> httpResponse = topicsResource.getLegacyListByReference();
 
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(httpResponse.getBody()).isNull();
 
-    }*/
+    }
 }
