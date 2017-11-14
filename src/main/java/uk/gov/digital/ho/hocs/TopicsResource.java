@@ -47,7 +47,7 @@ public class TopicsResource {
         return ResponseEntity.badRequest().build();
     }
 
-    @RequestMapping(value = "/topics/topicList", method = RequestMethod.GET)
+    @RequestMapping(value = {"/topics/topicList", "/service/homeoffice/ctsv2/topicList"}, method = RequestMethod.GET)
     public ResponseEntity<List<TopicGroupRecord>> getLegacyListByReference() {
         log.info("List \"Legacy TopicList\" requested");
         try {

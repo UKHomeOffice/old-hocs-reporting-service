@@ -38,7 +38,7 @@ public class BusinessGroupResource {
         return ResponseEntity.badRequest().build();
     }
 
-    @RequestMapping(value = "/groups", method = RequestMethod.GET)
+    @RequestMapping(value = {"/groups", "s/homeoffice/cts/allTeams"}, method = RequestMethod.GET)
     public ResponseEntity<UnitRecord> getGroups(){
         log.info("All Groups requested");
         try {

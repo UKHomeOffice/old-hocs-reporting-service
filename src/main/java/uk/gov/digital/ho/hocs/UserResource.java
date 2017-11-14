@@ -38,6 +38,11 @@ public class UserResource {
         return ResponseEntity.badRequest().build();
     }
 
+    @RequestMapping(value = "s/homeoffice/cts/teamUsers", method =  RequestMethod.GET)
+    public ResponseEntity<UserRecord> getUsersByGroupRequest(@RequestParam String group) {
+        return this.getUsersByGroup(group);
+    }
+
     @RequestMapping(value = "/users/{group}", method = RequestMethod.GET)
     public ResponseEntity<UserRecord> getUsersByGroup(@PathVariable String group) {
         log.info("\"{}\" requested", group);
