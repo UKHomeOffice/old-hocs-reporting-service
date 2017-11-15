@@ -164,6 +164,117 @@ public class UserServiceTest {
         verify(mockUserRepo).save(anyList());
     }
 
+    @Test
+    public void testServiceUpdateUsersFromCSVAdd() throws ListNotFoundException{
+        when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
+        List<User> users = new ArrayList<>();
+        User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
+        User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
+        users.add(userOne);
+        users.add(userTwo);
+        when(mockUserRepo.findAllByDepartment("Dept")).thenReturn(users);
+
+        List<String> groups = new ArrayList<>();
+        groups.add("A_GROUP");
+        CSVUserLine lineOne =   new CSVUserLine("First1", "Last1", "Email1", groups);
+        CSVUserLine lineTwo =   new CSVUserLine("First2", "Last2", "Email2", groups);
+        CSVUserLine lineThree = new CSVUserLine("First3", "Last3", "Email3", groups);
+        Set<CSVUserLine> lines = new HashSet<>();
+        lines.add(lineOne);
+        lines.add(lineTwo);
+        lines.add(lineThree);
+        service.updateUsersByDepartment(lines, "Dept");
+
+        verify(mockUserRepo, times(1)).save(anyList());
+        verify(mockUserRepo, times(0)).delete(anyList());
+    }
+
+    @Test
+    public void testServiceUpdateUsersFromCSVRemove() throws ListNotFoundException{
+        when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
+        List<User> users = new ArrayList<>();
+        User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
+        User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
+        users.add(userOne);
+        users.add(userTwo);
+        when(mockUserRepo.findAllByDepartment("Dept")).thenReturn(users);
+
+        List<String> groups = new ArrayList<>();
+        groups.add("A_GROUP");
+        CSVUserLine lineOne =   new CSVUserLine("First1", "Last1", "Email1", groups);
+        Set<CSVUserLine> lines = new HashSet<>();
+        lines.add(lineOne);
+        service.updateUsersByDepartment(lines, "Dept");
+
+        verify(mockUserRepo, times(0)).save(anyList());
+        verify(mockUserRepo, times(1)).delete(anyList());
+    }
+
+    @Test
+    public void testServiceUpdateUsersFromCSVBoth() throws ListNotFoundException{
+        when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
+        List<User> users = new ArrayList<>();
+        User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
+        User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
+        users.add(userOne);
+        users.add(userTwo);
+        when(mockUserRepo.findAllByDepartment("Dept")).thenReturn(users);
+
+        List<String> groups = new ArrayList<>();
+        groups.add("A_GROUP");
+        CSVUserLine lineOne =   new CSVUserLine("First1", "Last1", "Email1", groups);
+        CSVUserLine lineThree = new CSVUserLine("First3", "Last3", "Email3", groups);
+        Set<CSVUserLine> lines = new HashSet<>();
+        lines.add(lineOne);
+        lines.add(lineThree);
+        service.updateUsersByDepartment(lines, "Dept");
+
+        verify(mockUserRepo, times(1)).save(anyList());
+        verify(mockUserRepo, times(1)).delete(anyList());
+    }
+
+    @Test
+    public void testServiceUpdateUsersFromCSVNothingSame() throws ListNotFoundException{
+        when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
+        List<User> users = new ArrayList<>();
+        User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
+        User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
+        users.add(userOne);
+        users.add(userTwo);
+        when(mockUserRepo.findAllByDepartment("Dept")).thenReturn(users);
+
+        List<String> groups = new ArrayList<>();
+        groups.add("A_GROUP");
+        CSVUserLine lineOne =   new CSVUserLine("First1", "Last1", "Email1", groups);
+        CSVUserLine lineTwo =   new CSVUserLine("First2", "Last2", "Email2", groups);
+        Set<CSVUserLine> lines = new HashSet<>();
+        lines.add(lineOne);
+        lines.add(lineTwo);
+        service.updateUsersByDepartment(lines, "Dept");
+
+        verify(mockUserRepo, times(0)).save(anyList());
+        verify(mockUserRepo, times(0)).delete(anyList());
+    }
+
+    @Test
+    public void testServiceUpdateUsersFromCSVNothingNone() throws ListNotFoundException{
+        when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
+        List<User> users = new ArrayList<>();
+        User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
+        User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
+        users.add(userOne);
+        users.add(userTwo);
+        when(mockUserRepo.findAllByDepartment("Dept")).thenReturn(users);
+
+        List<String> groups = new ArrayList<>();
+        groups.add("A_GROUP");
+        Set<CSVUserLine> lines = new HashSet<>();
+        service.updateUsersByDepartment(lines, "Dept");
+
+        verify(mockUserRepo, times(0)).save(anyList());
+        verify(mockUserRepo, times(1)).delete(anyList());
+    }
+
     public List<User>buildValidUserList(){
         List<User> userList = new ArrayList<>();
         User user = new User("First", "Last", "User","email", "Dept");

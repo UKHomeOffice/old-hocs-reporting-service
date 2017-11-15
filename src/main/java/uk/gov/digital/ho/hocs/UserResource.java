@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
@@ -57,7 +56,18 @@ public class UserResource {
 
     @RequestMapping(value = "/users/{group}", method = RequestMethod.PUT)
     public ResponseEntity<UserRecord> putUsersByGroup(@PathVariable("group") String group, @RequestParam("file") MultipartFile file) {
-        throw new NotImplementedException();
+        if (!file.isEmpty()) {
+            log.info("Parsing \"{}\" Users File", group);
+            try {
+                userService.updateUsersByDepartment(new UserFileParser(file).getLines(), group);
+                return ResponseEntity.ok().build();
+            } catch (EntityCreationException | ListNotFoundException e) {
+                log.info("{} Users not created", group);
+                log.info(e.getMessage());
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.

@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserCreateRecord;
 import uk.gov.digital.ho.hocs.dto.legacy.users.UserRecord;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
@@ -19,6 +20,7 @@ import uk.gov.digital.ho.hocs.model.User;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -57,6 +59,32 @@ public class UserService {
                        @CacheEvict(value = "usersByGroupName", allEntries = true)})
     public void createUsersFromCSV(Set<CSVUserLine> lines, String department) throws ListNotFoundException{
 
+        Set<User> users = getUsers(lines, department);
+        if(users.size() > 0) {
+            createUsers(users);
+        }
+    }
+
+    @Transactional
+    public void updateUsersByDepartment(Set<CSVUserLine> lines,String department) throws ListNotFoundException {
+        Set<User> users = getUsers(lines, department);
+        List<User> jpaUsers = userRepository.findAllByDepartment(department);
+
+        // Get list of users to remove
+        Set<User> usersToDelete = jpaUsers.stream().filter(user -> !users.contains(user)).collect(Collectors.toSet());
+
+        // Get list of users to add
+        Set<User> usersToAdd = users.stream().filter(user -> !jpaUsers.contains(user)).collect(Collectors.toSet());
+
+        if(!usersToDelete.isEmpty()) {
+            deleteUsers(usersToDelete);
+        }
+        if(!usersToAdd.isEmpty()) {
+            createUsers(usersToAdd);
+        }
+    }
+
+    private Set<User> getUsers(Set<CSVUserLine> lines, String department) throws ListNotFoundException {
         Set<User> users = new HashSet<>();
         for (CSVUserLine line : lines) {
             User user = new User(line.getFirst(), line.getLast(), line.getEmail(), line.getEmail(), department);
@@ -68,9 +96,11 @@ public class UserService {
             user.setGroups(groups);
             users.add(user);
         }
-        if(users.size() > 0) {
-            createUsers(users);
-        }
+        return users;
+    }
+
+    private void deleteUsers(Set<User> users) {
+        userRepository.delete(users);
     }
 
     private void createUsers(Set<User> users) {
@@ -86,4 +116,5 @@ public class UserService {
             throw e;
         }
     }
+
 }
