@@ -16,10 +16,7 @@ import uk.gov.digital.ho.hocs.legacy.users.CSVUserLine;
 import uk.gov.digital.ho.hocs.model.BusinessGroup;
 import uk.gov.digital.ho.hocs.model.User;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyList;
@@ -57,7 +54,7 @@ public class UserServiceTest {
         assertThat(userRecord).isNotNull();
         assertThat(userRecord).isInstanceOf(UserRecord.class);
         Assertions.assertThat(userRecord.getUsers()).size().isEqualTo(1);
-        assertThat(userRecord.getUsers().get(0).getUserName()).isEqualTo("User");
+        assertThat(new ArrayList<>(userRecord.getUsers()).get(0).getUserName()).isEqualTo("User");
     }
 
     @Test(expected = ListNotFoundException.class)
@@ -79,7 +76,7 @@ public class UserServiceTest {
         assertThat(userRecord).isNotNull();
         assertThat(userRecord).isInstanceOf(UserCreateRecord.class);
         Assertions.assertThat(userRecord.getUsers()).size().isEqualTo(1);
-        assertThat(userRecord.getUsers().get(0).getUserName()).isEqualTo("User");
+        assertThat(new ArrayList<>(userRecord.getUsers()).get(0).getUserName()).isEqualTo("User");
     }
 
     @Test(expected = ListNotFoundException.class)
@@ -167,7 +164,7 @@ public class UserServiceTest {
     @Test
     public void testServiceUpdateUsersFromCSVAdd() throws ListNotFoundException{
         when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
-        List<User> users = new ArrayList<>();
+        Set<User> users = new HashSet<>();
         User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
         User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
         users.add(userOne);
@@ -192,7 +189,7 @@ public class UserServiceTest {
     @Test
     public void testServiceUpdateUsersFromCSVRemove() throws ListNotFoundException{
         when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
-        List<User> users = new ArrayList<>();
+        Set<User> users = new HashSet<>();
         User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
         User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
         users.add(userOne);
@@ -213,7 +210,7 @@ public class UserServiceTest {
     @Test
     public void testServiceUpdateUsersFromCSVBoth() throws ListNotFoundException{
         when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
-        List<User> users = new ArrayList<>();
+        Set<User> users = new HashSet<>();
         User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
         User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
         users.add(userOne);
@@ -236,7 +233,7 @@ public class UserServiceTest {
     @Test
     public void testServiceUpdateUsersFromCSVNothingSame() throws ListNotFoundException{
         when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
-        List<User> users = new ArrayList<>();
+        Set<User> users = new HashSet<>();
         User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
         User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
         users.add(userOne);
@@ -259,7 +256,7 @@ public class UserServiceTest {
     @Test
     public void testServiceUpdateUsersFromCSVNothingNone() throws ListNotFoundException{
         when(mockBusinessGroupService.getGroupByReference("A_GROUP")).thenReturn(new BusinessGroup());
-        List<User> users = new ArrayList<>();
+        Set<User> users = new HashSet<>();
         User userOne = new User("First1", "Last1", "Email1", "Email1", "Dept");
         User userTwo = new User("First2", "Last2", "Email2", "Email2", "Dept");
         users.add(userOne);
@@ -275,11 +272,11 @@ public class UserServiceTest {
         verify(mockUserRepo, times(1)).delete(anyList());
     }
 
-    public List<User>buildValidUserList(){
-        List<User> userList = new ArrayList<>();
+    public Set<User>buildValidUserList(){
+        Set<User> users = new HashSet<>();
         User user = new User("First", "Last", "User","email", "Dept");
-        userList.add(user);
-        return userList;
+        users.add(user);
+        return users;
     }
 
 }

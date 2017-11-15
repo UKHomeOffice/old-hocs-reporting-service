@@ -18,7 +18,6 @@ import uk.gov.digital.ho.hocs.model.BusinessGroup;
 import uk.gov.digital.ho.hocs.model.User;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,38 +36,39 @@ public class UserService {
 
     @Cacheable(value = "usersByDeptName", key = "#departmentRef")
     public UserCreateRecord getUsersByDepartmentName(String departmentRef) throws ListNotFoundException {
-        List<User> list = userRepository.findAllByDepartment(departmentRef);
-        if(list.size() == 0)
+        Set<User> users = userRepository.findAllByDepartment(departmentRef);
+        if(!users.isEmpty())
         {
             throw new ListNotFoundException();
         }
-        return UserCreateRecord.create(list);
+        return UserCreateRecord.create(users);
     }
 
     @Cacheable(value = "usersByGroupName", key = "#groupRef")
     public UserRecord getUsersByGroupName(String groupRef) throws ListNotFoundException {
-        List<User> list = userRepository.findAllByBusinessGroupReference(groupRef);
-        if(list.size() == 0)
+        Set<User> users = userRepository.findAllByBusinessGroupReference(groupRef);
+        if(!users.isEmpty())
         {
             throw new ListNotFoundException();
         }
-        return UserRecord.create(list);
+        return UserRecord.create(users);
     }
 
     @Caching( evict = {@CacheEvict(value = "usersByDeptName", allEntries = true),
                        @CacheEvict(value = "usersByGroupName", allEntries = true)})
     public void createUsersFromCSV(Set<CSVUserLine> lines, String department) throws ListNotFoundException{
-
         Set<User> users = getUsers(lines, department);
-        if(users.size() > 0) {
+        if(!users.isEmpty()) {
             createUsers(users);
         }
     }
 
     @Transactional
+    @Caching( evict = {@CacheEvict(value = "usersByDeptName", allEntries = true),
+                       @CacheEvict(value = "usersByGroupName", allEntries = true)})
     public void updateUsersByDepartment(Set<CSVUserLine> lines,String department) throws ListNotFoundException {
         Set<User> users = getUsers(lines, department);
-        List<User> jpaUsers = userRepository.findAllByDepartment(department);
+        Set<User> jpaUsers = userRepository.findAllByDepartment(department);
 
         // Get list of users to remove
         Set<User> usersToDelete = jpaUsers.stream().filter(user -> !users.contains(user)).collect(Collectors.toSet());

@@ -24,11 +24,27 @@ public class UserResource {
     @RequestMapping(value = "/users/{group}", method = RequestMethod.POST)
     public ResponseEntity postUsersByGroup(@PathVariable("group") String group, @RequestParam("file") MultipartFile file) throws ListNotFoundException {
         if (!file.isEmpty()) {
-            log.info("Parsing \"{}\" Users File", group);
+            log.info("Parsing \"{}\" Users File - POST", group);
             try {
                 userService.createUsersFromCSV(new UserFileParser(file).getLines(), group);
                 return ResponseEntity.ok().build();
             } catch (EntityCreationException e) {
+                log.info("{} Users not created", group);
+                log.info(e.getMessage());
+                return ResponseEntity.badRequest().build();
+            }
+        }
+        return ResponseEntity.badRequest().build();
+    }
+
+    @RequestMapping(value = "/users/{group}", method = RequestMethod.PUT)
+    public ResponseEntity<UserRecord> putUsersByGroup(@PathVariable("group") String group, @RequestParam("file") MultipartFile file) {
+        if (!file.isEmpty()) {
+            log.info("Parsing \"{}\" Users File - PUT", group);
+            try {
+                userService.updateUsersByDepartment(new UserFileParser(file).getLines(), group);
+                return ResponseEntity.ok().build();
+            } catch (EntityCreationException | ListNotFoundException e) {
                 log.info("{} Users not created", group);
                 log.info(e.getMessage());
                 return ResponseEntity.badRequest().build();
@@ -52,22 +68,6 @@ public class UserResource {
             log.info(e.getMessage());
             return ResponseEntity.notFound().build();
         }
-    }
-
-    @RequestMapping(value = "/users/{group}", method = RequestMethod.PUT)
-    public ResponseEntity<UserRecord> putUsersByGroup(@PathVariable("group") String group, @RequestParam("file") MultipartFile file) {
-        if (!file.isEmpty()) {
-            log.info("Parsing \"{}\" Users File", group);
-            try {
-                userService.updateUsersByDepartment(new UserFileParser(file).getLines(), group);
-                return ResponseEntity.ok().build();
-            } catch (EntityCreationException | ListNotFoundException e) {
-                log.info("{} Users not created", group);
-                log.info(e.getMessage());
-                return ResponseEntity.badRequest().build();
-            }
-        }
-        return ResponseEntity.badRequest().build();
     }
 
     //This is a create script, to be used once per new environment, maybe in the future this could just POST to alfresco directly.
