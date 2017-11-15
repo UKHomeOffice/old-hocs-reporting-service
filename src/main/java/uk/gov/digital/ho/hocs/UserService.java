@@ -37,7 +37,7 @@ public class UserService {
     @Cacheable(value = "usersByDeptName", key = "#departmentRef")
     public UserCreateRecord getUsersByDepartmentName(String departmentRef) throws ListNotFoundException {
         Set<User> users = userRepository.findAllByDepartment(departmentRef);
-        if(!users.isEmpty())
+        if(users.isEmpty())
         {
             throw new ListNotFoundException();
         }
@@ -47,7 +47,7 @@ public class UserService {
     @Cacheable(value = "usersByGroupName", key = "#groupRef")
     public UserRecord getUsersByGroupName(String groupRef) throws ListNotFoundException {
         Set<User> users = userRepository.findAllByBusinessGroupReference(groupRef);
-        if(!users.isEmpty())
+        if(users.isEmpty())
         {
             throw new ListNotFoundException();
         }
