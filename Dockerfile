@@ -2,7 +2,7 @@ FROM quay.io/ukhomeofficedigital/openjdk8
 
 ENV USER user_hocs_data
 ENV GROUP group_hocs_data
-ENV NAME hocs-data-service
+ENV NAME hocs-reporting-service
 ENV JAR_PATH build/libs
 
 RUN yum update -y glibc && \

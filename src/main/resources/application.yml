@@ -1,5 +1,5 @@
 spring:
  datasource:
-    url: ${sls.jdbc.url}
-    username: ${sls.db.username}
-    password: ${sls.db.password}
+    url: ${reporting.jdbc.url}
+    username: ${reporting.db.username}
+    password: ${reporting.db.password}

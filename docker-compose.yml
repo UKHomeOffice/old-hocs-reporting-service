@@ -9,7 +9,7 @@ services:
       - 5432:5432
 
     networks:
-      - sls-network
+      - reporting-network
 
     environment:
      POSTGRES_USER: root
@@ -18,20 +18,20 @@ services:
     volumes:
       - dbdata:/var/lib/postgresql
 
-  sls:
+  reporting:
     build:
       context: .
 
     environment:
       spring.profiles.active: postgres
       server.port: 8080
-      sls.db.hostname: database
-      sls.db.username: root
-      sls.db.password: dev
-      sls.db.name: postgres
-      sls.db.port: 5432
-      sls.schema.name: public
-      hostname: sls:8080
+      reporting.db.hostname: database
+      reporting.db.username: root
+      reporting.db.password: dev
+      reporting.db.name: postgres
+      reporting.db.port: 5432
+      reporting.schema.name: public
+      hostname: reporting:8080
 
     depends_on:
       - database
@@ -40,7 +40,7 @@ services:
       - 9001:8080
 
     networks:
-      - sls-network
+      - reporting-network
 
     command: /app/scripts/run.sh
 
@@ -48,7 +48,7 @@ services:
       - ../hocs-data/data/:/app/data/
 
 networks:
-  sls-network:
+  reporting-network:
 
 volumes:
   dbdata: {}
