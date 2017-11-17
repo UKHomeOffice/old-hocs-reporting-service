@@ -1,7 +1,7 @@
 FROM quay.io/ukhomeofficedigital/openjdk8
 
-ENV USER user_hocs_data
-ENV GROUP group_hocs_data
+ENV USER user_hocs_reporting
+ENV GROUP group_hocs_reporting
 ENV NAME hocs-reporting-service
 ENV JAR_PATH build/libs
 
@@ -26,4 +26,4 @@ EXPOSE 8000
 
 USER ${USER}
 
-CMD /app/scripts/start.sh
+CMD /app/scripts/run.sh
