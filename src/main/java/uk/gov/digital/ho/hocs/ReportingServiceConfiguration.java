@@ -10,11 +10,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.text.SimpleDateFormat;
 
 @Configuration
-public class DataServiceConfiguration extends WebMvcConfigurerAdapter {
+public class ReportingServiceConfiguration extends WebMvcConfigurerAdapter {
 
 
     @Autowired
-    public DataServiceConfiguration(ObjectMapper objectMapper) {
+    public ReportingServiceConfiguration(ObjectMapper objectMapper) {
         initialiseObjectMapper(objectMapper);
     }
 
