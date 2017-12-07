@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "events")
+@Table(name = "contact_details")
 @Access(AccessType.FIELD)
 @NoArgsConstructor
 public class ContactDetails {

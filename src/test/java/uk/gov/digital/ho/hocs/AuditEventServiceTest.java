@@ -8,13 +8,13 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.dao.DataIntegrityViolationException;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
-import uk.gov.digital.ho.hocs.model.Event;
+import uk.gov.digital.ho.hocs.model.AuditEvent;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EventServiceTest {
+public class AuditEventServiceTest {
 
     @Mock
     private EventRepository mockEventRepo;
@@ -28,33 +28,33 @@ public class EventServiceTest {
 
     @Test
     public void testCreateEvent() {
-        Event event = new Event();
+        AuditEvent auditEvent = new AuditEvent();
 
-        eventService.createEvent(event);
+        eventService.createEvent(auditEvent);
 
-        verify(mockEventRepo).save(event);
+        verify(mockEventRepo).save(auditEvent);
     }
 
     @Test(expected = EntityCreationException.class)
     public void testRepoDataIntegrityExceptionThrowsEntityCreationException() {
-        Event event = new Event();
+        AuditEvent auditEvent = new AuditEvent();
 
-        when(mockEventRepo.save(event)).thenThrow(new DataIntegrityViolationException("Thrown DataIntegrityViolationException", new ConstraintViolationException("", null, "event_id_idempotent")));
+        when(mockEventRepo.save(auditEvent)).thenThrow(new DataIntegrityViolationException("Thrown DataIntegrityViolationException", new ConstraintViolationException("", null, "event_id_idempotent")));
 
-        eventService.createEvent(event);
+        eventService.createEvent(auditEvent);
 
-        verify(mockEventRepo).save(event);
+        verify(mockEventRepo).save(auditEvent);
     }
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testRepoUnhandledExceptionThrowsDataIntegrityException() {
-        Event event = new Event();
+        AuditEvent auditEvent = new AuditEvent();
 
-        when(mockEventRepo.save(event)). thenThrow(new DataIntegrityViolationException("Thrown DataIntegrityViolationException", new ConstraintViolationException("", null, "")));
+        when(mockEventRepo.save(auditEvent)). thenThrow(new DataIntegrityViolationException("Thrown DataIntegrityViolationException", new ConstraintViolationException("", null, "")));
 
-        eventService.createEvent(event);
+        eventService.createEvent(auditEvent);
 
-        verify(mockEventRepo).save(event);
+        verify(mockEventRepo).save(auditEvent);
     }
 
 }

@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.digital.ho.hocs.model.Event;
+import uk.gov.digital.ho.hocs.model.AuditEvent;
 
 import java.time.LocalDateTime;
 
@@ -38,16 +38,16 @@ public class EventRepositoryTest {
         String before = "Before";
         String after = "After";
 
-        Event event = new Event(uuid,dateTime, nodeRef, caseRef, caseType, before, after);
-        Long id = eventRepository.save(event).getId();
+        AuditEvent auditEvent = new AuditEvent(uuid,dateTime, nodeRef, caseRef, caseType, before, after);
+        Long id = eventRepository.save(auditEvent).getId();
 
-        Event returnedEvent = eventRepository.findOne(id);
+        AuditEvent returnedAuditEvent = eventRepository.findOne(id);
 
-        assertThat(returnedEvent.getUuid()).isEqualTo(uuid);
-        assertThat(returnedEvent.getTimestamp()).isEqualTo(dateTime);
-        assertThat(returnedEvent.getNodeReference()).isEqualTo(nodeRef);
-        assertThat(returnedEvent.getCaseReference()).isEqualTo(caseRef);
-        assertThat(returnedEvent.getBefore()).isEqualTo(before);
-        assertThat(returnedEvent.getAfter()).isEqualTo(after);
+        assertThat(returnedAuditEvent.getUuid()).isEqualTo(uuid);
+        assertThat(returnedAuditEvent.getTimestamp()).isEqualTo(dateTime);
+        assertThat(returnedAuditEvent.getNodeReference()).isEqualTo(nodeRef);
+        assertThat(returnedAuditEvent.getCaseReference()).isEqualTo(caseRef);
+        assertThat(returnedAuditEvent.getBefore()).isEqualTo(before);
+        assertThat(returnedAuditEvent.getAfter()).isEqualTo(after);
     }
 }

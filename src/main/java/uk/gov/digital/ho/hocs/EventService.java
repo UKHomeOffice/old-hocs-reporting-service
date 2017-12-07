@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
+import uk.gov.digital.ho.hocs.model.AuditEvent;
 import uk.gov.digital.ho.hocs.model.CaseType;
-import uk.gov.digital.ho.hocs.model.Event;
 
 import javax.transaction.Transactional;
 
@@ -22,10 +22,10 @@ public class EventService {
     }
 
     @Transactional
-    public void createEvent(Event event) throws EntityCreationException {
+    public void createEvent(AuditEvent auditEvent) throws EntityCreationException {
         try {
-            repo.save(event);
-            createCaseData(event);
+            repo.save(auditEvent);
+            createCaseData(auditEvent);
         } catch (DataIntegrityViolationException e) {
 
             if (e.getCause() instanceof ConstraintViolationException &&
@@ -37,9 +37,9 @@ public class EventService {
         }
     }
 
-    private void createCaseData(Event event) {
-        if(event.getCaseType() != null) {
-            switch (Enum.valueOf(CaseType.class, event.getCaseType())) {
+    private void createCaseData(AuditEvent auditEvent) {
+        if(auditEvent.getCaseType() != null) {
+            switch (Enum.valueOf(CaseType.class, auditEvent.getCaseType())) {
                 case DCU:
 
                     break;
