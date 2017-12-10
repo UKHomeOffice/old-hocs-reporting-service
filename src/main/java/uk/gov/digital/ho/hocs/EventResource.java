@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.Event;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 
 @RestController
 @Slf4j
@@ -29,21 +24,29 @@ public class EventResource {
 
     @RequestMapping(value = "/event/add", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity postEvent(@RequestBody Event event) {
-        log.info("writing auditEvent {}", event.getUuid());
 
-        String file = "messages.log";
-        System.out.println("Writing to file: " + file);
-        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file))) {
-            writer.write(event.toString() + "\n");
+
+        // Please remove event.tostring annotation when this code is removed.
+        //String file = "messages.log";
+        //System.out.println("Writing to file: " + file);
+        //try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(file))) {
+        //    writer.append(event.toString() + "\n");
+        //} catch (EntityCreationException e) {
+        //    log.info("auditEvent not written {}", event.getUuid());
+        //    log.info(e.getMessage());
+        //    return ResponseEntity.badRequest().build();
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
+
+        log.info("Writing Event \"{}\"", event.getUuid());
+        try {
+            eventService.createEvent(event);
+            return ResponseEntity.ok().build();
         } catch (EntityCreationException e) {
-            log.info("auditEvent not written {}", event.getUuid());
+            log.info("Event \"{}\" not written", event.getUuid());
             log.info(e.getMessage());
             return ResponseEntity.badRequest().build();
-        } catch (IOException e) {
-            e.printStackTrace();
-
         }
-
-        return ResponseEntity.ok("OK");
     }
 }

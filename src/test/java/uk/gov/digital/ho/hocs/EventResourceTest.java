@@ -5,9 +5,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
-import uk.gov.digital.ho.hocs.model.AuditEvent;
+import uk.gov.digital.ho.hocs.model.Event;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
@@ -20,23 +23,25 @@ public class EventResourceTest {
     private EventResource eventResource;
 
     @Before
-    public void setUp() {eventResource = new EventResource(eventService);}
+    public void setUp() {
+        eventResource = new EventResource(eventService);}
 
 
     @Test
     public void shouldReturnBadRequestWhenUnableCreate() throws EntityCreationException {
-        AuditEvent auditEvent = new AuditEvent();
-        doThrow(new EntityCreationException("")).when(eventService).createEvent(auditEvent);
-        //ResponseEntity httpResponse = eventResource.postEvent(auditEvent);
-        //assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
-        verify(eventService).createEvent(auditEvent);
+        Event event = new Event();
+        doThrow(new EntityCreationException("")).when(eventService).createEvent(event);
+        ResponseEntity httpResponse = eventResource.postEvent(event);
+        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+        verify(eventService).createEvent(event);
     }
 
     @Test
     public void shouldReturnOKWhenAbleCreate() throws EntityCreationException {
-        AuditEvent auditEvent = new AuditEvent();
-        //ResponseEntity httpResponse = eventResource.postEvent(auditEvent);
-        //assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(eventService).createEvent(auditEvent);
+        Event event = new Event();
+        ResponseEntity httpResponse = eventResource.postEvent(event);
+        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        verify(eventService).createEvent(event);
     }
 }

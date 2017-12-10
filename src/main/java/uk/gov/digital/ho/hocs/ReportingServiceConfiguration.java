@@ -3,26 +3,26 @@ package uk.gov.digital.ho.hocs;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import java.text.SimpleDateFormat;
 
 @Configuration
-public class ReportingServiceConfiguration extends WebMvcConfigurerAdapter {
-
+public class ReportingServiceConfiguration {
 
     @Autowired
     public ReportingServiceConfiguration(ObjectMapper objectMapper) {
         initialiseObjectMapper(objectMapper);
     }
 
-    private static ObjectMapper initialiseObjectMapper(final ObjectMapper m) {
+    private static void initialiseObjectMapper(final ObjectMapper m) {
         m.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
+
+        m.registerModule(new JavaTimeModule());
         m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         m.enable(SerializationFeature.INDENT_OUTPUT);
         m.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        return m;
     }
 }

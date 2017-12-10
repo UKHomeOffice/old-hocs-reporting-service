@@ -1,5 +1,6 @@
 package uk.gov.digital.ho.hocs.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -7,7 +8,9 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+@AllArgsConstructor
 @NoArgsConstructor
+//TODO: ToString only used by temp file writing code in resource.
 @ToString
 public class Event {
 
@@ -18,18 +21,11 @@ public class Event {
     private LocalDateTime timestamp;
 
     @Getter
-    private String nodeReference;
-
-    @Getter
     private String caseReference;
-
-    @Getter
-    private String caseType;
 
     @Getter
     private Map<String,String> before;
 
     @Getter
     private Map<String,String> after;
-
 }
