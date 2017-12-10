@@ -27,11 +27,8 @@ public class AuditEvent {
     @Column(name = "case_reference", nullable = false)
     private String caseReference;
 
-    @Column(name = "before", nullable = false)
-    private String before;
-
-    @Column(name = "after", nullable = false)
-    private String after;
+    @Column(name = "data", nullable = false)
+    private String data;
 
     public AuditEvent(Event event) {
         if(event.getUuid() != null) {
@@ -43,11 +40,8 @@ public class AuditEvent {
         if(event.getCaseReference() != null) {
             this.caseReference = event.getCaseReference();
         }
-        if(event.getBefore() != null) {
-            this.before = event.getBefore().toString();
-        }
-        if(event.getBefore() != null) {
-            this.after = event.getAfter().toString();
+        if(event.getData() != null) {
+            this.data = event.getData().toString();
         }
     }
 

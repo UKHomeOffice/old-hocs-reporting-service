@@ -6,8 +6,7 @@ CREATE TABLE IF NOT EXISTS events
     msg_uuid        TEXT          NOT NULL,
     msg_timestamp   TIMESTAMP     NOT NULL,
     case_reference  TEXT          NOT NULL,
-    before          TEXT          NOT NULL,
-    after           TEXT          NOT NULL,
+    data            TEXT          NOT NULL,
 
     CONSTRAINT event_id_idempotent UNIQUE (msg_uuid,msg_timestamp)
 );

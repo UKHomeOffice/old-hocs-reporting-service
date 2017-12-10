@@ -24,8 +24,5 @@ public class Event {
     private String caseReference;
 
     @Getter
-    private Map<String,String> before;
-
-    @Getter
-    private Map<String,String> after;
+    private Map<String,String> data;
 }

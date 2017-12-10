@@ -36,9 +36,8 @@ public class CasePropertiesRepositoryTest {
         String uuid = "uuid";
         LocalDateTime dateTime = LocalDateTime.now();
         String caseRef = "CaseRef";
-        Map<String, String> before = new HashMap<>();
-        Map<String, String> after = new HashMap<>();
-        Event event = new Event(uuid, dateTime, caseRef, before, after);
+        Map<String, String> data = new HashMap<>();
+        Event event = new Event(uuid, dateTime, caseRef, data);
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();
@@ -58,8 +57,8 @@ public class CasePropertiesRepositoryTest {
         LocalDateTime dateTime = LocalDateTime.now();
         String caseRef = "CaseRef";
         Map<String, String> before = new HashMap<>();
-        Map<String, String> after = new HashMap<>();
-        Event event = new Event(uuid, dateTime, caseRef, before, after);
+        Map<String, String> data = new HashMap<>();
+        Event event = new Event(uuid, dateTime, caseRef, data);
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();

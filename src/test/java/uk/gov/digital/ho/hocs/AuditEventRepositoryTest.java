@@ -36,9 +36,8 @@ public class AuditEventRepositoryTest {
         String uuid = "uuid";
         LocalDateTime dateTime = LocalDateTime.now();
         String caseRef = "CaseRef";
-        Map<String, String> before = new HashMap<>();
-        Map<String, String> after = new HashMap<>();
-        Event event = new Event(uuid, dateTime, caseRef, before, after);
+        Map<String, String> data = new HashMap<>();
+        Event event = new Event(uuid, dateTime, caseRef, data);
 
         AuditEvent auditEvent = new AuditEvent(event);
         Long id = auditEventRepository.save(auditEvent).getId();
@@ -47,8 +46,7 @@ public class AuditEventRepositoryTest {
         assertThat(returnedAuditEvent.getUuid()).isEqualTo(auditEvent.getUuid());
         assertThat(returnedAuditEvent.getTimestamp()).isEqualTo(auditEvent.getTimestamp());
         assertThat(returnedAuditEvent.getCaseReference()).isEqualTo(auditEvent.getCaseReference());
-        assertThat(returnedAuditEvent.getBefore()).isEqualTo(auditEvent.getBefore());
-        assertThat(returnedAuditEvent.getAfter()).isEqualTo(auditEvent.getAfter());
+        assertThat(returnedAuditEvent.getData()).isEqualTo(auditEvent.getData());
 
         assertThat(returnedAuditEvent).isEqualTo(auditEvent);
     }
@@ -58,9 +56,8 @@ public class AuditEventRepositoryTest {
         String uuid = "uuid";
         LocalDateTime dateTime = LocalDateTime.now();
         String caseRef = "CaseRef";
-        Map<String, String> before = new HashMap<>();
-        Map<String, String> after = new HashMap<>();
-        Event event = new Event(uuid, dateTime, caseRef, before, after);
+        Map<String, String> data = new HashMap<>();
+        Event event = new Event(uuid, dateTime, caseRef, data);
 
         AuditEvent auditEvent = new AuditEvent(event);
         Long id = auditEventRepository.save(auditEvent).getId();

@@ -306,7 +306,7 @@ public class CaseProperties {
             this.caseReference = event.getCaseReference();
         }
 
-        Map<String,String> after = event.getAfter();
+        Map<String,String> after = event.getData();
 
         advice  = SetString("advice", after);
         allocateToResponderTarget  = SetString("allocateToResponderTarget", after);
@@ -405,7 +405,7 @@ public class CaseProperties {
            value = map.getOrDefault(key, null);
        }
 
-       if(value.equals("null") || value.equals("")) {
+       if(value == "null" || value == "") {
            value = null;
        }
 
