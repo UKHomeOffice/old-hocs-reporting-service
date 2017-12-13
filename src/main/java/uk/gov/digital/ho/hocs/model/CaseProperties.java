@@ -4,8 +4,12 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 @Entity
 @Table(name = "properties")
@@ -29,19 +33,16 @@ public class CaseProperties {
     private String caseReference = "";
 
     @Column(name = "acpo_consultation")
-    private String acpoConsultation;
+    private Boolean acpoConsultation;
 
     @Column(name = "advice")
     private String advice;
 
-    @Column(name = "allocate_header")
-    private String allocateHeader;
-
     @Column(name = "allocate_target")
-    private String allocateTarget;
+    private LocalDateTime allocateTarget;
 
     @Column(name = "allocate_to_responder_target")
-    private String allocateToResponderTarget;
+    private LocalDateTime allocateToResponderTarget;
 
     @Column(name = "answering_minister")
     private String answeringMinister;
@@ -80,7 +81,7 @@ public class CaseProperties {
     private String applicantTitle;
 
     @Column(name = "arriving_date_in_uk")
-    private String arrivingDateInUK;
+    private LocalDateTime arrivingDateInUK;
 
     @Column(name = "assigned_team")
     private String assignedTeam;
@@ -92,19 +93,19 @@ public class CaseProperties {
     private String assignedUser;
 
     @Column(name = "auto_created_case")
-    private String autoCreatedCase;
+    private Boolean autoCreatedCase;
 
     @Column(name = "bring_up_date")
-    private String bringUpDate;
+    private LocalDateTime bringUpDate;
 
     @Column(name = "cabinet_office_consultation")
-    private String cabinetOfficeConsultation;
+    private Boolean cabinetOfficeConsultation;
 
     @Column(name = "case_ref")
     private String caseRef;
 
     @Column(name = "case_response_deadline")
-    private String caseResponseDeadline;
+    private LocalDateTime caseResponseDeadline;
 
     @Column(name = "case_status")
     private String caseStatus;
@@ -112,20 +113,17 @@ public class CaseProperties {
     @Column(name = "case_task")
     private String caseTask;
 
-    @Column(name = "case_workflow_status")
-    private String caseWorkflowStatus;
-
     @Column(name = "channel")
     private String channel;
 
     @Column(name = "comment_count")
-    private String commentCount;
+    private Integer commentCount;
 
     @Column(name = "complex")
-    private String complex;
+    private Boolean complex;
 
     @Column(name = "consent_attached")
-    private String consentAttached;
+    private Boolean consentAttached;
 
     @Column(name = "correspondent_address_line1")
     private String correspondentAddressLine1;
@@ -170,16 +168,16 @@ public class CaseProperties {
     private String countryOfDestination;
 
     @Column(name = "created")
-    private String created;
+    private LocalDateTime created;
 
     @Column(name = "creator")
     private String creator;
 
     @Column(name = "date_of_letter")
-    private String dateOfLetter;
+    private LocalDateTime dateOfLetter;
 
     @Column(name = "date_received")
-    private String dateReceived;
+    private LocalDateTime dateReceived;
 
     @Column(name = "defer_due_to")
     private String deferDueTo;
@@ -191,10 +189,10 @@ public class CaseProperties {
     private String deliveryType;
 
     @Column(name = "departure_date_from_uk")
-    private String departureDateFromUK;
+    private LocalDateTime departureDateFromUK;
 
     @Column(name = "dispatched_date")
-    private String dispatchedDate;
+    private LocalDateTime dispatchedDate;
 
     @Column(name = "dispatch_target")
     private String dispatchTarget;
@@ -203,22 +201,22 @@ public class CaseProperties {
     private String documentAdded;
 
     @Column(name = "draft_date")
-    private String draftDate;
+    private LocalDateTime draftDate;
 
     @Column(name = "draft_response_target")
     private String draftResponseTarget;
 
     @Column(name = "enforcement_notice_deadline")
-    private String enforcementNoticeDeadline;
+    private LocalDateTime enforcementNoticeDeadline;
 
     @Column(name = "enforcement_notice_needed")
-    private String enforcementNoticeNeeded;
+    private Boolean enforcementNoticeNeeded;
 
     @Column(name = "examiner_security_check")
-    private String examinerSecurityCheck;
+    private Boolean examinerSecurityCheck;
 
     @Column(name = "fee_included")
-    private String feeIncluded;
+    private Boolean feeIncluded;
 
     @Column(name = "final_approval_target")
     private String finalApprovalTarget;
@@ -227,10 +225,10 @@ public class CaseProperties {
     private String foiDisclosure;
 
     @Column(name = "foi_is_eir")
-    private String foiIsEir;
+    private Boolean foiIsEir;
 
     @Column(name = "foi_minister_sign_off")
-    private String foiMinisterSignOff;
+    private Boolean foiMinisterSignOff;
 
     @Column(name = "hard_copy_received")
     private String hardCopyReceived;
@@ -257,10 +255,10 @@ public class CaseProperties {
     private String hoCaseOfficer;
 
     @Column(name = "ho_joined")
-    private String hoJoined;
+    private Boolean hoJoined;
 
     @Column(name = "home_secretary_reply")
-    private String homeSecretaryReply;
+    private Boolean homeSecretaryReply;
 
     @Column(name = "ico_complaint_officer")
     private String icoComplaintOfficer;
@@ -269,22 +267,22 @@ public class CaseProperties {
     private String icoOutcome;
 
     @Column(name = "ico_outcome_date")
-    private String icoOutcomeDate;
+    private LocalDateTime icoOutcomeDate;
 
     @Column(name = "ico_reference")
     private String icoReference;
 
     @Column(name = "individual_household")
-    private String individualHousehold;
+    private Boolean individualHousehold;
 
     @Column(name = "is_grouped_master")
-    private String isGroupedMaster;
+    private Boolean isGroupedMaster;
 
     @Column(name = "is_grouped_slave")
-    private String isGroupedSlave;
+    private Boolean isGroupedSlave;
 
     @Column(name = "is_linked_case")
-    private String isLinkedCase;
+    private Boolean isLinkedCase;
 
     @Column(name = "leaders_address_aboard")
     private String leadersAddressAboard;
@@ -311,7 +309,7 @@ public class CaseProperties {
     private String minutesCollated;
 
     @Column(name = "modified")
-    private String modified;
+    private LocalDateTime modified;
 
     @Column(name = "modifier")
     private String modifier;
@@ -323,7 +321,7 @@ public class CaseProperties {
     private String name;
 
     @Column(name = "new_information_released")
-    private String newInformationReleased;
+    private Boolean newInformationReleased;
 
     @Column(name = "node_dbid")
     private String nodedbid;
@@ -332,10 +330,10 @@ public class CaseProperties {
     private String nodeuuid;
 
     @Column(name = "nslg_consultation")
-    private String nslgConsultation;
+    private Boolean nslgConsultation;
 
     @Column(name = "number_of_children")
-    private String numberOfChildren;
+    private Integer numberOfChildren;
 
     @Column(name = "office_of_origin")
     private String officeOfOrigin;
@@ -359,10 +357,10 @@ public class CaseProperties {
     private String otherCountriesToBeVisited;
 
     @Column(name = "owner_updated_datetime")
-    private String ownerUpdatedDatetime;
+    private LocalDateTime ownerUpdatedDatetime;
 
     @Column(name = "parly_dispatch")
-    private String parlyDispatch;
+    private Boolean parlyDispatch;
 
     @Column(name = "party_leader_deputy_last_name")
     private String partyLeaderDeputyLastName;
@@ -374,7 +372,7 @@ public class CaseProperties {
     private String partyLeaderDeputyPassportIssuedAt;
 
     @Column(name = "party_leader_deputy_passport_issued_on")
-    private String partyLeaderDeputyPassportIssuedOn;
+    private LocalDateTime partyLeaderDeputyPassportIssuedOn;
 
     @Column(name = "party_leader_deputy_passport_number")
     private String partyLeaderDeputyPassportNumber;
@@ -389,16 +387,16 @@ public class CaseProperties {
     private String partyLeaderPassportIssuedAt;
 
     @Column(name = "party_leader_passport_issued_on")
-    private String partyLeaderPassportIssuedOn;
+    private LocalDateTime partyLeaderPassportIssuedOn;
 
     @Column(name = "party_leader_passport_number")
     private String partyLeaderPassportNumber;
 
     @Column(name = "pit_extension")
-    private String pitExtension;
+    private Boolean pitExtension;
 
     @Column(name = "pit_letter_sent_date")
-    private String pitLetterSentDate;
+    private LocalDateTime pitLetterSentDate;
 
     @Column(name = "pit_qualified_exemptions")
     private String pitQualifiedExemptions;
@@ -407,10 +405,10 @@ public class CaseProperties {
     private String poTarget;
 
     @Column(name = "pq_api_created_case")
-    private String pqApiCreatedCase;
+    private Boolean pqApiCreatedCase;
 
     @Column(name = "priority")
-    private String priority;
+    private Boolean priority;
 
     @Column(name = "reply_to_address_line1")
     private String replyToAddressLine1;
@@ -422,10 +420,10 @@ public class CaseProperties {
     private String replyToAddressLine3;
 
     @Column(name = "reply_to_applicant")
-    private String replyToApplicant;
+    private Boolean replyToApplicant;
 
     @Column(name = "reply_to_correspondent")
-    private String replyToCorrespondent;
+    private Boolean replyToCorrespondent;
 
     @Column(name = "reply_to_country")
     private String replyToCountry;
@@ -437,7 +435,7 @@ public class CaseProperties {
     private String replyToName;
 
     @Column(name = "reply_to_number_ten_copy")
-    private String replyToNumberTenCopy;
+    private Boolean replyToNumberTenCopy;
 
     @Column(name = "reply_to_postcode")
     private String replyToPostcode;
@@ -448,29 +446,32 @@ public class CaseProperties {
     @Column(name = "responder_hub_target")
     private String responderHubTarget;
 
+    @Column(name = "response_date")
+    private LocalDateTime responseDate;
+
     @Column(name = "return_case_at")
-    private String returnCaseAt;
+    private Boolean returnCaseAt;
 
     @Column(name = "returned_count")
-    private String returnedCount;
+    private Integer returnedCount;
 
     @Column(name = "reviewed_by_perm_sec")
-    private String reviewedByPermSec;
+    private Boolean reviewedByPermSec;
 
     @Column(name = "reviewed_by_spads")
-    private String reviewedBySpads;
+    private Boolean reviewedBySpads;
 
     @Column(name = "round_robin")
-    private String roundRobin;
+    private Boolean roundRobin;
 
     @Column(name = "round_robin_advice_consultation")
-    private String roundRobinAdviceConsultation;
+    private Boolean roundRobinAdviceConsultation;
 
     @Column(name = "royals_consultation")
-    private String royalsConsultation;
+    private Boolean royalsConsultation;
 
     @Column(name = "scs_approval_target")
-    private String scsApprovalTarget;
+    private LocalDateTime scsApprovalTarget;
 
     @Column(name = "sec_correspondent_consent_attached")
     private String secCorrespondentConsentAttached;
@@ -497,7 +498,7 @@ public class CaseProperties {
     private String secondaryCorrespondentPostcode;
 
     @Column(name = "secondary_correspondent_reply_to")
-    private String secondaryCorrespondentReplyTo;
+    private Boolean secondaryCorrespondentReplyTo;
 
     @Column(name = "secondary_correspondent_surname")
     private String secondaryCorrespondentSurname;
@@ -515,16 +516,16 @@ public class CaseProperties {
     private String secondaryTypeOfCorrespondent;
 
     @Column(name = "signed_by_home_sec")
-    private String signedByHomeSec;
+    private Boolean signedByHomeSec;
 
     @Column(name = "signed_by_lords_minister")
-    private String signedByLordsMinister;
+    private Boolean signedByLordsMinister;
 
     @Column(name = "status_updated_datetime")
-    private String statusUpdatedDatetime;
+    private LocalDateTime statusUpdatedDatetime;
 
     @Column(name = "task_updated_datetime")
-    private String taskUpdatedDatetime;
+    private LocalDateTime taskUpdatedDatetime;
 
     @Column(name = "third_party_consent_attached")
     private String thirdPartyConsentAttached;
@@ -554,7 +555,7 @@ public class CaseProperties {
     private String thirdPartyCorrespondentPostcode;
 
     @Column(name = "third_party_correspondent_reply_to")
-    private String thirdPartyCorrespondentReplyTo;
+    private Boolean thirdPartyCorrespondentReplyTo;
 
     @Column(name = "third_party_correspondent_surname")
     private String thirdPartyCorrespondentSurname;
@@ -575,7 +576,7 @@ public class CaseProperties {
     private String tribunalOutcome;
 
     @Column(name = "tribunal_outcome_date")
-    private String tribunalOutcomeDate;
+    private LocalDateTime tribunalOutcomeDate;
 
     @Column(name = "tsol_rep")
     private String tsolRep;
@@ -605,11 +606,10 @@ public class CaseProperties {
 
         Map<String,String> after = event.getData();
 
-        acpoConsultation  = SetString("acpoConsultation", after);
+        acpoConsultation  = SetBool("acpoConsultation", after);
         advice  = SetString("advice", after);
-        allocateHeader  = SetString("allocateHeader", after);
-        allocateTarget  = SetString("allocateTarget", after);
-        allocateToResponderTarget  = SetString("allocateToResponderTarget", after);
+        allocateTarget  = SetDate("allocateTarget", after);
+        allocateToResponderTarget  = SetDate("allocateToResponderTarget", after);
         answeringMinister  = SetString("answeringMinister", after);
         appellant  = SetString("appellant", after);
         applicantAddressLine1  = SetString("applicantAddressLine1", after);
@@ -622,22 +622,21 @@ public class CaseProperties {
         applicantSurname  = SetString("applicantSurname", after);
         applicantTelephone  = SetString("applicantTelephone", after);
         applicantTitle  = SetString("applicantTitle", after);
-        arrivingDateInUK  = SetString("arrivingDateInUK", after);
+        arrivingDateInUK  = SetDate("arrivingDateInUK", after);
         assignedTeam = SetString("assignedTeam", after);
         assignedUnit = SetString("assignedUnit", after);
         assignedUser = SetString("assignedUser", after);
-        autoCreatedCase  = SetString("autoCreatedCase", after);
-        bringUpDate  = SetString("bringUpDate", after);
-        cabinetOfficeConsultation  = SetString("cabinetOfficeConsultation", after);
+        autoCreatedCase  = SetBool("autoCreatedCase", after);
+        bringUpDate  = SetDate("bringUpDate", after);
+        cabinetOfficeConsultation  = SetBool("cabinetOfficeConsultation", after);
         caseRef  = SetString("caseRef", after);
-        caseResponseDeadline  = SetString("caseResponseDeadline", after);
+        caseResponseDeadline  = SetDate("caseResponseDeadline", after);
         caseTask = SetString("caseTask", after);
-        caseWorkflowStatus = SetString("caseWorkflowStatus", after);
         caseStatus = SetString("caseStatus", after);
         channel  = SetString("channel", after);
-        commentCount  = SetString("commentCount", after);
-        complex  = SetString("complex", after);
-        consentAttached  = SetString("consentAttached", after);
+        commentCount  = SetInt("commentCount", after);
+        complex  = SetBool("complex", after);
+        consentAttached  = SetBool("consentAttached", after);
         correspondentAddressLine1 = SetString("correspondentAddressLine1", after);
         correspondentAddressLine2 = SetString("correspondentAddressLine2", after);
         correspondentAddressLine3 = SetString("correspondentAddressLine3", after);
@@ -652,27 +651,27 @@ public class CaseProperties {
         correspondingName  = SetString("correspondingName", after);
         countriesToBeTravelledThrough  = SetString("countriesToBeTravelledThrough", after);
         countryOfDestination  = SetString("countryOfDestination", after);
-        created  = SetString("created", after);
+        created  = SetDate("created", after);
         creator  = SetString("creator", after);
-        dateOfLetter  = SetString("dateOfLetter", after);
-        dateReceived  = SetString("dateReceived", after);
+        dateOfLetter  = SetDate("dateOfLetter", after);
+        dateReceived  = SetDate("dateReceived", after);
         deferDueTo  = SetString("deferDueTo", after);
         deliveryNumber  = SetString("deliveryNumber", after);
         deliveryType  = SetString("deliveryType", after);
-        departureDateFromUK  = SetString("departureDateFromUK", after);
-        dispatchedDate  = SetString("dispatchedDate", after);
+        departureDateFromUK  = SetDate("departureDateFromUK", after);
+        dispatchedDate  = SetDate("dispatchedDate", after);
         dispatchTarget  = SetString("dispatchTarget", after);
         documentAdded  = SetString("documentAdded", after);
-        draftDate  = SetString("draftDate", after);
+        draftDate  = SetDate("draftDate", after);
         draftResponseTarget  = SetString("draftResponseTarget", after);
-        enforcementNoticeDeadline  = SetString("enforcementNoticeDeadline", after);
-        enforcementNoticeNeeded  = SetString("enforcementNoticeNeeded", after);
-        examinerSecurityCheck  = SetString("examinerSecurityCheck", after);
-        feeIncluded  = SetString("feeIncluded", after);
+        enforcementNoticeDeadline  = SetDate("enforcementNoticeDeadline", after);
+        enforcementNoticeNeeded  = SetBool("enforcementNoticeNeeded", after);
+        examinerSecurityCheck  = SetBool("examinerSecurityCheck", after);
+        feeIncluded  = SetBool("feeIncluded", after);
         finalApprovalTarget  = SetString("finalApprovalTarget", after);
         foiDisclosure  = SetString("foiDisclosure", after);
-        foiIsEir  = SetString("foiIsEir", after);
-        foiMinisterSignOff  = SetString("foiMinisterSignOff", after);
+        foiIsEir  = SetBool("foiIsEir", after);
+        foiMinisterSignOff  = SetBool("foiMinisterSignOff", after);
         hardCopyReceived  = SetString("hardCopyReceived", after);
         hmpoApplicationNumber  = SetString("hmpoApplicationNumber", after);
         hmpoComplaintOutcome  = SetString("hmpoComplaintOutcome", after);
@@ -681,16 +680,16 @@ public class CaseProperties {
         hmpoRefundDecision  = SetString("hmpoRefundDecision", after);
         hmpoResponse  = SetString("hmpoResponse", after);
         hoCaseOfficer  = SetString("hoCaseOfficer", after);
-        hoJoined  = SetString("hoJoined", after);
-        homeSecretaryReply  = SetString("homeSecretaryReply", after);
+        hoJoined  = SetBool("hoJoined", after);
+        homeSecretaryReply  = SetBool("homeSecretaryReply", after);
         icoComplaintOfficer  = SetString("icoComplaintOfficer", after);
         icoOutcome  = SetString("icoOutcome", after);
-        icoOutcomeDate  = SetString("icoOutcomeDate", after);
+        icoOutcomeDate  = SetDate("icoOutcomeDate", after);
         icoReference  = SetString("icoReference", after);
-        individualHousehold  = SetString("individualHousehold", after);
-        isGroupedMaster  = SetString("isGroupedMaster", after);
-        isGroupedSlave  = SetString("isGroupedSlave", after);
-        isLinkedCase  = SetString("isLinkedCase", after);
+        individualHousehold  = SetBool("individualHousehold", after);
+        isGroupedMaster  = SetBool("isGroupedMaster", after);
+        isGroupedSlave  = SetBool("isGroupedSlave", after);
+        isLinkedCase  = SetBool("isLinkedCase", after);
         leadersAddressAboard  = SetString("leadersAddressAboard", after);
         markupDecision  = SetString("markupDecision", after);
         markupMinister  = SetString("markupMinister", after);
@@ -699,15 +698,15 @@ public class CaseProperties {
         markupUnit  = SetString("markupUnit", after);
         member  = SetString("member", after);
         minutesCollated  = SetString("minutesCollated", after);
-        modified  = SetString("modified", after);
+        modified  = SetDate("modified", after);
         modifier  = SetString("modifier", after);
         mpRef  = SetString("mpRef", after);
         name  = SetString("name", after);
-        newInformationReleased  = SetString("newInformationReleased", after);
+        newInformationReleased  = SetBool("newInformationReleased", after);
         nodedbid  = SetString("node-dbid", after);
         nodeuuid  = SetString("node-uuid", after);
-        nslgConsultation  = SetString("nslgConsultation", after);
-        numberOfChildren  = SetString("numberOfChildren", after);
+        nslgConsultation  = SetBool("nslgConsultation", after);
+        numberOfChildren  = SetInt("numberOfChildren", after);
         officeOfOrigin  = SetString("officeOfOrigin", after);
         ogdName  = SetString("ogdName", after);
         organisation  = SetString("organisation", after);
@@ -715,42 +714,45 @@ public class CaseProperties {
         originalDrafterUnit  = SetString("originalDrafterUnit", after);
         originalDrafterUser  = SetString("originalDrafterUser", after);
         otherCountriesToBeVisited  = SetString("otherCountriesToBeVisited", after);
-        ownerUpdatedDatetime  = SetString("ownerUpdatedDatetime", after);
-        parlyDispatch  = SetString("parlyDispatch", after);
+        ownerUpdatedDatetime  = SetDate("ownerUpdatedDatetime", after);
+        parlyDispatch  = SetBool("parlyDispatch", after);
         partyLeaderDeputyLastName  = SetString("partyLeaderDeputyLastName", after);
         partyLeaderDeputyOtherNames  = SetString("partyLeaderDeputyOtherNames", after);
         partyLeaderDeputyPassportIssuedAt  = SetString("partyLeaderDeputyPassportIssuedAt", after);
-        partyLeaderDeputyPassportIssuedOn  = SetString("partyLeaderDeputyPassportIssuedOn", after);
+        partyLeaderDeputyPassportIssuedOn  = SetDate("partyLeaderDeputyPassportIssuedOn", after);
         partyLeaderDeputyPassportNumber  = SetString("partyLeaderDeputyPassportNumber", after);
         partyLeaderLastName  = SetString("partyLeaderLastName", after);
         partyLeaderOtherNames  = SetString("partyLeaderOtherNames", after);
         partyLeaderPassportIssuedAt  = SetString("partyLeaderPassportIssuedAt", after);
-        partyLeaderPassportIssuedOn  = SetString("partyLeaderPassportIssuedOn", after);
+        partyLeaderPassportIssuedOn  = SetDate("partyLeaderPassportIssuedOn", after);
         partyLeaderPassportNumber  = SetString("partyLeaderPassportNumber", after);
-        pitExtension  = SetString("pitExtension", after);
-        pitLetterSentDate  = SetString("pitLetterSentDate", after);
+        pitExtension  = SetBool("pitExtension", after);
+        pitLetterSentDate  = SetDate("pitLetterSentDate", after);
         pitQualifiedExemptions  = SetString("pitQualifiedExemptions", after);
         poTarget  = SetString("poTarget", after);
-        pqApiCreatedCase  = SetString("pqApiCreatedCase", after);
-        priority  = SetString("priority", after);
+        pqApiCreatedCase  = SetBool("pqApiCreatedCase", after);
+        priority  = SetBool("priority", after);
         replyToAddressLine1 = SetString("replyToAddressLine1", after);
         replyToAddressLine2 = SetString("replyToAddressLine2", after);
         replyToAddressLine3 = SetString("replyToAddressLine3", after);
+        replyToApplicant = SetBool("replyToApplicant", after);
+        replyToCorrespondent = SetBool("replyToCorrespondent", after);
         replyToCountry = SetString("replyToCountry", after);
         replyToEmail = SetString("replyToEmail", after);
         replyToName = SetString("replyToName", after);
         replyToPostcode = SetString("replyToPostcode", after);
         replyToTelephone = SetString("replyToTelephone", after);
-        replyToNumberTenCopy  = SetString("replyToNumberTenCopy", after);
+        replyToNumberTenCopy  = SetBool("replyToNumberTenCopy", after);
         responderHubTarget  = SetString("responderHubTarget", after);
-        returnCaseAt  = SetString("returnCaseAt", after);
-        returnedCount = SetString("returnedCount", after);
-        reviewedByPermSec  = SetString("reviewedByPermSec", after);
-        reviewedBySpads  = SetString("reviewedBySpads", after);
-        roundRobin  = SetString("roundRobin", after);
-        roundRobinAdviceConsultation  = SetString("roundRobinAdviceConsultation", after);
-        royalsConsultation  = SetString("royalsConsultation", after);
-        scsApprovalTarget  = SetString("scsApprovalTarget", after);
+        responseDate  = SetDate("responderHubTarget", after);
+        returnCaseAt  = SetBool("returnCaseAt", after);
+        returnedCount = SetInt("returnedCount", after);
+        reviewedByPermSec  = SetBool("reviewedByPermSec", after);
+        reviewedBySpads  = SetBool("reviewedBySpads", after);
+        roundRobin  = SetBool("roundRobin", after);
+        roundRobinAdviceConsultation  = SetBool("roundRobinAdviceConsultation", after);
+        royalsConsultation  = SetBool("royalsConsultation", after);
+        scsApprovalTarget  = SetDate("scsApprovalTarget", after);
         secCorrespondentConsentAttached  = SetString("secCorrespondentConsentAttached", after);
         secCorrespondentTypeOfRepresentative  = SetString("secCorrespondentTypeOfRepresentative", after);
         secondaryCorrespondentAddressLine1  = SetString("secondaryCorrespondentAddressLine1", after);
@@ -759,16 +761,16 @@ public class CaseProperties {
         secondaryCorrespondentEmail  = SetString("secondaryCorrespondentEmail", after);
         secondaryCorrespondentForename  = SetString("secondaryCorrespondentForename", after);
         secondaryCorrespondentPostcode  = SetString("secondaryCorrespondentPostcode", after);
-        secondaryCorrespondentReplyTo  = SetString("secondaryCorrespondentReplyTo", after);
+        secondaryCorrespondentReplyTo  = SetBool("secondaryCorrespondentReplyTo", after);
         secondaryCorrespondentSurname  = SetString("secondaryCorrespondentSurname", after);
         secondaryCorrespondentTelephone  = SetString("secondaryCorrespondentTelephone", after);
         secondaryCorrespondentTitle  = SetString("secondaryCorrespondentTitle", after);
         secondaryTopic  = SetString("secondaryTopic", after);
         secondaryTypeOfCorrespondent  = SetString("secondaryTypeOfCorrespondent", after);
-        signedByHomeSec  = SetString("signedByHomeSec", after);
-        signedByLordsMinister  = SetString("signedByLordsMinister", after);
-        statusUpdatedDatetime  = SetString("statusUpdatedDatetime", after);
-        taskUpdatedDatetime  = SetString("taskUpdatedDatetime", after);
+        signedByHomeSec  = SetBool("signedByHomeSec", after);
+        signedByLordsMinister  = SetBool("signedByLordsMinister", after);
+        statusUpdatedDatetime  = SetDate("statusUpdatedDatetime", after);
+        taskUpdatedDatetime  = SetDate("taskUpdatedDatetime", after);
         thirdPartyConsentAttached  = SetString("thirdPartyConsentAttached", after);
         thirdPartyCorrespondentAddressLine1 = SetString("thirdPartyCorrespondentAddressLine1", after);
         thirdPartyCorrespondentAddressLine2 = SetString("thirdPartyCorrespondentAddressLine2", after);
@@ -778,14 +780,14 @@ public class CaseProperties {
         thirdPartyCorrespondentForename = SetString("thirdPartyCorrespondentForename", after);
         thirdPartyCorrespondentOrganisation = SetString("thirdPartyCorrespondentOrganisation", after);
         thirdPartyCorrespondentPostcode = SetString("thirdPartyCorrespondentPostcode", after);
-        thirdPartyCorrespondentReplyTo = SetString("thirdPartyCorrespondentReplyTo", after);
+        thirdPartyCorrespondentReplyTo = SetBool("thirdPartyCorrespondentReplyTo", after);
         thirdPartyCorrespondentSurname = SetString("thirdPartyCorrespondentSurname", after);
         thirdPartyCorrespondentTelephone = SetString("thirdPartyCorrespondentTelephone", after);
         thirdPartyCorrespondentTitle = SetString("thirdPartyCorrespondentTitle", after);
         thirdPartyTypeOfCorrespondent = SetString("thirdPartyTypeOfCorrespondent", after);
         thirdPartyTypeOfRepresentative = SetString("thirdPartyTypeOfRepresentative", after);
         tribunalOutcome = SetString("tribunalOutcome", after);
-        tribunalOutcomeDate = SetString("tribunalOutcomeDate", after);
+        tribunalOutcomeDate = SetDate("tribunalOutcomeDate", after);
         tsolRep = SetString("tsolRep", after);
         typeOfCorrespondent = SetString("typeOfCorrespondent", after);
         typeOfRepresentative = SetString("typeOfRepresentative", after);
@@ -799,11 +801,56 @@ public class CaseProperties {
            value = map.getOrDefault(key, null);
        }
 
-       if(value == "null" || value == "") {
+       if(Objects.equals(value, "null") || Objects.equals(value, "")) {
            value = null;
        }
 
        return value;
     }
 
+    private Integer SetInt(String key, Map<String,String> map) {
+        String value;
+
+        if(map != null) {
+            value = map.getOrDefault(key, null);
+
+            if (Objects.equals(value, "null") || Objects.equals(value, "")) {
+                return null;
+            } else {
+                return Integer.parseInt(value);
+            }
+        }
+        return null;
+    }
+
+    private Boolean SetBool(String key, Map<String,String> map) {
+        String value = null;
+
+        if(map != null) {
+            value = map.getOrDefault(key, null);
+        }
+
+        if(Objects.equals(value, "null") || Objects.equals(value, "")) {
+            return null;
+        }
+
+        return Objects.equals(value, "true");
+    }
+
+    private LocalDateTime SetDate(String key, Map<String,String> map) {
+        String value;
+
+        if(map != null) {
+            value = map.getOrDefault(key, null);
+
+            if (Objects.equals(value, "null") || Objects.equals(value, "")) {
+                return null;
+            } else {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E L d H:M:s O u", Locale.ENGLISH);
+                return LocalDateTime.parse(value, formatter);
+            }
+        } else {
+            return null;
+        }
+    }
 }
