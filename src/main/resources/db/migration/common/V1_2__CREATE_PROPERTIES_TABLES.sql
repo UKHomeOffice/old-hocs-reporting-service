@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS properties
   examiner_security_check                  BOOL,
   fee_included                             BOOL,
   final_approval_target                    TEXT,
-  foi_disclosure                           TEXT,
+  foi_disclosure                           BOOL,
   foi_is_eir                               BOOL,
   foi_minister_sign_off                    BOOL,
   hard_copy_received                       TEXT,

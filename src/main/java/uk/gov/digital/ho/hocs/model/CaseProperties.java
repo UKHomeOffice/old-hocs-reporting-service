@@ -4,7 +4,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -222,7 +221,7 @@ public class CaseProperties {
     private String finalApprovalTarget;
 
     @Column(name = "foi_disclosure")
-    private String foiDisclosure;
+    private Boolean foiDisclosure;
 
     @Column(name = "foi_is_eir")
     private Boolean foiIsEir;
@@ -591,52 +590,51 @@ public class CaseProperties {
     private String urnSuffix;
 
     public CaseProperties(Event event) {
-        if(event.getUuid() != null) {
+        if (event.getUuid() != null) {
             this.uuid = event.getUuid();
         }
-        if(event.getTimestamp() != null) {
+        if (event.getTimestamp() != null) {
             this.timestamp = event.getTimestamp();
-        }
-        else {
+        } else {
             this.timestamp = LocalDateTime.now();
         }
-        if(event.getCaseReference() != null) {
+        if (event.getCaseReference() != null) {
             this.caseReference = event.getCaseReference();
         }
 
-        Map<String,String> after = event.getData();
+        Map<String, String> after = event.getData();
 
-        acpoConsultation  = SetBool("acpoConsultation", after);
-        advice  = SetString("advice", after);
-        allocateTarget  = SetDate("allocateTarget", after);
-        allocateToResponderTarget  = SetDate("allocateToResponderTarget", after);
-        answeringMinister  = SetString("answeringMinister", after);
-        appellant  = SetString("appellant", after);
-        applicantAddressLine1  = SetString("applicantAddressLine1", after);
-        applicantAddressLine2  = SetString("applicantAddressLine2", after);
-        applicantAddressLine3  = SetString("applicantAddressLine3", after);
-        applicantCountry  = SetString("applicantCountry", after);
-        applicantEmail  = SetString("applicantEmail", after);
-        applicantForename  = SetString("applicantForename", after);
-        applicantPostcode  = SetString("applicantPostcode", after);
-        applicantSurname  = SetString("applicantSurname", after);
-        applicantTelephone  = SetString("applicantTelephone", after);
-        applicantTitle  = SetString("applicantTitle", after);
-        arrivingDateInUK  = SetDate("arrivingDateInUK", after);
+        acpoConsultation = SetBool("acpoConsultation", after);
+        advice = SetString("advice", after);
+        allocateTarget = SetDate("allocateTarget", after);
+        allocateToResponderTarget = SetDate("allocateToResponderTarget", after);
+        answeringMinister = SetString("answeringMinister", after);
+        appellant = SetString("appellant", after);
+        applicantAddressLine1 = SetString("applicantAddressLine1", after);
+        applicantAddressLine2 = SetString("applicantAddressLine2", after);
+        applicantAddressLine3 = SetString("applicantAddressLine3", after);
+        applicantCountry = SetString("applicantCountry", after);
+        applicantEmail = SetString("applicantEmail", after);
+        applicantForename = SetString("applicantForename", after);
+        applicantPostcode = SetString("applicantPostcode", after);
+        applicantSurname = SetString("applicantSurname", after);
+        applicantTelephone = SetString("applicantTelephone", after);
+        applicantTitle = SetString("applicantTitle", after);
+        arrivingDateInUK = SetDate("arrivingDateInUK", after);
         assignedTeam = SetString("assignedTeam", after);
         assignedUnit = SetString("assignedUnit", after);
         assignedUser = SetString("assignedUser", after);
-        autoCreatedCase  = SetBool("autoCreatedCase", after);
-        bringUpDate  = SetDate("bringUpDate", after);
-        cabinetOfficeConsultation  = SetBool("cabinetOfficeConsultation", after);
-        caseRef  = SetString("caseRef", after);
-        caseResponseDeadline  = SetDate("caseResponseDeadline", after);
+        autoCreatedCase = SetBool("autoCreatedCase", after);
+        bringUpDate = SetDate("bringUpDate", after);
+        cabinetOfficeConsultation = SetBool("cabinetOfficeConsultation", after);
+        caseRef = SetString("caseRef", after);
+        caseResponseDeadline = SetDate("caseResponseDeadline", after);
         caseTask = SetString("caseTask", after);
         caseStatus = SetString("caseStatus", after);
-        channel  = SetString("channel", after);
-        commentCount  = SetInt("commentCount", after);
-        complex  = SetBool("complex", after);
-        consentAttached  = SetBool("consentAttached", after);
+        channel = SetString("channel", after);
+        commentCount = SetInt("commentCount", after);
+        complex = SetBool("complex", after);
+        consentAttached = SetBool("consentAttached", after);
         correspondentAddressLine1 = SetString("correspondentAddressLine1", after);
         correspondentAddressLine2 = SetString("correspondentAddressLine2", after);
         correspondentAddressLine3 = SetString("correspondentAddressLine3", after);
@@ -644,94 +642,94 @@ public class CaseProperties {
         correspondentEmail = SetString("correspondentEmail", after);
         correspondentForename = SetString("correspondentForename", after);
         correspondentPostcode = SetString("correspondentPostcode", after);
-        correspondentSurname  = SetString("correspondentSurname", after);
-        correspondentTelephone  = SetString("correspondentTelephone", after);
-        correspondentTitle  = SetString("correspondentTitle", after);
-        correspondenceType  = SetString("correspondenceType", after);
-        correspondingName  = SetString("correspondingName", after);
-        countriesToBeTravelledThrough  = SetString("countriesToBeTravelledThrough", after);
-        countryOfDestination  = SetString("countryOfDestination", after);
-        created  = SetDate("created", after);
-        creator  = SetString("creator", after);
-        dateOfLetter  = SetDate("dateOfLetter", after);
-        dateReceived  = SetDate("dateReceived", after);
-        deferDueTo  = SetString("deferDueTo", after);
-        deliveryNumber  = SetString("deliveryNumber", after);
-        deliveryType  = SetString("deliveryType", after);
-        departureDateFromUK  = SetDate("departureDateFromUK", after);
-        dispatchedDate  = SetDate("dispatchedDate", after);
-        dispatchTarget  = SetString("dispatchTarget", after);
-        documentAdded  = SetString("documentAdded", after);
-        draftDate  = SetDate("draftDate", after);
-        draftResponseTarget  = SetString("draftResponseTarget", after);
-        enforcementNoticeDeadline  = SetDate("enforcementNoticeDeadline", after);
-        enforcementNoticeNeeded  = SetBool("enforcementNoticeNeeded", after);
-        examinerSecurityCheck  = SetBool("examinerSecurityCheck", after);
-        feeIncluded  = SetBool("feeIncluded", after);
-        finalApprovalTarget  = SetString("finalApprovalTarget", after);
-        foiDisclosure  = SetString("foiDisclosure", after);
-        foiIsEir  = SetBool("foiIsEir", after);
-        foiMinisterSignOff  = SetBool("foiMinisterSignOff", after);
-        hardCopyReceived  = SetString("hardCopyReceived", after);
-        hmpoApplicationNumber  = SetString("hmpoApplicationNumber", after);
-        hmpoComplaintOutcome  = SetString("hmpoComplaintOutcome", after);
-        hmpoPassportNumber  = SetString("hmpoPassportNumber", after);
-        hmpoRefundAmount  = SetString("hmpoRefundAmount", after);
-        hmpoRefundDecision  = SetString("hmpoRefundDecision", after);
-        hmpoResponse  = SetString("hmpoResponse", after);
-        hoCaseOfficer  = SetString("hoCaseOfficer", after);
-        hoJoined  = SetBool("hoJoined", after);
-        homeSecretaryReply  = SetBool("homeSecretaryReply", after);
-        icoComplaintOfficer  = SetString("icoComplaintOfficer", after);
-        icoOutcome  = SetString("icoOutcome", after);
-        icoOutcomeDate  = SetDate("icoOutcomeDate", after);
-        icoReference  = SetString("icoReference", after);
-        individualHousehold  = SetBool("individualHousehold", after);
-        isGroupedMaster  = SetBool("isGroupedMaster", after);
-        isGroupedSlave  = SetBool("isGroupedSlave", after);
-        isLinkedCase  = SetBool("isLinkedCase", after);
-        leadersAddressAboard  = SetString("leadersAddressAboard", after);
-        markupDecision  = SetString("markupDecision", after);
-        markupMinister  = SetString("markupMinister", after);
-        markupTopic  = SetString("markupTopic", after);
-        markupTeam= SetString("markupTopic", after);
-        markupUnit  = SetString("markupUnit", after);
-        member  = SetString("member", after);
-        minutesCollated  = SetString("minutesCollated", after);
-        modified  = SetDate("modified", after);
-        modifier  = SetString("modifier", after);
-        mpRef  = SetString("mpRef", after);
-        name  = SetString("name", after);
-        newInformationReleased  = SetBool("newInformationReleased", after);
-        nodedbid  = SetString("node-dbid", after);
-        nodeuuid  = SetString("node-uuid", after);
-        nslgConsultation  = SetBool("nslgConsultation", after);
-        numberOfChildren  = SetInt("numberOfChildren", after);
-        officeOfOrigin  = SetString("officeOfOrigin", after);
-        ogdName  = SetString("ogdName", after);
-        organisation  = SetString("organisation", after);
-        originalDrafterTeam  = SetString("originalDrafterTeam", after);
-        originalDrafterUnit  = SetString("originalDrafterUnit", after);
-        originalDrafterUser  = SetString("originalDrafterUser", after);
-        otherCountriesToBeVisited  = SetString("otherCountriesToBeVisited", after);
-        ownerUpdatedDatetime  = SetDate("ownerUpdatedDatetime", after);
-        parlyDispatch  = SetBool("parlyDispatch", after);
-        partyLeaderDeputyLastName  = SetString("partyLeaderDeputyLastName", after);
-        partyLeaderDeputyOtherNames  = SetString("partyLeaderDeputyOtherNames", after);
-        partyLeaderDeputyPassportIssuedAt  = SetString("partyLeaderDeputyPassportIssuedAt", after);
-        partyLeaderDeputyPassportIssuedOn  = SetDate("partyLeaderDeputyPassportIssuedOn", after);
-        partyLeaderDeputyPassportNumber  = SetString("partyLeaderDeputyPassportNumber", after);
-        partyLeaderLastName  = SetString("partyLeaderLastName", after);
-        partyLeaderOtherNames  = SetString("partyLeaderOtherNames", after);
-        partyLeaderPassportIssuedAt  = SetString("partyLeaderPassportIssuedAt", after);
-        partyLeaderPassportIssuedOn  = SetDate("partyLeaderPassportIssuedOn", after);
-        partyLeaderPassportNumber  = SetString("partyLeaderPassportNumber", after);
-        pitExtension  = SetBool("pitExtension", after);
-        pitLetterSentDate  = SetDate("pitLetterSentDate", after);
-        pitQualifiedExemptions  = SetString("pitQualifiedExemptions", after);
-        poTarget  = SetString("poTarget", after);
-        pqApiCreatedCase  = SetBool("pqApiCreatedCase", after);
-        priority  = SetBool("priority", after);
+        correspondentSurname = SetString("correspondentSurname", after);
+        correspondentTelephone = SetString("correspondentTelephone", after);
+        correspondentTitle = SetString("correspondentTitle", after);
+        correspondenceType = SetString("correspondenceType", after);
+        correspondingName = SetString("correspondingName", after);
+        countriesToBeTravelledThrough = SetString("countriesToBeTravelledThrough", after);
+        countryOfDestination = SetString("countryOfDestination", after);
+        created = SetDate("created", after);
+        creator = SetString("creator", after);
+        dateOfLetter = SetDate("dateOfLetter", after);
+        dateReceived = SetDate("dateReceived", after);
+        deferDueTo = SetString("deferDueTo", after);
+        deliveryNumber = SetString("deliveryNumber", after);
+        deliveryType = SetString("deliveryType", after);
+        departureDateFromUK = SetDate("departureDateFromUK", after);
+        dispatchedDate = SetDate("dispatchedDate", after);
+        dispatchTarget = SetString("dispatchTarget", after);
+        documentAdded = SetString("documentAdded", after);
+        draftDate = SetDate("draftDate", after);
+        draftResponseTarget = SetString("draftResponseTarget", after);
+        enforcementNoticeDeadline = SetDate("enforcementNoticeDeadline", after);
+        enforcementNoticeNeeded = SetBool("enforcementNoticeNeeded", after);
+        examinerSecurityCheck = SetBool("examinerSecurityCheck", after);
+        feeIncluded = SetBool("feeIncluded", after);
+        finalApprovalTarget = SetString("finalApprovalTarget", after);
+        foiDisclosure = SetBool("foiDisclosure", after);
+        foiIsEir = SetBool("foiIsEir", after);
+        foiMinisterSignOff = SetBool("foiMinisterSignOff", after);
+        hardCopyReceived = SetString("hardCopyReceived", after);
+        hmpoApplicationNumber = SetString("hmpoApplicationNumber", after);
+        hmpoComplaintOutcome = SetString("hmpoComplaintOutcome", after);
+        hmpoPassportNumber = SetString("hmpoPassportNumber", after);
+        hmpoRefundAmount = SetString("hmpoRefundAmount", after);
+        hmpoRefundDecision = SetString("hmpoRefundDecision", after);
+        hmpoResponse = SetString("hmpoResponse", after);
+        hoCaseOfficer = SetString("hoCaseOfficer", after);
+        hoJoined = SetBool("hoJoined", after);
+        homeSecretaryReply = SetBool("homeSecretaryReply", after);
+        icoComplaintOfficer = SetString("icoComplaintOfficer", after);
+        icoOutcome = SetString("icoOutcome", after);
+        icoOutcomeDate = SetDate("icoOutcomeDate", after);
+        icoReference = SetString("icoReference", after);
+        individualHousehold = SetBool("individualHousehold", after);
+        isGroupedMaster = SetBool("isGroupedMaster", after);
+        isGroupedSlave = SetBool("isGroupedSlave", after);
+        isLinkedCase = SetBool("isLinkedCase", after);
+        leadersAddressAboard = SetString("leadersAddressAboard", after);
+        markupDecision = SetString("markupDecision", after);
+        markupMinister = SetString("markupMinister", after);
+        markupTopic = SetString("markupTopic", after);
+        markupTeam = SetString("markupTopic", after);
+        markupUnit = SetString("markupUnit", after);
+        member = SetString("member", after);
+        minutesCollated = SetString("minutesCollated", after);
+        modified = SetDate("modified", after);
+        modifier = SetString("modifier", after);
+        mpRef = SetString("mpRef", after);
+        name = SetString("name", after);
+        newInformationReleased = SetBool("newInformationReleased", after);
+        nodedbid = SetString("node-dbid", after);
+        nodeuuid = SetString("node-uuid", after);
+        nslgConsultation = SetBool("nslgConsultation", after);
+        numberOfChildren = SetInt("numberOfChildren", after);
+        officeOfOrigin = SetString("officeOfOrigin", after);
+        ogdName = SetString("ogdName", after);
+        organisation = SetString("organisation", after);
+        originalDrafterTeam = SetString("originalDrafterTeam", after);
+        originalDrafterUnit = SetString("originalDrafterUnit", after);
+        originalDrafterUser = SetString("originalDrafterUser", after);
+        otherCountriesToBeVisited = SetString("otherCountriesToBeVisited", after);
+        ownerUpdatedDatetime = SetDate("ownerUpdatedDatetime", after);
+        parlyDispatch = SetBool("parlyDispatch", after);
+        partyLeaderDeputyLastName = SetString("partyLeaderDeputyLastName", after);
+        partyLeaderDeputyOtherNames = SetString("partyLeaderDeputyOtherNames", after);
+        partyLeaderDeputyPassportIssuedAt = SetString("partyLeaderDeputyPassportIssuedAt", after);
+        partyLeaderDeputyPassportIssuedOn = SetDate("partyLeaderDeputyPassportIssuedOn", after);
+        partyLeaderDeputyPassportNumber = SetString("partyLeaderDeputyPassportNumber", after);
+        partyLeaderLastName = SetString("partyLeaderLastName", after);
+        partyLeaderOtherNames = SetString("partyLeaderOtherNames", after);
+        partyLeaderPassportIssuedAt = SetString("partyLeaderPassportIssuedAt", after);
+        partyLeaderPassportIssuedOn = SetDate("partyLeaderPassportIssuedOn", after);
+        partyLeaderPassportNumber = SetString("partyLeaderPassportNumber", after);
+        pitExtension = SetBool("pitExtension", after);
+        pitLetterSentDate = SetDate("pitLetterSentDate", after);
+        pitQualifiedExemptions = SetString("pitQualifiedExemptions", after);
+        poTarget = SetString("poTarget", after);
+        pqApiCreatedCase = SetBool("pqApiCreatedCase", after);
+        priority = SetBool("priority", after);
         replyToAddressLine1 = SetString("replyToAddressLine1", after);
         replyToAddressLine2 = SetString("replyToAddressLine2", after);
         replyToAddressLine3 = SetString("replyToAddressLine3", after);
@@ -742,36 +740,36 @@ public class CaseProperties {
         replyToName = SetString("replyToName", after);
         replyToPostcode = SetString("replyToPostcode", after);
         replyToTelephone = SetString("replyToTelephone", after);
-        replyToNumberTenCopy  = SetBool("replyToNumberTenCopy", after);
-        responderHubTarget  = SetString("responderHubTarget", after);
-        responseDate  = SetDate("responderHubTarget", after);
-        returnCaseAt  = SetBool("returnCaseAt", after);
+        replyToNumberTenCopy = SetBool("replyToNumberTenCopy", after);
+        responderHubTarget = SetString("responderHubTarget", after);
+        responseDate = SetDate("responderHubTarget", after);
+        returnCaseAt = SetBool("returnCaseAt", after);
         returnedCount = SetInt("returnedCount", after);
-        reviewedByPermSec  = SetBool("reviewedByPermSec", after);
-        reviewedBySpads  = SetBool("reviewedBySpads", after);
-        roundRobin  = SetBool("roundRobin", after);
-        roundRobinAdviceConsultation  = SetBool("roundRobinAdviceConsultation", after);
-        royalsConsultation  = SetBool("royalsConsultation", after);
-        scsApprovalTarget  = SetDate("scsApprovalTarget", after);
-        secCorrespondentConsentAttached  = SetString("secCorrespondentConsentAttached", after);
-        secCorrespondentTypeOfRepresentative  = SetString("secCorrespondentTypeOfRepresentative", after);
-        secondaryCorrespondentAddressLine1  = SetString("secondaryCorrespondentAddressLine1", after);
-        secondaryCorrespondentAddressLine2  = SetString("secondaryCorrespondentAddressLine2", after);
-        secondaryCorrespondentAddressLine3  = SetString("secondaryCorrespondentAddressLine3", after);
-        secondaryCorrespondentEmail  = SetString("secondaryCorrespondentEmail", after);
-        secondaryCorrespondentForename  = SetString("secondaryCorrespondentForename", after);
-        secondaryCorrespondentPostcode  = SetString("secondaryCorrespondentPostcode", after);
-        secondaryCorrespondentReplyTo  = SetBool("secondaryCorrespondentReplyTo", after);
-        secondaryCorrespondentSurname  = SetString("secondaryCorrespondentSurname", after);
-        secondaryCorrespondentTelephone  = SetString("secondaryCorrespondentTelephone", after);
-        secondaryCorrespondentTitle  = SetString("secondaryCorrespondentTitle", after);
-        secondaryTopic  = SetString("secondaryTopic", after);
-        secondaryTypeOfCorrespondent  = SetString("secondaryTypeOfCorrespondent", after);
-        signedByHomeSec  = SetBool("signedByHomeSec", after);
-        signedByLordsMinister  = SetBool("signedByLordsMinister", after);
-        statusUpdatedDatetime  = SetDate("statusUpdatedDatetime", after);
-        taskUpdatedDatetime  = SetDate("taskUpdatedDatetime", after);
-        thirdPartyConsentAttached  = SetString("thirdPartyConsentAttached", after);
+        reviewedByPermSec = SetBool("reviewedByPermSec", after);
+        reviewedBySpads = SetBool("reviewedBySpads", after);
+        roundRobin = SetBool("roundRobin", after);
+        roundRobinAdviceConsultation = SetBool("roundRobinAdviceConsultation", after);
+        royalsConsultation = SetBool("royalsConsultation", after);
+        scsApprovalTarget = SetDate("scsApprovalTarget", after);
+        secCorrespondentConsentAttached = SetString("secCorrespondentConsentAttached", after);
+        secCorrespondentTypeOfRepresentative = SetString("secCorrespondentTypeOfRepresentative", after);
+        secondaryCorrespondentAddressLine1 = SetString("secondaryCorrespondentAddressLine1", after);
+        secondaryCorrespondentAddressLine2 = SetString("secondaryCorrespondentAddressLine2", after);
+        secondaryCorrespondentAddressLine3 = SetString("secondaryCorrespondentAddressLine3", after);
+        secondaryCorrespondentEmail = SetString("secondaryCorrespondentEmail", after);
+        secondaryCorrespondentForename = SetString("secondaryCorrespondentForename", after);
+        secondaryCorrespondentPostcode = SetString("secondaryCorrespondentPostcode", after);
+        secondaryCorrespondentReplyTo = SetBool("secondaryCorrespondentReplyTo", after);
+        secondaryCorrespondentSurname = SetString("secondaryCorrespondentSurname", after);
+        secondaryCorrespondentTelephone = SetString("secondaryCorrespondentTelephone", after);
+        secondaryCorrespondentTitle = SetString("secondaryCorrespondentTitle", after);
+        secondaryTopic = SetString("secondaryTopic", after);
+        secondaryTypeOfCorrespondent = SetString("secondaryTypeOfCorrespondent", after);
+        signedByHomeSec = SetBool("signedByHomeSec", after);
+        signedByLordsMinister = SetBool("signedByLordsMinister", after);
+        statusUpdatedDatetime = SetDate("statusUpdatedDatetime", after);
+        taskUpdatedDatetime = SetDate("taskUpdatedDatetime", after);
+        thirdPartyConsentAttached = SetString("thirdPartyConsentAttached", after);
         thirdPartyCorrespondentAddressLine1 = SetString("thirdPartyCorrespondentAddressLine1", after);
         thirdPartyCorrespondentAddressLine2 = SetString("thirdPartyCorrespondentAddressLine2", after);
         thirdPartyCorrespondentAddressLine3 = SetString("thirdPartyCorrespondentAddressLine3", after);
@@ -791,66 +789,71 @@ public class CaseProperties {
         tsolRep = SetString("tsolRep", after);
         typeOfCorrespondent = SetString("typeOfCorrespondent", after);
         typeOfRepresentative = SetString("typeOfRepresentative", after);
-        urnSuffix  = SetString("urnSuffix", after);
+        urnSuffix = SetString("urnSuffix", after);
     }
 
-    private String SetString(String key, Map<String,String> map) {
-       String value = null;
+    private String SetString(String key, Map<String, String> map) {
+        String value = null;
 
-       if(map != null) {
-           value = map.getOrDefault(key, null);
-       }
+        if (map != null) {
+            value = map.getOrDefault(key, null);
+        }
 
-       if(Objects.equals(value, "null") || Objects.equals(value, "")) {
-           value = null;
-       }
+        if (Objects.equals(value, "null") || Objects.equals(value, "")) {
+            value = null;
+        }
 
-       return value;
+        return value;
     }
 
-    private Integer SetInt(String key, Map<String,String> map) {
+    private Integer SetInt(String key, Map<String, String> map) {
         String value;
 
-        if(map != null) {
+        if (map != null) {
             value = map.getOrDefault(key, null);
 
             if (Objects.equals(value, "null") || Objects.equals(value, "")) {
                 return null;
             } else {
-                return Integer.parseInt(value);
+                if (value != null) {
+                    return Integer.parseInt(value);
+                }
             }
         }
         return null;
     }
 
-    private Boolean SetBool(String key, Map<String,String> map) {
+    private Boolean SetBool(String key, Map<String, String> map) {
         String value = null;
 
-        if(map != null) {
+        if (map != null) {
             value = map.getOrDefault(key, null);
         }
 
-        if(Objects.equals(value, "null") || Objects.equals(value, "")) {
+        if (Objects.equals(value, "null") || Objects.equals(value, "")) {
             return null;
         }
 
         return Objects.equals(value, "true");
     }
 
-    private LocalDateTime SetDate(String key, Map<String,String> map) {
+    private LocalDateTime SetDate(String key, Map<String, String> map) {
         String value;
 
-        if(map != null) {
+        if (map != null) {
             value = map.getOrDefault(key, null);
 
             if (Objects.equals(value, "null") || Objects.equals(value, "")) {
                 return null;
             } else {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E L d H:M:s O u", Locale.ENGLISH);
-                return LocalDateTime.parse(value, formatter);
+                if (value != null) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("E MMM dd HH:mm:ss z yyyy", Locale.ENGLISH);
+                    return LocalDateTime.parse(value, formatter);
+                }
             }
-        } else {
-            return null;
         }
+
+        return null;
     }
+
 }
