@@ -194,7 +194,7 @@ public class CaseProperties {
     private LocalDateTime dispatchedDate;
 
     @Column(name = "dispatch_target")
-    private String dispatchTarget;
+    private LocalDateTime dispatchTarget;
 
     @Column(name = "document_added")
     private String documentAdded;
@@ -203,7 +203,7 @@ public class CaseProperties {
     private LocalDateTime draftDate;
 
     @Column(name = "draft_response_target")
-    private String draftResponseTarget;
+    private LocalDateTime draftResponseTarget;
 
     @Column(name = "enforcement_notice_deadline")
     private LocalDateTime enforcementNoticeDeadline;
@@ -218,7 +218,7 @@ public class CaseProperties {
     private Boolean feeIncluded;
 
     @Column(name = "final_approval_target")
-    private String finalApprovalTarget;
+    private LocalDateTime finalApprovalTarget;
 
     @Column(name = "foi_disclosure")
     private Boolean foiDisclosure;
@@ -401,7 +401,7 @@ public class CaseProperties {
     private String pitQualifiedExemptions;
 
     @Column(name = "po_target")
-    private String poTarget;
+    private LocalDateTime poTarget;
 
     @Column(name = "pq_api_created_case")
     private Boolean pqApiCreatedCase;
@@ -658,15 +658,15 @@ public class CaseProperties {
         deliveryType = SetString("deliveryType", after);
         departureDateFromUK = SetDate("departureDateFromUK", after);
         dispatchedDate = SetDate("dispatchedDate", after);
-        dispatchTarget = SetString("dispatchTarget", after);
+        dispatchTarget = SetDate("dispatchTarget", after);
         documentAdded = SetString("documentAdded", after);
         draftDate = SetDate("draftDate", after);
-        draftResponseTarget = SetString("draftResponseTarget", after);
+        draftResponseTarget = SetDate("draftResponseTarget", after);
         enforcementNoticeDeadline = SetDate("enforcementNoticeDeadline", after);
         enforcementNoticeNeeded = SetBool("enforcementNoticeNeeded", after);
         examinerSecurityCheck = SetBool("examinerSecurityCheck", after);
         feeIncluded = SetBool("feeIncluded", after);
-        finalApprovalTarget = SetString("finalApprovalTarget", after);
+        finalApprovalTarget = SetDate("finalApprovalTarget", after);
         foiDisclosure = SetBool("foiDisclosure", after);
         foiIsEir = SetBool("foiIsEir", after);
         foiMinisterSignOff = SetBool("foiMinisterSignOff", after);
@@ -727,7 +727,7 @@ public class CaseProperties {
         pitExtension = SetBool("pitExtension", after);
         pitLetterSentDate = SetDate("pitLetterSentDate", after);
         pitQualifiedExemptions = SetString("pitQualifiedExemptions", after);
-        poTarget = SetString("poTarget", after);
+        poTarget = SetDate("poTarget", after);
         pqApiCreatedCase = SetBool("pqApiCreatedCase", after);
         priority = SetBool("priority", after);
         replyToAddressLine1 = SetString("replyToAddressLine1", after);
