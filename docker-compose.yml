@@ -2,53 +2,37 @@ version: '3.1'
 
 services:
 
-  database:
+  postgres:
     image: postgres
-
     ports:
       - 5432:5432
-
     networks:
-      - reporting-network
-
+      - hocs-network
     environment:
      POSTGRES_USER: root
      POSTGRES_PASSWORD: dev
-
     volumes:
       - dbdata:/var/lib/postgresql
 
   reporting:
     build:
       context: .
-
     environment:
       spring.profiles.active: postgres
-      server.port: 8080
-      reporting.db.hostname: database
-      reporting.db.username: root
-      reporting.db.password: dev
-      reporting.db.name: postgres
-      reporting.db.port: 5432
-      reporting.schema.name: public
-      hostname: reporting:8080
-
+      db.host: postgres
+      db.user: root
+      db.pass: dev
     depends_on:
-      - database
-
+      - postgres
     ports:
-      - 9001:8080
-
+      - 8082:8080
     networks:
-      - reporting-network
-
+      - hocs-network
     command: /app/scripts/run.sh
-
     volumes:
       - ../hocs-data/data/:/app/data/
-
 networks:
-  reporting-network:
+  hocs-network:
 
 volumes:
   dbdata: {}
