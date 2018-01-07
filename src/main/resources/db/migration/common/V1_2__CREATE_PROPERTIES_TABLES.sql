@@ -196,5 +196,5 @@ CREATE TABLE IF NOT EXISTS properties
   CONSTRAINT properties_id_idempotent UNIQUE (msg_uuid, msg_timestamp)
 );
 
-CREATE INDEX idx_events_case_reference ON properties (case_reference);
-CREATE INDEX idx_events_timestamp ON properties (msg_timestamp);
+CREATE INDEX idx_properties_case_reference ON properties (case_reference);
+CREATE INDEX idx_properties_timestamp ON properties (msg_timestamp);

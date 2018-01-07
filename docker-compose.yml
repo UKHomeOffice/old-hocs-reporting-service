@@ -12,7 +12,7 @@ services:
      POSTGRES_USER: root
      POSTGRES_PASSWORD: dev
     volumes:
-      - dbdata:/var/lib/postgresql
+      - pgrepdata:/var/lib/postgresql
 
   reporting:
     build:
@@ -20,8 +20,8 @@ services:
     environment:
       spring.profiles.active: postgres
       db.host: postgres
-      db.user: root
-      db.pass: dev
+      db.username: root
+      db.password: dev
     depends_on:
       - postgres
     ports:
@@ -29,10 +29,9 @@ services:
     networks:
       - hocs-network
     command: /app/scripts/run.sh
-    volumes:
-      - ../hocs-data/data/:/app/data/
+
 networks:
   hocs-network:
 
 volumes:
-  dbdata: {}
+  pgrepdata: {}
