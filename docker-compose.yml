@@ -28,7 +28,6 @@ services:
       - 8082:8080
     networks:
       - hocs-network
-    command: /app/scripts/run.sh
 
 networks:
   hocs-network:
