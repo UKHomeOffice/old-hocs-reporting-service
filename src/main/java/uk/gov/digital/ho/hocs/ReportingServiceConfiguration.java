@@ -19,7 +19,6 @@ public class ReportingServiceConfiguration {
 
     private static void initialiseObjectMapper(final ObjectMapper m) {
         m.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
-
         m.registerModule(new JavaTimeModule());
         m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         m.enable(SerializationFeature.INDENT_OUTPUT);

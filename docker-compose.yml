@@ -2,6 +2,12 @@ version: '3.1'
 
 services:
 
+  rabbitmq:
+    image: quay.io/ukhomeofficedigital/rabbitmq:v3.6.6
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
   postgres:
     image: postgres
     ports:
@@ -11,8 +17,8 @@ services:
     environment:
      POSTGRES_USER: root
      POSTGRES_PASSWORD: dev
-    volumes:
-      - pgrepdata:/var/lib/postgresql
+    tmpfs:
+      - /var/lib/postgresql
 
   reporting:
     build:
@@ -24,6 +30,7 @@ services:
       db.password: dev
     depends_on:
       - postgres
+      - rabbitmq
     ports:
       - 8082:8080
     networks:
@@ -31,6 +38,3 @@ services:
 
 networks:
   hocs-network:
-
-volumes:
-  pgrepdata: {}
