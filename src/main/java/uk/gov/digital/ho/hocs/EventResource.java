@@ -11,8 +11,9 @@ import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.Event;
 
 
-@RestController
 @Slf4j
+@RestController
+@RequestMapping(value = "/event/")
 public class EventResource {
     private final EventService eventService;
 
@@ -22,7 +23,7 @@ public class EventResource {
     }
 
 
-    @RequestMapping(value = "/event/add", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity postEvent(@RequestBody Event event) {
         log.info("Writing Event \"{}\"", event.getUuid());
         try {

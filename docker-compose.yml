@@ -3,10 +3,12 @@ version: '3.1'
 services:
 
   rabbitmq:
-    image: quay.io/ukhomeofficedigital/rabbitmq:v3.6.6
+    image: rabbitmq:management
     ports:
       - "5672:5672"
       - "15672:15672"
+    networks:
+      - hocs-network
 
   postgres:
     image: postgres
@@ -24,10 +26,11 @@ services:
     build:
       context: .
     environment:
-      spring.profiles.active: postgres
+      spring.profiles.active: postgres, rabbitmq
       db.host: postgres
       db.username: root
       db.password: dev
+      env.rabbit.mq.host: rabbitmq
     depends_on:
       - postgres
       - rabbitmq

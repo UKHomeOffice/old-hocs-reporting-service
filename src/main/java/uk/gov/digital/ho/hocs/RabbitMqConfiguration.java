@@ -1,53 +1,88 @@
 package uk.gov.digital.ho.hocs;
 
-import com.rabbitmq.client.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import java.net.URISyntaxException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-
 @Configuration
 @Slf4j
 @Profile("rabbitmq")
-public class RabbitMqConfiguration {
+public class RabbitMqConfiguration implements ApplicationListener<ApplicationReadyEvent> {
+
+    @Autowired
+    EventService eventService;
+
+    @Value("${hocs.rabbitmq.queue}")
+    String queueName;
+
+    @Value("${hocs.rabbitmq.exchange}")
+    String exchange;
+
+    @Value("${hocs.rabbitmq.routingkey}")
+    String routingKey;
+
+    @Value("${hocs.rabbitmq.routingkey.binding}")
+    String routingKeyBinding;
 
     @Bean
-    public ConnectionFactory rabbitMqClient(@Value("${amqp.connection.factory.uri}") String queueConnectionFactoryUri,
-                                            @Value("${rabbit.mq.username}") String username,
-                                            @Value("${rabbit.mq.password}") String password) throws NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
+    public TopicExchange receiverExchange() {
+        return new TopicExchange("eventExchange");
+    }
 
-
-        if (queueConnectionFactoryUri == null || queueConnectionFactoryUri.equals("")) {
-            throw new BeanCreationException("Failed to create RabbitMQ client bean. Need non-blank value for queue connection factory uri: " + queueConnectionFactoryUri);
+    @Bean
+    public Queue eventReceivingQueue() {
+        if (queueName == null) {
+            throw new IllegalStateException("No queue to listen to! Please specify the name of the queue to listen to with the property 'subscriber.queue'");
         }
+        return new Queue(queueName);
+    }
 
-        if (username == null || username.equals("")) {
-            throw new BeanCreationException("Failed to create RabbitMQ client bean. Need non-blank values for username: " + username);
+    @Bean
+    public Binding binding(Queue eventReceivingQueue, TopicExchange receiverExchange) {
+        if (routingKey == null) {
+            throw new IllegalStateException("No events to listen to! Please specify the routing key for the events to listen to with the property 'subscriber.routingKey' (see EventPublisher for available routing keys).");
         }
+        return BindingBuilder
+                .bind(eventReceivingQueue)
+                .to(receiverExchange)
+                .with(routingKeyBinding);
+    }
 
-        if (password == null && password.equals("")) {
-            throw new BeanCreationException("Failed to create RabbitMQ client bean. Need non-blank values for password");
-        }
+    @Bean
+    public SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
+                                                    MessageListenerAdapter listenerAdapter) {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory);
+        container.setQueueNames(queueName);
+        container.setMessageListener(listenerAdapter);
+        return container;
+    }
 
-        log.info("Queue Connection Factory {}", queueConnectionFactoryUri);
+    @Bean
+    public MessageListenerAdapter listenerAdapter(EventResource eventSubscriber) {
+        return new MessageListenerAdapter(eventSubscriber, "postEvent");
+    }
 
-        ConnectionFactory factory = new ConnectionFactory();
+    @Bean
+    public EventService eventReceiver() {
+        return eventService;
+    }
 
-        factory.setUri(queueConnectionFactoryUri);
-        factory.setRequestedHeartbeat(10);
-        factory.setAutomaticRecoveryEnabled(true);
-        factory.setNetworkRecoveryInterval(30000); // In case of broken connection, try again every 30 seconds
-        factory.setTopologyRecoveryEnabled(true);
-        factory.setUsername(username);
-        factory.setPassword(password);
-
-        return factory;
-
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        log.info("Subscribing to events matching key '{}' from queue '{}'", routingKeyBinding, queueName);
     }
 }
+
