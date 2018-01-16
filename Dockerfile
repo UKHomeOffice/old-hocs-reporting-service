@@ -1,4 +1,4 @@
-FROM quay.io/ukhomeofficedigital/openjdk8:v1.8.0.141
+FROM quay.io/ukhomeofficedigital/openjdk8
 
 ENV USER user_hocs_reporting
 ENV GROUP group_hocs_reporting
