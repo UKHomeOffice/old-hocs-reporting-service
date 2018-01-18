@@ -692,7 +692,7 @@ public class CaseProperties {
         markupDecision = SetString("markupDecision", after);
         markupMinister = SetString("markupMinister", after);
         markupTopic = SetString("markupTopic", after);
-        markupTeam = SetString("markupTopic", after);
+        markupTeam = SetString("markupTeam", after);
         markupUnit = SetString("markupUnit", after);
         member = SetString("member", after);
         minutesCollated = SetString("minutesCollated", after);
