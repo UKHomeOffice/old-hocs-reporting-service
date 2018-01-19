@@ -21,10 +21,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Transactional
 @SpringBootTest
 @Profile("logtoconsole")
-public class AuditEventRepositoryTest {
+public class EventRepositoryTest {
 
     @Autowired
-    private AuditEventRepository auditEventRepository;
+    private EventRepository eventRepository;
 
     @Before
     public void setup() {
@@ -40,8 +40,8 @@ public class AuditEventRepositoryTest {
         Event event = new Event(uuid, dateTime, caseRef, data);
 
         AuditEvent auditEvent = new AuditEvent(event);
-        Long id = auditEventRepository.save(auditEvent).getId();
-        AuditEvent returnedAuditEvent = auditEventRepository.findOne(id);
+        Long id = eventRepository.save(auditEvent).getId();
+        AuditEvent returnedAuditEvent = eventRepository.findOne(id);
 
         assertThat(returnedAuditEvent.getUuid()).isEqualTo(auditEvent.getUuid());
         assertThat(returnedAuditEvent.getTimestamp()).isEqualTo(auditEvent.getTimestamp());
@@ -60,8 +60,8 @@ public class AuditEventRepositoryTest {
         Event event = new Event(uuid, dateTime, caseRef, data);
 
         AuditEvent auditEvent = new AuditEvent(event);
-        Long id = auditEventRepository.save(auditEvent).getId();
-        AuditEvent returnedAuditEvent = auditEventRepository.findOne(id);
+        Long id = eventRepository.save(auditEvent).getId();
+        AuditEvent returnedAuditEvent = eventRepository.findOne(id);
 
         AuditEvent newAuditEvent = new AuditEvent(event);
 

@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 @Entity
-@Table(name = "properties")
+@Table(name = "current_properties")
 @Access(AccessType.FIELD)
 @Getter
 @EqualsAndHashCode(of = {"uuid", "timestamp"}, callSuper = false)
-public class CaseProperties extends BaseProperties {
+public class CaseCurrentProperties extends BaseProperties {
 
     @Id
     @Column(name = "id")
@@ -586,7 +586,7 @@ public class CaseProperties extends BaseProperties {
     @Column(name = "urn_suffix")
     private String urnSuffix;
 
-    public CaseProperties(Event event) {
+    public CaseCurrentProperties(Event event) {
         update(event);
     }
 

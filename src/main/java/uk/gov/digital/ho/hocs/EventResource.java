@@ -16,18 +16,23 @@ import uk.gov.digital.ho.hocs.model.Event;
 @RequestMapping(value = "/event/")
 public class EventResource {
     private final EventService eventService;
+    private final CasePropertiesService casePropertiesService;
+    private final CaseCurrentPropertiesService caseCurrentPropertiesService;
 
     @Autowired
-    public EventResource(EventService eventService) {
+    public EventResource(EventService eventService, CasePropertiesService casePropertiesService, CaseCurrentPropertiesService caseCurrentPropertiesService) {
         this.eventService = eventService;
+        this.casePropertiesService = casePropertiesService;
+        this.caseCurrentPropertiesService = caseCurrentPropertiesService;
     }
-
 
     @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity postEvent(@RequestBody Event event) {
         log.info("Writing Event \"{}\"", event.getUuid());
         try {
             eventService.createEvent(event);
+            casePropertiesService.createProperties(event);
+            caseCurrentPropertiesService.createCurrentProperties(event);
             return ResponseEntity.ok("OK");
         } catch (EntityCreationException e) {
             log.info("Event \"{}\" not written", event.getUuid());

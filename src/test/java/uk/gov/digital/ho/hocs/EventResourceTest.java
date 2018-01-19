@@ -20,11 +20,17 @@ public class EventResourceTest {
     @Mock
     private EventService eventService;
 
+    @Mock
+    private CasePropertiesService casePropertiesService;
+
+    @Mock
+    private CaseCurrentPropertiesService caseCurrentPropertiesRepository;
+
     private EventResource eventResource;
 
     @Before
     public void setUp() {
-        eventResource = new EventResource(eventService);}
+        eventResource = new EventResource(eventService, casePropertiesService, caseCurrentPropertiesRepository);}
 
 
     @Test
