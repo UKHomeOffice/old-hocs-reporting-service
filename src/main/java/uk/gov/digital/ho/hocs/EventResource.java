@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.Event;
 
-
 @Slf4j
 @RestController
 @RequestMapping(value = "/event/")

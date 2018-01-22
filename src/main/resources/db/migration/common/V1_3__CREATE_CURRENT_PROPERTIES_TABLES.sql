@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS current_properties
   type_of_representative                   TEXT,
   urn_suffix                               TEXT,
 
-  CONSTRAINT current_properties_id_idempotent UNIQUE (msg_uuid, msg_timestamp)
+  CONSTRAINT current_properties_id_idempotent UNIQUE (case_reference)
 );
 
 CREATE INDEX idx_current_properties_case_reference ON current_properties (case_reference);

@@ -9,8 +9,6 @@ import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.CaseProperties;
 import uk.gov.digital.ho.hocs.model.Event;
 
-import java.util.Set;
-
 @Service
 @Slf4j
 public class CasePropertiesService {
@@ -37,9 +35,5 @@ public class CasePropertiesService {
                 throw e;
             }
         }
-    }
-
-    public Set<CaseProperties> getAllProperties() {
-        return casePropertiesRepository.findAllBy();
     }
 }

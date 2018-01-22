@@ -2,11 +2,13 @@ package uk.gov.digital.ho.hocs.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+@NoArgsConstructor
 @Entity
 @Table(name = "properties")
 @Access(AccessType.FIELD)

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.digital.ho.hocs.model.CaseCurrentProperties;
@@ -53,12 +54,7 @@ public class CaseCurrentPropertiesRepositoryTest {
 
     @Test
     public void shouldRoundTripSimpleEquals() {
-        String uuid = "uuid";
-        LocalDateTime dateTime = LocalDateTime.now();
-        String caseRef = "CaseRef";
-        Map<String, String> before = new HashMap<>();
-        Map<String, String> data = new HashMap<>();
-        Event event = new Event(uuid, dateTime, caseRef, data);
+        Event event = getValidEvent();
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
@@ -68,4 +64,64 @@ public class CaseCurrentPropertiesRepositoryTest {
 
         assertThat(returnedCaseProperties).isEqualTo(newCaseProperties);
     }
+
+    @Test
+    public void shouldUpdate() {
+        Event event = getValidEvent();
+
+        String uuid = "uuidNew";
+        LocalDateTime dateTime = LocalDateTime.now();
+        String caseRef = "CaseRef";
+        Map<String, String> data = new HashMap<>();
+        data.put("advice", "do one");
+        Event newEvent =  new Event(uuid, dateTime, caseRef, data);
+
+        CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
+        Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
+        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findOne(id);
+
+        assertThat(returnedCaseProperties.getAdvice()).isNull();
+
+        returnedCaseProperties.update(newEvent);
+
+        Long newId = caseCurrentPropertiesRepository.save(returnedCaseProperties).getId();
+        CaseCurrentProperties returnedNewCaseProperties = caseCurrentPropertiesRepository.findOne(newId);
+
+        // See CasePropertiesRepoTest -> ShouldAllowMultiple to understand the difference.
+        assertThat(returnedCaseProperties.getAdvice()).isEqualTo("do one");
+        assertThat(returnedNewCaseProperties.getAdvice()).isEqualTo("do one");
+        assertThat(returnedNewCaseProperties.getCaseReference()).isEqualTo(returnedCaseProperties.getCaseReference());
+
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void shouldNotAllowMultipleSameCaseRef() {
+        Event event = getValidEvent();
+
+        String uuid = "uuidNew";
+        LocalDateTime dateTime = LocalDateTime.now();
+        String caseRef = "CaseRef";
+        Map<String, String> data = new HashMap<>();
+        data.put("advice", "do one");
+        Event newEvent =  new Event(uuid, dateTime, caseRef, data);
+
+        CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
+        Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
+        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findOne(id);
+
+        assertThat(returnedCaseProperties.getAdvice()).isNull();
+
+        CaseCurrentProperties newCaseProperties = new CaseCurrentProperties(newEvent);
+        Long newId = caseCurrentPropertiesRepository.save(newCaseProperties).getId();
+    }
+
+    private Event getValidEvent() {
+        String uuid = "uuid";
+        LocalDateTime dateTime = LocalDateTime.now();
+        String caseRef = "CaseRef";
+        Map<String, String> data = new HashMap<>();
+        return new Event(uuid, dateTime, caseRef, data);
+    }
+
+
 }

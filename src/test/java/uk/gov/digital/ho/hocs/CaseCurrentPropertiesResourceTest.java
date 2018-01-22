@@ -15,7 +15,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class EventResourceTest {
+public class CaseCurrentPropertiesResourceTest {
 
     @Mock
     private EventService eventService;
@@ -28,19 +28,21 @@ public class EventResourceTest {
 
     private EventResource eventResource;
 
+
     @Before
     public void setUp() {
-        eventResource = new EventResource(eventService, casePropertiesService, caseCurrentPropertiesService);}
+        eventResource = new EventResource(eventService, casePropertiesService, caseCurrentPropertiesService);
+    }
 
 
     @Test
     public void shouldReturnBadRequestWhenUnableCreate() throws EntityCreationException {
         Event event = new Event();
-        doThrow(new EntityCreationException("")).when(eventService).createEvent(event);
+        doThrow(new EntityCreationException("")).when(caseCurrentPropertiesService).createCurrentProperties(event);
         ResponseEntity httpResponse = eventResource.postEvent(event);
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
-        verify(eventService).createEvent(event);
+        verify(caseCurrentPropertiesService).createCurrentProperties(event);
     }
 
     @Test
@@ -48,6 +50,6 @@ public class EventResourceTest {
         Event event = new Event();
         ResponseEntity httpResponse = eventResource.postEvent(event);
         assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(eventService).createEvent(event);
+        verify(caseCurrentPropertiesService).createCurrentProperties(event);
     }
 }

@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.digital.ho.hocs.model.AuditEvent;
@@ -66,5 +67,20 @@ public class EventRepositoryTest {
         AuditEvent newAuditEvent = new AuditEvent(event);
 
         assertThat(returnedAuditEvent).isEqualTo(newAuditEvent);
+    }
+
+    @Test(expected = DataIntegrityViolationException.class)
+    public void shouldNotAllowDuplicate() {
+        String uuid = "uuid";
+        LocalDateTime dateTime = LocalDateTime.now();
+        String caseRef = "CaseRef";
+        Map<String, String> data = new HashMap<>();
+        Event event = new Event(uuid, dateTime, caseRef, data);
+
+        AuditEvent auditEvent = new AuditEvent(event);
+        Long id = eventRepository.save(auditEvent).getId();
+
+        AuditEvent newAuditEvent = new AuditEvent(event);
+        Long newId = eventRepository.save(newAuditEvent).getId();
     }
 }
