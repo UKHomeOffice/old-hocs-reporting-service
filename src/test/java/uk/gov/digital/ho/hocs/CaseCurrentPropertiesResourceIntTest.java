@@ -74,6 +74,38 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
+    public void shouldNotUpdateWhenSameTime() throws EntityCreationException {
+        Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
+        repository.save(new CaseCurrentProperties(event1));
+
+        Event event2 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
+        event2.getData().put("advice", "do one");
+        restTemplate.postForEntity("/event/add", event2, String.class);
+
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU", CaseCurrentProperties[].class);
+        assertThat(actualList.getBody()).hasSize(1);
+        assertThat(actualList.getBody()[0].getAdvice()).isNull();
+    }
+
+    @Test
+    public void shouldNotUpdateWhenDifferentTime() throws EntityCreationException {
+        Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
+        repository.save(new CaseCurrentProperties(event1));
+
+        String uuid = "uuid";
+        LocalDateTime dateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN.plusMinutes(5));
+        Map<String, String> data = new HashMap<>();
+        data.put("correspondenceType","MIN");
+        data.put("advice", "do one");
+        Event event2 = new  Event(uuid, dateTime, "CaseRef1", data);
+        restTemplate.postForEntity("/event/add", event2, String.class);
+
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU", CaseCurrentProperties[].class);
+        assertThat(actualList.getBody()).hasSize(1);
+        assertThat(actualList.getBody()[0].getAdvice()).isEqualTo("do one");
+    }
+
+    @Test
     public void shouldReturnWhenOutsideVaidDateRangeMulti() throws EntityCreationException {
         Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event1));

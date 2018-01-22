@@ -40,11 +40,12 @@ public class CaseCurrentPropertiesService {
 
     public void createCurrentProperties(Event event) throws EntityCreationException {
         try {
-            CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseRef(event.getCaseReference());
+            CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
 
             if(caseCurrentProperties == null) {
                 currentPropertiesRepository.save(new CaseCurrentProperties(event));
             } else if(event.getTimestamp().isAfter(caseCurrentProperties.getTimestamp())) {
+                log.info("Entry already found, updating: " + event.getCaseReference());
                 caseCurrentProperties.update(event);
                 currentPropertiesRepository.save(caseCurrentProperties);
             }
@@ -70,7 +71,7 @@ public class CaseCurrentPropertiesService {
             return new HashSet<>();
         } else {
 
-            log.info("Fetching All Current Properties for \"{}\"", correspondenceTypes);
+            log.info("Fetching All Current Properties for \"{}\"", correspondenceTypes.toString());
 
             LocalDate now = LocalDate.now();
             LocalDateTime today = LocalDateTime.of(now, LocalTime.MAX);

@@ -43,7 +43,7 @@ public class CaseCurrentPropertiesServiceTest {
         Event event = getValidEvent();
         currentPropertiesService.createCurrentProperties(event);
 
-        verify(mockCurrentPropertiesRepo).findByCaseRef(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
         verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
     }
 
@@ -52,12 +52,12 @@ public class CaseCurrentPropertiesServiceTest {
         Event event = getValidEvent();
         currentPropertiesService.createCurrentProperties(event);
 
-        when(mockCurrentPropertiesRepo.findByCaseRef(event.getCaseReference())).thenReturn(new CaseCurrentProperties(event));
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(new CaseCurrentProperties(event));
 
         Event newEvent = getValidEventWithTime(LocalDateTime.now().plusHours(1));
         currentPropertiesService.createCurrentProperties(newEvent);
 
-        verify(mockCurrentPropertiesRepo, times(2)).findByCaseRef(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(2)).findByCaseReference(event.getCaseReference());
         verify(mockCurrentPropertiesRepo, times(2)).save(any(CaseCurrentProperties.class));
     }
 
@@ -68,7 +68,7 @@ public class CaseCurrentPropertiesServiceTest {
 
         currentPropertiesService.createCurrentProperties(event);
 
-        verify(mockCurrentPropertiesRepo).findByCaseRef(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
         verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
     }
 
@@ -79,7 +79,7 @@ public class CaseCurrentPropertiesServiceTest {
 
         currentPropertiesService.createCurrentProperties(event);
 
-        verify(mockCurrentPropertiesRepo).findByCaseRef(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
         verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
     }
 
@@ -110,7 +110,7 @@ public class CaseCurrentPropertiesServiceTest {
     @Test
     public void shouldNotWriteOlderMessage() throws EntityCreationException {
         Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
-        when(mockCurrentPropertiesRepo.findByCaseRef(event1.getCaseReference())).thenReturn(new CaseCurrentProperties(event1));
+        when(mockCurrentPropertiesRepo.findByCaseReference(event1.getCaseReference())).thenReturn(new CaseCurrentProperties(event1));
 
         Event event2 = getValidEventWithDate(LocalDate.now().minusDays(1), "CaseRef1");
         currentPropertiesService.createCurrentProperties(event2);
@@ -121,7 +121,7 @@ public class CaseCurrentPropertiesServiceTest {
     @Test
     public void shouldNotWriteSameMessage() throws EntityCreationException {
         Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
-        when(mockCurrentPropertiesRepo.findByCaseRef(event1.getCaseReference())).thenReturn(new CaseCurrentProperties(event1));
+        when(mockCurrentPropertiesRepo.findByCaseReference(event1.getCaseReference())).thenReturn(new CaseCurrentProperties(event1));
 
         currentPropertiesService.createCurrentProperties(event1);
 
@@ -131,7 +131,7 @@ public class CaseCurrentPropertiesServiceTest {
     @Test
     public void shouldWriteNewerMessage() throws EntityCreationException {
         Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
-        when(mockCurrentPropertiesRepo.findByCaseRef(event1.getCaseReference())).thenReturn(new CaseCurrentProperties(event1));
+        when(mockCurrentPropertiesRepo.findByCaseReference(event1.getCaseReference())).thenReturn(new CaseCurrentProperties(event1));
 
         Event event2 = getValidEventWithDate(LocalDate.now().plusDays(1), "CaseRef1");
         currentPropertiesService.createCurrentProperties(event2);

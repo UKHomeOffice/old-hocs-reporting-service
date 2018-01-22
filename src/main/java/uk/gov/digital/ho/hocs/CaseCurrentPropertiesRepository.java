@@ -10,7 +10,7 @@ import java.util.Set;
 @Repository
 public interface CaseCurrentPropertiesRepository extends CrudRepository<CaseCurrentProperties, Long> {
 
-    CaseCurrentProperties findByCaseRef(String caseReference);
+    CaseCurrentProperties findByCaseReference(String caseReference);
 
     Set<CaseCurrentProperties> getAllByTimestampBetweenAndCorrespondenceTypeIn(LocalDateTime start, LocalDateTime end, String[] correspondenceTypes);
 }
