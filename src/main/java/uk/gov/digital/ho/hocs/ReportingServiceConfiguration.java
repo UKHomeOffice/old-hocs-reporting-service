@@ -12,16 +12,21 @@ import java.text.SimpleDateFormat;
 @Configuration
 public class ReportingServiceConfiguration {
 
+
     @Autowired
     public ReportingServiceConfiguration(ObjectMapper objectMapper) {
         initialiseObjectMapper(objectMapper);
     }
 
-    private static void initialiseObjectMapper(final ObjectMapper m) {
+    public static void initialiseObjectMapper(final ObjectMapper m) {
         m.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
         m.registerModule(new JavaTimeModule());
         m.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         m.enable(SerializationFeature.INDENT_OUTPUT);
-        m.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        m.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+        m.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
     }
+
+
+
 }

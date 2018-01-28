@@ -80,4 +80,6 @@ public class CaseCurrentPropertiesService {
             return currentPropertiesRepository.getAllByTimestampBetweenAndCorrespondenceTypeIn(start, today, correspondenceTypes);
         }
     }
+
+
 }

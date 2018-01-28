@@ -14,13 +14,11 @@ import uk.gov.digital.ho.hocs.model.Event;
 @RestController
 @RequestMapping(value = "/event/")
 public class EventResource {
-    private final EventService eventService;
     private final CasePropertiesService casePropertiesService;
     private final CaseCurrentPropertiesService caseCurrentPropertiesService;
 
     @Autowired
-    public EventResource(EventService eventService, CasePropertiesService casePropertiesService, CaseCurrentPropertiesService caseCurrentPropertiesService) {
-        this.eventService = eventService;
+    public EventResource(CasePropertiesService casePropertiesService, CaseCurrentPropertiesService caseCurrentPropertiesService) {
         this.casePropertiesService = casePropertiesService;
         this.caseCurrentPropertiesService = caseCurrentPropertiesService;
     }
@@ -29,7 +27,6 @@ public class EventResource {
     public ResponseEntity postEvent(@RequestBody Event event) {
         log.info("Writing Event \"{}\"", event.getUuid());
         try {
-            eventService.createEvent(event);
             casePropertiesService.createProperties(event);
             caseCurrentPropertiesService.createCurrentProperties(event);
             return ResponseEntity.ok("OK");

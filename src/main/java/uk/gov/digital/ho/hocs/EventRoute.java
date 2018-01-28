@@ -15,7 +15,6 @@ import java.io.IOException;
 @Profile("rabbitmq")
 @Controller
 public class EventRoute {
-    private final EventService eventService;
     private final CasePropertiesService casePropertiesService;
     private final CaseCurrentPropertiesService caseCurrentPropertiesService;
 
@@ -23,8 +22,7 @@ public class EventRoute {
     private ObjectMapper objectMapper;
 
     @Autowired
-    public EventRoute(EventService eventService, CasePropertiesService casePropertiesService, CaseCurrentPropertiesService caseCurrentPropertiesService) {
-        this.eventService = eventService;
+    public EventRoute(CasePropertiesService casePropertiesService, CaseCurrentPropertiesService caseCurrentPropertiesService) {
         this.casePropertiesService = casePropertiesService;
         this.caseCurrentPropertiesService = caseCurrentPropertiesService;
     }
@@ -35,7 +33,6 @@ public class EventRoute {
             Event event = objectMapper.readValue(new String(message), Event.class);
             log.info("Writing Event \"{}\"", event.getUuid());
             try {
-                eventService.createEvent(event);
                 casePropertiesService.createProperties(event);
                 caseCurrentPropertiesService.createCurrentProperties(event);
                 } catch (EntityCreationException e) {

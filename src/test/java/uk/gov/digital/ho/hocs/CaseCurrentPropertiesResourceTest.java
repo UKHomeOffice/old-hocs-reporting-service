@@ -18,9 +18,6 @@ import static org.mockito.Mockito.verify;
 public class CaseCurrentPropertiesResourceTest {
 
     @Mock
-    private EventService eventService;
-
-    @Mock
     private CasePropertiesService casePropertiesService;
 
     @Mock
@@ -31,7 +28,7 @@ public class CaseCurrentPropertiesResourceTest {
 
     @Before
     public void setUp() {
-        eventResource = new EventResource(eventService, casePropertiesService, caseCurrentPropertiesService);
+        eventResource = new EventResource(casePropertiesService, caseCurrentPropertiesService);
     }
 
 
