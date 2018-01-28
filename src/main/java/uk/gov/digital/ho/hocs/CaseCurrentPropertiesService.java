@@ -38,7 +38,7 @@ public class CaseCurrentPropertiesService {
         this.currentPropertiesRepository = caseCurrentPropertiesRepository;
     }
 
-    public void createCurrentProperties(Event event) throws EntityCreationException {
+    void createCurrentProperties(Event event) throws EntityCreationException {
         try {
             CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
 
@@ -62,7 +62,7 @@ public class CaseCurrentPropertiesService {
         }
     }
 
-    public Set<CaseCurrentProperties> getCurrentProperties(String unit) {
+    Set<CaseCurrentProperties> getCurrentProperties(String unit) {
 
         String[] correspondenceTypes = caseTypesMapping.get(unit);
 
@@ -75,7 +75,12 @@ public class CaseCurrentPropertiesService {
 
             LocalDate now = LocalDate.now();
             LocalDateTime today = LocalDateTime.of(now, LocalTime.MAX);
-            LocalDateTime start = LocalDateTime.of(now.minusYears(1), LocalTime.MAX);
+
+            int monthsBack =6;
+            // Start at the first day of the month
+            LocalDateTime start = LocalDateTime.of(now.minusMonths(monthsBack).getYear(),
+                                                   now.minusMonths(monthsBack).getMonth(),
+                                                   1,0,0);
 
             return currentPropertiesRepository.getAllByTimestampBetweenAndCorrespondenceTypeIn(start, today, correspondenceTypes);
         }

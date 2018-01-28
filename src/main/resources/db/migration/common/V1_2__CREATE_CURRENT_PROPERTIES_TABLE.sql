@@ -198,3 +198,4 @@ CREATE TABLE IF NOT EXISTS current_properties
 
 CREATE INDEX idx_current_properties_case_reference ON current_properties (case_reference);
 CREATE INDEX idx_current_properties_timestamp ON current_properties (msg_timestamp);
+CREATE INDEX idx_current_properties_corr_type ON current_properties (correspondence_type);
