@@ -42,7 +42,7 @@ public class CaseCurrentPropertiesRepositoryTest {
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
-        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findOne(id);
+        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getUuid()).isEqualTo(caseProperties.getUuid());
         assertThat(returnedCaseProperties.getTimestamp()).isEqualTo(caseProperties.getTimestamp());
@@ -58,7 +58,7 @@ public class CaseCurrentPropertiesRepositoryTest {
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
-        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findOne(id);
+        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findById(id).get();
 
         CaseCurrentProperties newCaseProperties = new CaseCurrentProperties(event);
 
@@ -78,14 +78,14 @@ public class CaseCurrentPropertiesRepositoryTest {
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
-        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findOne(id);
+        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
 
         returnedCaseProperties.update(newEvent);
 
         Long newId = caseCurrentPropertiesRepository.save(returnedCaseProperties).getId();
-        CaseCurrentProperties returnedNewCaseProperties = caseCurrentPropertiesRepository.findOne(newId);
+        CaseCurrentProperties returnedNewCaseProperties = caseCurrentPropertiesRepository.findById(newId).get();
 
         // See CasePropertiesRepoTest -> ShouldAllowMultiple to understand the difference.
         assertThat(returnedCaseProperties.getAdvice()).isEqualTo("do one");
@@ -107,7 +107,7 @@ public class CaseCurrentPropertiesRepositoryTest {
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
-        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findOne(id);
+        CaseCurrentProperties returnedCaseProperties = caseCurrentPropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
 

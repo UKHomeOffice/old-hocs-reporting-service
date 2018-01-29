@@ -38,7 +38,7 @@ public class CasePropertiesRepositoryTest {
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();
-        CaseProperties returnedCaseProperties = casePropertiesRepository.findOne(id);
+        CaseProperties returnedCaseProperties = casePropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getUuid()).isEqualTo(caseProperties.getUuid());
         assertThat(returnedCaseProperties.getTimestamp()).isEqualTo(caseProperties.getTimestamp());
@@ -54,7 +54,7 @@ public class CasePropertiesRepositoryTest {
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();
-        CaseProperties returnedCaseProperties = casePropertiesRepository.findOne(id);
+        CaseProperties returnedCaseProperties = casePropertiesRepository.findById(id).get();
 
         CaseProperties newCaseProperties = new CaseProperties(event);
 
@@ -71,7 +71,7 @@ public class CasePropertiesRepositoryTest {
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();
-        CaseProperties returnedCaseProperties = casePropertiesRepository.findOne(id);
+        CaseProperties returnedCaseProperties = casePropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
 
@@ -92,13 +92,13 @@ public class CasePropertiesRepositoryTest {
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();
-        CaseProperties returnedCaseProperties = casePropertiesRepository.findOne(id);
+        CaseProperties returnedCaseProperties = casePropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
 
         CaseProperties newCaseProperties = new CaseProperties(newEvent);
         Long newId = casePropertiesRepository.save(newCaseProperties).getId();
-        CaseProperties returnedNewCaseProperties = casePropertiesRepository.findOne(newId);
+        CaseProperties returnedNewCaseProperties = casePropertiesRepository.findById(newId).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
         assertThat(returnedNewCaseProperties.getAdvice()).isEqualTo("do one");
@@ -119,13 +119,13 @@ public class CasePropertiesRepositoryTest {
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();
-        CaseProperties returnedCaseProperties = casePropertiesRepository.findOne(id);
+        CaseProperties returnedCaseProperties = casePropertiesRepository.findById(id).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
 
         CaseProperties newCaseProperties = new CaseProperties(newEvent);
         Long newId = casePropertiesRepository.save(newCaseProperties).getId();
-        CaseProperties returnedNewCaseProperties = casePropertiesRepository.findOne(newId);
+        CaseProperties returnedNewCaseProperties = casePropertiesRepository.findById(newId).get();
 
         assertThat(returnedCaseProperties.getAdvice()).isNull();
         assertThat(returnedNewCaseProperties.getAdvice()).isEqualTo("do one");
