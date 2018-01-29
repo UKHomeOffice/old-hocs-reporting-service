@@ -12,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.hocs.model.CaseCurrentProperties;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
 import java.util.Set;
 
 
@@ -43,17 +42,19 @@ public class CaseCurrentPropertiesResource {
         Set<CaseCurrentProperties> caseCurrentProperties = this.caseCurrentPropertiesService.getCurrentProperties(unit);
 
         CsvSchema schema = csvMapper.schemaFor(CaseCurrentProperties.class).withHeader();
-        String value = null;
+        String value;
         try {
             value = csvMapper.writer(schema).writeValueAsString(caseCurrentProperties);
         } catch (JsonProcessingException e) {
             return ResponseEntity.badRequest().build();
         }
 
-        return ResponseEntity.ok(value);
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=\"Hocs_Reporting_COP_" + getFormattedTime() + ".csv\"")
+                .body(value);
     }
 
     private String getFormattedTime() {
-        return DateTimeFormatter.ISO_DATE_TIME.format(LocalDateTime.now());
+        return LocalDate.now().minusDays(1).toString();
     }
 }
