@@ -51,7 +51,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(1);
         assertThat(actualList.getBody()[0].getCaseReference()).isEqualTo("CaseRef1");
     }
@@ -61,7 +61,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
 
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties).hasSize(1);
@@ -73,7 +73,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event = getValidEventWithDate(LocalDate.now().plusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(0);
     }
 
@@ -82,7 +82,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event = getValidEventWithDate(LocalDate.now().plusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
 
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties).hasSize(0);
@@ -93,7 +93,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(0);
     }
 
@@ -102,7 +102,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
 
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties).hasSize(0);
@@ -110,13 +110,13 @@ public class CaseCurrentPropertiesResourceIntTest {
 
     @Test
     public void shouldNotReturnWhenEmpty() throws EntityCreationException {
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(0);
     }
 
     @Test
     public void shouldNotReturnWhenEmptyCsv() throws EntityCreationException, IOException {
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
 
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties).hasSize(0);
@@ -131,7 +131,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         event2.getData().put("advice", "do one");
         restTemplate.postForEntity("/event/add", event2, String.class);
 
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(1);
         assertThat(actualList.getBody()[0].getAdvice()).isNull();
     }
@@ -145,7 +145,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         event2.getData().put("advice", "do one");
         restTemplate.postForEntity("/event/add", event2, String.class);
 
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
 
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties).hasSize(1);
@@ -165,7 +165,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event2 = new  Event(uuid, dateTime, "CaseRef1", data);
         restTemplate.postForEntity("/event/add", event2, String.class);
 
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(1);
         assertThat(actualList.getBody()[0].getAdvice()).isEqualTo("do one");
     }
@@ -183,7 +183,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event2 = new  Event(uuid, dateTime, "CaseRef1", data);
         restTemplate.postForEntity("/event/add", event2, String.class);
 
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties.get(0).getCaseReference()).isEqualTo("CaseRef1");
         assertThat(caseCurrentProperties.get(0).getAdvice()).contains("do one");
@@ -203,7 +203,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event4 = getValidEventWithDate(LocalDate.now().minusDays(1), "CaseRef4");
         repository.save(new CaseCurrentProperties(event4));
 
-        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/currentProperties/DCU/json", CaseCurrentProperties[].class);
+        ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
         assertThat(actualList.getBody()).hasSize(2);
     }
 
@@ -221,7 +221,7 @@ public class CaseCurrentPropertiesResourceIntTest {
         Event event4 = getValidEventWithDate(LocalDate.now().minusDays(1), "CaseRef4");
         repository.save(new CaseCurrentProperties(event4));
 
-        ResponseEntity<String> actualList = restTemplate.getForEntity("/currentProperties/DCU/csv", String.class);
+        ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/current/DCU/csv", String.class);
         List<CaseCurrentProperties> caseCurrentProperties = getCaseCurrentPropertiesCsv(actualList);
         assertThat(caseCurrentProperties).hasSize(2);
     }

@@ -9,9 +9,28 @@ import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.CaseProperties;
 import uk.gov.digital.ho.hocs.model.Event;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 @Slf4j
 public class CasePropertiesService {
+
+    private static HashMap<String,String[]> caseTypesMapping;
+
+    // This code should be in the data-service but we also want to get rid of getCurrentProperties code.
+    static {
+        caseTypesMapping = new HashMap<>();
+        caseTypesMapping.put("DCU", new String[]{"MIN","TRO","DTEN"});
+        caseTypesMapping.put("UKVI", new String[]{"IMCB","IMCM","UTEN"});
+        caseTypesMapping.put("FOI", new String[]{"FOI", "FTC", "FTCI", "FSC", "FSCI"});
+        caseTypesMapping.put("HMPOCOR", new String[]{"COM","COM1","COM2","DGEN"});
+        caseTypesMapping.put("HMPOCOL", new String[]{"COL"});
+    }
 
     private final CasePropertiesRepository casePropertiesRepository;
 
@@ -34,6 +53,30 @@ public class CasePropertiesService {
             else {
                 throw e;
             }
+        }
+    }
+
+    Set<CaseProperties> getProperties(String unit, String cutoff) {
+
+        String[] correspondenceTypes = caseTypesMapping.get(unit);
+
+        if (correspondenceTypes == null) {
+            log.error("Unit {} not found", unit);
+            return new HashSet<>();
+        } else {
+           LocalDate localDateCutOff = LocalDate.parse(cutoff);
+
+            log.info("Fetching All Properties for \"{}\" up to {}", correspondenceTypes.toString(), cutoff);
+
+            LocalDateTime today = LocalDateTime.of(localDateCutOff, LocalTime.MAX);
+
+            int monthsBack =4;
+            // Start at the first day of the month
+            LocalDateTime start = LocalDateTime.of(localDateCutOff.minusMonths(monthsBack).getYear(),
+                    localDateCutOff.minusMonths(monthsBack).getMonth(),
+                    1,0,0);
+
+            return casePropertiesRepository.getAllByTimestampBetweenAndCorrespondenceTypeIn(start, today, correspondenceTypes);
         }
     }
 }

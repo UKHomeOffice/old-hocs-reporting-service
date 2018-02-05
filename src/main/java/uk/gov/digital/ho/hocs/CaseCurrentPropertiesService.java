@@ -19,7 +19,6 @@ import java.util.Set;
 @Slf4j
 public class CaseCurrentPropertiesService {
 
-
     private static HashMap<String,String[]> caseTypesMapping;
 
     // This code should be in the data-service but we also want to get rid of getCurrentProperties code.
@@ -27,9 +26,9 @@ public class CaseCurrentPropertiesService {
         caseTypesMapping = new HashMap<>();
         caseTypesMapping.put("DCU", new String[]{"MIN","TRO","DTEN"});
         caseTypesMapping.put("UKVI", new String[]{"IMCB","IMCM","UTEN"});
-        //caseTypesMapping.put("FOI", new String[]{"","",""});
-        //caseTypesMapping.put("HMPOCOR", new String[]{"","",""});
-        //caseTypesMapping.put("HMPOCOL", new String[]{"","",""});
+        caseTypesMapping.put("FOI", new String[]{"FOI", "FTC", "FTCI", "FSC", "FSCI"});
+        caseTypesMapping.put("HMPOCOR", new String[]{"COM","COM1","COM2","DGEN"});
+        caseTypesMapping.put("HMPOCOL", new String[]{"COL"});
     }
 
     private final CaseCurrentPropertiesRepository currentPropertiesRepository;
@@ -76,7 +75,7 @@ public class CaseCurrentPropertiesService {
             LocalDate now = LocalDate.now();
             LocalDateTime today = LocalDateTime.of(now, LocalTime.MAX);
 
-            int monthsBack =6;
+            int monthsBack =4;
             // Start at the first day of the month
             LocalDateTime start = LocalDateTime.of(now.minusMonths(monthsBack).getYear(),
                                                    now.minusMonths(monthsBack).getMonth(),

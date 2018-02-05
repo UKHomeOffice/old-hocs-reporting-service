@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.hocs.model.CaseCurrentProperties;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 
 @Slf4j
 @RestController
-@RequestMapping(value = "/currentProperties/")
+@RequestMapping(value = "/cases/current")
 public class CaseCurrentPropertiesResource {
     private final CaseCurrentPropertiesService caseCurrentPropertiesService;
 
@@ -50,11 +50,11 @@ public class CaseCurrentPropertiesResource {
         }
 
         return ResponseEntity.ok()
-                .header("Content-Disposition", "inline; filename=\"Hocs_Reporting_COP_" + getFormattedTime() + ".csv\"")
+                .header("Content-Disposition", "inline; filename=\"Hocs_Reporting_Current_" + getFormattedTime() + ".csv\"")
                 .body(value);
     }
 
     private String getFormattedTime() {
-        return LocalDate.now().minusDays(1).toString();
+        return LocalDateTime.now().toString();
     }
 }
