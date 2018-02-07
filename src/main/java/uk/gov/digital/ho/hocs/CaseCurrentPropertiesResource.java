@@ -12,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.hocs.model.CaseCurrentProperties;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Set;
 
 
@@ -50,11 +51,13 @@ public class CaseCurrentPropertiesResource {
         }
 
         return ResponseEntity.ok()
-                .header("Content-Disposition", "inline; filename=\"Hocs_Reporting_Current_" + getFormattedTime() + ".csv\"")
+                .header("Content-Disposition", "inline; filename=\"hocs_c_" + getFormattedTime() + ".csv\"")
                 .body(value);
     }
 
     private String getFormattedTime() {
-        return LocalDateTime.now().toString();
+        LocalDate localDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE;
+        return localDate.format(formatter);
     }
 }
