@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.digital.ho.hocs.model.CaseProperties;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 
@@ -33,7 +32,7 @@ public class CasePropertiesResource {
 
     @RequestMapping(value = "/{cutoff}/{unit}/json", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<CaseProperties[]> getCasePropertiesJson(@PathVariable("unit") String unit, @PathVariable("cutoff") String cutoff) {
-        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getProperties(unit,cutoff);
+        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getProperties(unit, cutoff);
         return ResponseEntity.ok(caseCurrentProperties.toArray(new CaseProperties[]{}));
     }
 
@@ -50,11 +49,7 @@ public class CasePropertiesResource {
         }
 
         return ResponseEntity.ok()
-                .header("Content-Disposition", "inline; filename=\"Hocs_Reporting_" + cutoff + ".csv\"")
+                .header("Content-Disposition", "inline; filename=\"hocs_" + cutoff + ".csv\"")
                 .body(value);
-    }
-
-    private String getFormattedTime() {
-        return LocalDate.now().minusDays(1).toString();
     }
 }

@@ -12,6 +12,7 @@ import uk.gov.digital.ho.hocs.model.Event;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class CasePropertiesService {
         } else {
            LocalDate localDateCutOff = LocalDate.parse(cutoff);
 
-            log.info("Fetching All Properties for \"{}\" up to {}", correspondenceTypes.toString(), cutoff);
+            log.info("Fetching All Properties for \"{}\" up to {}", Arrays.toString(correspondenceTypes), cutoff);
 
             LocalDateTime today = LocalDateTime.of(localDateCutOff, LocalTime.MAX);
 

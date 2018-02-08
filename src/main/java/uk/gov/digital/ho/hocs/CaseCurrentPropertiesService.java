@@ -11,6 +11,7 @@ import uk.gov.digital.ho.hocs.model.Event;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -70,7 +71,7 @@ public class CaseCurrentPropertiesService {
             return new HashSet<>();
         } else {
 
-            log.info("Fetching All Current Properties for \"{}\"", correspondenceTypes.toString());
+            log.info("Fetching All Current Properties for \"{}\"", Arrays.toString(correspondenceTypes));
 
             LocalDate now = LocalDate.now();
             LocalDateTime today = LocalDateTime.of(now, LocalTime.MAX);

@@ -29,7 +29,7 @@ public class CaseCurrentPropertiesRepositoryTest {
 
     @Before
     public void setup() {
-
+        caseCurrentPropertiesRepository.deleteAll();
     }
 
     @Test
