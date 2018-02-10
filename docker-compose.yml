@@ -26,14 +26,13 @@ services:
     build:
       context: .
     environment:
-      spring.profiles.active: postgres, rabbitmq
+      spring.profiles.active: postgres
       db.host: postgres
       db.username: root
       db.password: dev
       env.rabbit.mq.host: rabbitmq
     depends_on:
       - postgres
-      - rabbitmq
     ports:
       - 8082:8080
     networks:
