@@ -749,7 +749,7 @@ public class CaseCurrentProperties extends BaseProperties {
         replyToTelephone = SetString("replyToTelephone", after);
         replyToNumberTenCopy = SetBool("replyToNumberTenCopy", after);
         responderHubTarget = SetString("responderHubTarget", after);
-        responseDate = SetDate("responderHubTarget", after);
+        responseDate = SetDate("responseDate", after);
         returnCaseAt = SetBool("returnCaseAt", after);
         returnedCount = SetInt("returnedCount", after);
         reviewedByPermSec = SetBool("reviewedByPermSec", after);
