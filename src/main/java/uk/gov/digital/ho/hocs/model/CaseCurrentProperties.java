@@ -213,6 +213,9 @@ public class CaseCurrentProperties extends BaseProperties {
     @Column(name = "examiner_security_check")
     private Boolean examinerSecurityCheck;
 
+    @Column(name = "exemptions")
+    private String exemptions;
+
     @Column(name = "fee_included")
     private Boolean feeIncluded;
 
@@ -668,6 +671,7 @@ public class CaseCurrentProperties extends BaseProperties {
         enforcementNoticeDeadline = SetDate("enforcementNoticeDeadline", after);
         enforcementNoticeNeeded = SetBool("enforcementNoticeNeeded", after);
         examinerSecurityCheck = SetBool("examinerSecurityCheck", after);
+        exemptions = SetString("exemptions", after);
         feeIncluded = SetBool("feeIncluded", after);
         finalApprovalTarget = SetDate("finalApprovalTarget", after);
         foiDisclosure = SetBool("foiDisclosure", after);
