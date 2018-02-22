@@ -1,3 +1,3 @@
-# Hocs Reporting Service.
+# Hocs Reporting Service
 
 Very simple reporting service
