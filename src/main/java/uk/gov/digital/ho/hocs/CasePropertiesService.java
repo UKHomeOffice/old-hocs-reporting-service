@@ -29,7 +29,7 @@ public class CasePropertiesService {
         caseTypesMapping.put("DCU", new String[]{"MIN","TRO","DTEN"});
         caseTypesMapping.put("UKVI", new String[]{"IMCB","IMCM","UTEN"});
         caseTypesMapping.put("FOI", new String[]{"FOI", "FTC", "FTCI", "FSC", "FSCI"});
-        caseTypesMapping.put("HMPOCOR", new String[]{"COM","COM1","COM2","DGEN"});
+        caseTypesMapping.put("HMPOCOR", new String[]{"COM","COM1","COM2","DGEN", "GNR"});
         caseTypesMapping.put("HMPOCOL", new String[]{"COL"});
     }
 
