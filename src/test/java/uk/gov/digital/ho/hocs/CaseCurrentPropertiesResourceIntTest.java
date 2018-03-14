@@ -47,7 +47,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldReturnWhenVaidDateRange() throws EntityCreationException {
+    public void shouldReturnWhenValidDateRange() throws EntityCreationException {
         Event event = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
@@ -57,7 +57,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldReturnWhenVaidDateRangeCsv() throws EntityCreationException, IOException {
+    public void shouldReturnWhenValidDateRangeCsv() throws EntityCreationException, IOException {
         Event event = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
@@ -69,7 +69,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldNotReturnWhenOutsideVaidDateRangePlus() throws EntityCreationException {
+    public void shouldNotReturnWhenOutsideValidDateRangePlus() throws EntityCreationException {
         Event event = getValidEventWithDate(LocalDate.now().plusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
@@ -78,7 +78,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldNotReturnWhenOutsideVaidDateRangePlusCsv() throws EntityCreationException, IOException {
+    public void shouldNotReturnWhenOutsideValidDateRangePlusCsv() throws EntityCreationException, IOException {
         Event event = getValidEventWithDate(LocalDate.now().plusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
@@ -89,7 +89,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldNotReturnWhenOutsideVaidDateRangeMinus() throws EntityCreationException {
+    public void shouldNotReturnWhenOutsideValidDateRangeMinus() throws EntityCreationException {
         Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
@@ -98,7 +98,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldNotReturnWhenOutsideVaidDateRangeMinusCsv() throws EntityCreationException, IOException {
+    public void shouldNotReturnWhenOutsideValidDateRangeMinusCsv() throws EntityCreationException, IOException {
         Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusDays(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
@@ -190,7 +190,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldReturnWhenOutsideVaidDateRangeMulti() throws EntityCreationException {
+    public void shouldReturnWhenOutsideValidDateRangeMulti() throws EntityCreationException {
         Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event1));
 
@@ -208,7 +208,7 @@ public class CaseCurrentPropertiesResourceIntTest {
     }
 
     @Test
-    public void shouldReturnWhenOutsideVaidDateRangeMultiCsv() throws EntityCreationException, IOException {
+    public void shouldReturnWhenOutsideValidDateRangeMultiCsv() throws EntityCreationException, IOException {
         Event event1 = getValidEventWithDate(LocalDate.now(), "CaseRef1");
         repository.save(new CaseCurrentProperties(event1));
 

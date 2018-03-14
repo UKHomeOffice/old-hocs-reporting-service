@@ -74,7 +74,7 @@ public class CaseCurrentPropertiesRepositoryTest {
         String caseRef = "CaseRef";
         Map<String, String> data = new HashMap<>();
         data.put("advice", "do one");
-        Event newEvent =  new Event(uuid, dateTime, caseRef, data);
+        Event newEvent = new Event(uuid, dateTime, caseRef, data);
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
@@ -103,7 +103,7 @@ public class CaseCurrentPropertiesRepositoryTest {
         String caseRef = "CaseRef";
         Map<String, String> data = new HashMap<>();
         data.put("advice", "do one");
-        Event newEvent =  new Event(uuid, dateTime, caseRef, data);
+        Event newEvent = new Event(uuid, dateTime, caseRef, data);
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
         Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
@@ -113,6 +113,23 @@ public class CaseCurrentPropertiesRepositoryTest {
 
         CaseCurrentProperties newCaseProperties = new CaseCurrentProperties(newEvent);
         Long newId = caseCurrentPropertiesRepository.save(newCaseProperties).getId();
+    }
+
+    @Test
+    public void ShouldCountNumberOfCasesOfCaseTypeThatAreNotComplete() {
+        String uuid = "uuid";
+        LocalDateTime dateTime = LocalDateTime.now();
+        String caseRef = "CaseRef";
+        Map<String, String> data = new HashMap<>();
+        data.put("correspondenceType", "MIN");
+        data.put("caseStatus", "New");
+        Event event = new Event(uuid, dateTime, caseRef, data);
+
+        CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
+        Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
+        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot("MIN", "Completed");
+        System.out.println("returnedCaseCount = " + returnedCaseCount);
+        assertThat(returnedCaseCount).isEqualTo("1l");
     }
 
     private Event getValidEvent() {
