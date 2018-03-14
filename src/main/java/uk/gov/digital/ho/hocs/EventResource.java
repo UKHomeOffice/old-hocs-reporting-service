@@ -23,7 +23,7 @@ public class EventResource {
         this.caseCurrentPropertiesService = caseCurrentPropertiesService;
     }
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/add", method = RequestMethod.POST, consumes = "application/*")
     public ResponseEntity postEvent(@RequestBody Event event) {
         log.info("Writing Event \"{}\"", event.getUuid());
         try {
