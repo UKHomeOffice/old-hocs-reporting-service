@@ -15,6 +15,7 @@ import uk.gov.digital.ho.hocs.model.Event;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -117,19 +118,38 @@ public class CaseCurrentPropertiesRepositoryTest {
 
     @Test
     public void ShouldCountNumberOfCasesOfCaseTypeThatAreNotComplete() {
-        String uuid = "uuid";
+        createCase("MIN", "New");
+
+        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot("MIN", "Completed");
+        System.out.println("returnedCaseCount = " + returnedCaseCount);
+        assertThat(returnedCaseCount).isEqualTo(1L);
+    }
+
+    @Test
+    public void ShouldOnlyCountNumberOfCasesOfCaseTypeThatAreNotComplete() {
+
+        createCase("MIN", "New");
+        createCase("MIN", "Draft");
+        createCase("MIN", "Dispatch");
+        createCase("MIN", "Completed");
+        createCase("TRO", "New");
+
+        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot("MIN", "Completed");
+        System.out.println("returnedCaseCount = " + returnedCaseCount);
+        assertThat(returnedCaseCount).isEqualTo(3L);
+    }
+
+    private Long createCase(String correspondenceType, String caseStatus){
+        String uuid = UUID.randomUUID().toString();
         LocalDateTime dateTime = LocalDateTime.now();
-        String caseRef = "CaseRef";
+        String caseRef = UUID.randomUUID().toString();
         Map<String, String> data = new HashMap<>();
-        data.put("correspondenceType", "MIN");
-        data.put("caseStatus", "New");
+        data.put("correspondenceType", correspondenceType);
+        data.put("caseStatus", caseStatus);
         Event event = new Event(uuid, dateTime, caseRef, data);
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);
-        Long id = caseCurrentPropertiesRepository.save(caseProperties).getId();
-        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot("MIN", "Completed");
-        System.out.println("returnedCaseCount = " + returnedCaseCount);
-        assertThat(returnedCaseCount).isEqualTo("1l");
+        return caseCurrentPropertiesRepository.save(caseProperties).getId();
     }
 
     private Event getValidEvent() {
