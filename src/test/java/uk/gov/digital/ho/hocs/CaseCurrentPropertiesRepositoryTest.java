@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.digital.ho.hocs.model.CaseCurrentProperties;
+import uk.gov.digital.ho.hocs.model.CaseStatus;
+import uk.gov.digital.ho.hocs.model.CaseType;
 import uk.gov.digital.ho.hocs.model.Event;
 
 import java.time.LocalDateTime;
@@ -118,9 +120,9 @@ public class CaseCurrentPropertiesRepositoryTest {
 
     @Test
     public void ShouldCountNumberOfCasesOfCaseTypeThatAreNotComplete() {
-        createCase("MIN", "New");
+        createCase(CaseType.MIN, CaseStatus.New);
 
-        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot("MIN", "Completed");
+        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name());
         System.out.println("returnedCaseCount = " + returnedCaseCount);
         assertThat(returnedCaseCount).isEqualTo(1L);
     }
@@ -128,24 +130,24 @@ public class CaseCurrentPropertiesRepositoryTest {
     @Test
     public void ShouldOnlyCountNumberOfCasesOfCaseTypeThatAreNotComplete() {
 
-        createCase("MIN", "New");
-        createCase("MIN", "Draft");
-        createCase("MIN", "Dispatch");
-        createCase("MIN", "Completed");
-        createCase("TRO", "New");
+        createCase(CaseType.MIN, CaseStatus.New);
+        createCase(CaseType.MIN, CaseStatus.Draft);
+        createCase(CaseType.MIN, CaseStatus.Dispatch);
+        createCase(CaseType.MIN, CaseStatus.Completed);
+        createCase(CaseType.TRO, CaseStatus.New);
 
-        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot("MIN", "Completed");
+        Long returnedCaseCount = caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name());
         System.out.println("returnedCaseCount = " + returnedCaseCount);
         assertThat(returnedCaseCount).isEqualTo(3L);
     }
 
-    private Long createCase(String correspondenceType, String caseStatus){
+    private Long createCase(CaseType caseType, CaseStatus caseStatus){
         String uuid = UUID.randomUUID().toString();
         LocalDateTime dateTime = LocalDateTime.now();
         String caseRef = UUID.randomUUID().toString();
         Map<String, String> data = new HashMap<>();
-        data.put("correspondenceType", correspondenceType);
-        data.put("caseStatus", caseStatus);
+        data.put("correspondenceType", caseType.name());
+        data.put("caseStatus", caseStatus.name());
         Event event = new Event(uuid, dateTime, caseRef, data);
 
         CaseCurrentProperties caseProperties = new CaseCurrentProperties(event);

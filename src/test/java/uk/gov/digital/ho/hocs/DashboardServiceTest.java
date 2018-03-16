@@ -5,30 +5,38 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import uk.gov.digital.ho.hocs.model.CaseStatus;
+import uk.gov.digital.ho.hocs.model.CaseType;
+import uk.gov.digital.ho.hocs.model.DashboardSummaryDto;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DashboardServiceTest {
 
-    private static final String MIN = "MIN";
-    private static final String TRO = "TRO";
-    private static final String DTEN = "DTEN";
-    private static final String ABC = "ABC";
-    private static final String DEF = "DEF";
-    private static final String COMPLETED = "Completed";
-    private static final List<String> EMPTY_CASE_TYPE  = new ArrayList<>();
-    private static final List<String> SINGLE_CASE_TYPE  = new ArrayList<String>() {{ add(MIN); }};
-    private static final List<String> DUPLICATE_CASE_TYPE  = new ArrayList<String>() {{ add(MIN); add(MIN);}};
-    private static final List<String> MULTI_CASE_TYPE  = new ArrayList<String>() {{ add(MIN); add(TRO);add(DTEN);add(ABC);add(DEF);}};
+
+    private static final LinkedHashSet<CaseType> EMPTY_CASE_TYPE = new LinkedHashSet<>();
+    private static final LinkedHashSet<CaseType> SINGLE_CASE_TYPE = new LinkedHashSet<CaseType>() {{
+        add(CaseType.MIN);
+    }};
+    private static final LinkedHashSet<CaseType> DUPLICATE_CASE_TYPE = new LinkedHashSet<CaseType>() {{
+        add(CaseType.MIN);
+        add(CaseType.MIN);
+    }};
+    private static final LinkedHashSet<CaseType> MULTI_CASE_TYPE = new LinkedHashSet<CaseType>() {{
+        add(CaseType.MIN);
+        add(CaseType.TRO);
+        add(CaseType.DTEN);
+    }};
 
     @Mock
     private CaseCurrentPropertiesRepository caseCurrentPropertiesRepository;
 
     private DashboardService dashboardService;
+    private DashboardSummaryDto dashboardSummaryDto;
 
     @Before
     public void setUp() {
@@ -36,38 +44,50 @@ public class DashboardServiceTest {
     }
 
     @Test
-    public void shouldCallRepositoryOnceAndReturnCountForSingleCaseType(){
-        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(MIN,COMPLETED)).thenReturn(5l);
+    public void shouldCallRepositoryOnceAndReturnCountForSingleCaseType() {
+        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name())).thenReturn(5l);
 
-        dashboardService.getSummary(SINGLE_CASE_TYPE);
-        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(MIN,COMPLETED);
+        dashboardSummaryDto = dashboardService.getSummary(SINGLE_CASE_TYPE);
+
+        assertThat(dashboardSummaryDto.toString()).isEqualTo("DashboardSummaryDto(summary=[{total=5, name=MIN}])");
+
+        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name());
     }
 
     @Test
-    public void shouldCallRepositoryFiveTimesAndReturnCountForFiveCaseType(){
-        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(MIN,COMPLETED)).thenReturn(5l);
+    public void shouldCallRepositoryThreeTimesAndReturnCountForThreeCaseType() {
+        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name())).thenReturn(3l);
+        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.TRO.name(), CaseStatus.Completed.name())).thenReturn(2l);
+        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.DTEN.name(), CaseStatus.Completed.name())).thenReturn(1l);
 
-        dashboardService.getSummary(MULTI_CASE_TYPE);
-        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(MIN,COMPLETED);
-        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(TRO,COMPLETED);
-        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(DTEN,COMPLETED);
-        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(ABC,COMPLETED);
-        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(DEF,COMPLETED);
+        dashboardSummaryDto = dashboardService.getSummary(MULTI_CASE_TYPE);
+
+        assertThat(dashboardSummaryDto.toString()).isEqualTo("DashboardSummaryDto(summary=[{total=3, name=MIN}, {total=2, name=TRO}, {total=1, name=DTEN}])");
+
+        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name());
+        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(CaseType.TRO.name(), CaseStatus.Completed.name());
+        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(CaseType.DTEN.name(), CaseStatus.Completed.name());
     }
 
     @Test
-    public void shouldCallRepositoryTwiceAndReturnCountForCaseTypeTwice(){
-        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(MIN,COMPLETED)).thenReturn(5l);
+    public void shouldCallRepositoryOnceWhenDuplicateCaseTypeEnteredAndReturnCountForCaseTypeOnce() {
+        when(caseCurrentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name())).thenReturn(4l);
 
-        dashboardService.getSummary(DUPLICATE_CASE_TYPE);
-        verify(caseCurrentPropertiesRepository, times(2)).countByCorrespondenceTypeAndCaseStatusNot(MIN,COMPLETED);
+        dashboardSummaryDto = dashboardService.getSummary(DUPLICATE_CASE_TYPE);
+
+        assertThat(dashboardSummaryDto.toString()).isEqualTo("DashboardSummaryDto(summary=[{total=4, name=MIN}])");
+
+        verify(caseCurrentPropertiesRepository, times(1)).countByCorrespondenceTypeAndCaseStatusNot(CaseType.MIN.name(), CaseStatus.Completed.name());
     }
 
     @Test
-    public void shouldCallRepository(){
+    public void shouldCallRepository() {
 
-        dashboardService.getSummary(EMPTY_CASE_TYPE);
-        verify(caseCurrentPropertiesRepository, never()).countByCorrespondenceTypeAndCaseStatusNot(anyString(),
-                anyString());
+        dashboardSummaryDto = dashboardService.getSummary(EMPTY_CASE_TYPE);
+        verify(caseCurrentPropertiesRepository, never()).countByCorrespondenceTypeAndCaseStatusNot(
+                any(),
+                any());
+
+        assertThat(dashboardSummaryDto.toString()).isEqualTo("DashboardSummaryDto(summary=[])");
     }
 }

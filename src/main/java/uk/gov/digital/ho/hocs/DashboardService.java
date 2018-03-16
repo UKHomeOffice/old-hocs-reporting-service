@@ -1,15 +1,17 @@
 package uk.gov.digital.ho.hocs;
 
 import org.springframework.stereotype.Service;
+import uk.gov.digital.ho.hocs.model.CaseStatus;
+import uk.gov.digital.ho.hocs.model.CaseType;
+import uk.gov.digital.ho.hocs.model.DashboardSummaryDto;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.String.valueOf;
 
 @Service
 public class DashboardService {
+
 
     private final CaseCurrentPropertiesRepository currentPropertiesRepository;
 
@@ -17,17 +19,17 @@ public class DashboardService {
         this.currentPropertiesRepository = caseCurrentPropertiesRepository;
     }
 
-    public HashMap getSummary(List<String> caseTypes) {
-        HashMap returnValuesHash = new HashMap();
+    public DashboardSummaryDto getSummary(LinkedHashSet<CaseType> caseTypes) {
         ArrayList<HashMap> returnValuesArray = new ArrayList<>();
-        caseTypes.forEach(caseType -> {
-            long returnCount = currentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(caseType,"Completed");
+        caseTypes.forEach((CaseType caseType) -> {
+
+            long returnCount = currentPropertiesRepository.countByCorrespondenceTypeAndCaseStatusNot(caseType.name(), CaseStatus.Completed.name());
+
             returnValuesArray.add(new HashMap<String, String>() {{
-                put("name", caseType);
+                put("name", caseType.name());
                 put("total", valueOf(returnCount));
             }});
         });
-        returnValuesHash.put("summary", returnValuesArray);
-        return returnValuesHash;
+        return DashboardSummaryDto.builder().summary(returnValuesArray).build();
     }
 }

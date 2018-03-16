@@ -14,7 +14,7 @@ public interface CaseCurrentPropertiesRepository extends CrudRepository<CaseCurr
 
     Set<CaseCurrentProperties> getAllByTimestampBetweenAndCorrespondenceTypeIn(LocalDateTime start, LocalDateTime end, String[] correspondenceTypes);
 
-    Long countByCorrespondenceTypeAndCaseStatusNot(String correspondenceTypes,String caseStatus);
+    Long countByCorrespondenceTypeAndCaseStatusNot(String correspondenceTypes, String caseStatus);
 
 
 }

@@ -5,10 +5,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.ResponseEntity;
+import uk.gov.digital.ho.hocs.model.CaseType;
+import uk.gov.digital.ho.hocs.model.DashboardSummaryDto;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.when;
@@ -21,8 +22,6 @@ public class DashboardResourceTest {
     @Mock
     private DashboardService dashboardService;
 
-    private static final String MIN = "MIN";
-    private static final String SUMMARY = "summary";
     private static final String TOTAL = "total";
     private static final String NAME = "name";
 
@@ -33,34 +32,22 @@ public class DashboardResourceTest {
 
     @Test
     public void shouldReturnCountResultWhenDashboardSummaryRequested() {
-        List<String> caseTypes = new ArrayList<String>() {{
-            add(MIN);
+        LinkedHashSet<CaseType> caseTypes = new LinkedHashSet<CaseType>() {{
+            add(CaseType.MIN);
         }};
-        when(dashboardService.getSummary(caseTypes)).
-                thenReturn(new HashMap() {{
-                    put(SUMMARY, new ArrayList<HashMap>() {
-                                {
-                                    add(new HashMap<String, String>() {{
-                                            put(TOTAL, "1");
-                                            put(NAME, MIN);
-                                        }}
-                                    );
-                                }
-                            }
-                    );
-                }});
-
-        HashMap hashMapResponse = dashboardResource.dashboardSummary(caseTypes);
-        System.out.println(hashMapResponse);
         ArrayList arraylist = new ArrayList<HashMap>() {
             {
                 add(new HashMap<String, String>() {{
                     put(TOTAL, "1");
-                    put(NAME, MIN);
+                    put(NAME, CaseType.MIN.name());
                 }});
 
             }
         };
-        assertThat(hashMapResponse.get(SUMMARY)).isEqualTo(arraylist);
+        when(dashboardService.getSummary(caseTypes)).
+                thenReturn(DashboardSummaryDto.builder().summary(arraylist).build());
+
+        ResponseEntity dashboardSummary = dashboardResource.dashboardSummary(caseTypes);
+        assertThat(dashboardSummary.getBody()).isEqualToComparingFieldByField(DashboardSummaryDto.builder().summary(arraylist).build());
     }
 }

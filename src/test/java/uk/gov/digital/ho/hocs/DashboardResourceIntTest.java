@@ -11,6 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.digital.ho.hocs.model.CaseCurrentProperties;
+import uk.gov.digital.ho.hocs.model.CaseStatus;
+import uk.gov.digital.ho.hocs.model.CaseType;
 import uk.gov.digital.ho.hocs.model.Event;
 
 import java.time.LocalDateTime;
@@ -33,15 +35,23 @@ public class DashboardResourceIntTest {
 
     private int caseReference = 0;
     private ResponseEntity<String> responseEntity;
-    private static final String MIN = "MIN";
-    private static final String TRO = "TRO";
-    private static final String DTEN = "DTEN";
-    private static final String COMPLETED = "Completed";
-    private static final String NEW = "New";
-    private static final String DRAFT = "Draft";
     private static final String DASHBOARD_SUMMARY_URL = "/dashboardSummary";
     private static final String CORRESPONDENCE_TYPE = "correspondenceType";
     private static final String CASE_STATUS = "caseStatus";
+    private static final String TOTAL = "total";
+    private static final String NAME = "name";
+    private static final HashMap<String,String> min  = new HashMap<String, String>() {{
+        put(TOTAL, "6");
+        put(NAME, CaseType.MIN.name());
+    }};
+    private static final HashMap<String,String> tro  = new HashMap<String, String>() {{
+        put(TOTAL, "5");
+        put(NAME, CaseType.TRO.name());
+    }};
+    private static final HashMap<String,String> dten  = new HashMap<String, String>() {{
+        put(TOTAL, "0");
+        put(NAME, CaseType.DTEN.name());
+    }};
 
     @Transactional
     @Before
@@ -60,8 +70,9 @@ public class DashboardResourceIntTest {
                 "  } ]\n" +
                 "}";
 
-        postRequest(new ArrayList<String>() {{ add(MIN); }});
+        postRequest(new ArrayList<CaseType>() {{ add(CaseType.MIN); }});
 
+        assertThat(responseEntity.getBody()).contains(min.values());
         assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
     }
 
@@ -75,30 +86,20 @@ public class DashboardResourceIntTest {
                 "  } ]\n" +
                 "}";
 
-        postRequest(new ArrayList<String>() {{ add(MIN); }});
-
+        postRequest(new ArrayList<CaseType>() {{ add(CaseType.MIN); }});
+        assertThat(responseEntity.getBody()).contains(min.values());
         assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
+        assertThat(responseEntity.getBody()).doesNotContain(tro.values());
     }
 
     @Test
-    public void shouldReturnCaseSummaryForMutlipleCaseTypesWhenRequested(){
+    public void shouldReturnCaseSummaryForMultipleCaseTypesWhenRequested(){
 
-        String expectedBodyAsJson = "{\n" +
-                "  \"summary\" : [ {\n" +
-                "    \"total\" : \"6\",\n" +
-                "    \"name\" : \"MIN\"\n" +
-                "  }, {\n" +
-                "    \"total\" : \"5\",\n" +
-                "    \"name\" : \"TRO\"\n" +
-                "  }, {\n" +
-                "    \"total\" : \"0\",\n" +
-                "    \"name\" : \"DTEN\"\n" +
-                "  } ]\n" +
-                "}";
+        postRequest(new ArrayList<CaseType>() {{ add(CaseType.MIN);add(CaseType.TRO);add(CaseType.DTEN); }});
 
-        postRequest(new ArrayList<String>() {{ add(MIN);add(TRO);add(DTEN); }});
-
-        assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
+        assertThat(responseEntity.getBody()).contains(min.values());
+        assertThat(responseEntity.getBody()).contains(tro.values());
+        assertThat(responseEntity.getBody()).contains(dten.values());
     }
 
     @Test
@@ -111,39 +112,18 @@ public class DashboardResourceIntTest {
                 "  } ]\n" +
                 "}";
 
-        postRequest( new ArrayList<String>() {{ add(DTEN); }});
-
+        postRequest( new ArrayList<CaseType>() {{ add(CaseType.DTEN); }});
+        assertThat(responseEntity.getBody()).contains(dten.values());
         assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
     }
 
     @Test
-    public void shouldReturnEmptyHashMapWhenEmptyStringUsedAsCaseType(){
+    public void shouldReturnUnprocessableEntityWhenCaseTypeIsNull() {
 
-        String expectedBodyAsJson = "{\n" +
-                "  \"summary\" : [ {\n" +
-                "    \"total\" : \"0\",\n" +
-                "    \"name\" : \"\"\n" +
-                "  } ]\n" +
-                "}";
+        postRequest(new ArrayList<CaseType>() {{ add(null); }});;
 
-        postRequest(new ArrayList<String>() {{ add(""); }});
-
-        assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
-    }
-
-    @Test
-    public void shouldReturnEmptyHashMapWhenNullUsedAsCaseType(){
-
-        String expectedBodyAsJson = "{\n" +
-                "  \"summary\" : [ {\n" +
-                "    \"total\" : \"0\",\n" +
-                "    \"name\" : null\n" +
-                "  } ]\n" +
-                "}";
-
-        postRequest(new ArrayList<String>() {{ add(null); }});
-
-        assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
+        System.out.println(responseEntity);
+        assertThat(responseEntity.getStatusCode()).isEqualByComparingTo(HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @Test
@@ -158,7 +138,7 @@ public class DashboardResourceIntTest {
         assertThat(responseEntity.getBody()).isEqualTo(expectedBodyAsJson);
     }
 
-    private void postRequest(List<String> caseTypes) {
+    private void postRequest(List<CaseType> caseTypes) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<?> request = new HttpEntity<>(caseTypes, headers);
@@ -166,21 +146,20 @@ public class DashboardResourceIntTest {
     }
 
     public void SeedDatabase(){
-        creatAndSaveEntryToDatabase(MIN, COMPLETED,3);
-        creatAndSaveEntryToDatabase(MIN, NEW,2);
-
-        creatAndSaveEntryToDatabase(MIN, DRAFT,4);
-        creatAndSaveEntryToDatabase(TRO, COMPLETED,3);
-        creatAndSaveEntryToDatabase(TRO, NEW,4);
-        creatAndSaveEntryToDatabase(TRO, DRAFT,1);
-        creatAndSaveEntryToDatabase(DTEN, COMPLETED,1);
+        creatAndSaveEntryToDatabase(CaseType.MIN, CaseStatus.Completed,3);
+        creatAndSaveEntryToDatabase(CaseType.MIN, CaseStatus.New,2);
+        creatAndSaveEntryToDatabase(CaseType.MIN, CaseStatus.Draft,4);
+        creatAndSaveEntryToDatabase(CaseType.TRO, CaseStatus.Completed,3);
+        creatAndSaveEntryToDatabase(CaseType.TRO, CaseStatus.New,4);
+        creatAndSaveEntryToDatabase(CaseType.TRO, CaseStatus.Draft,1);
+        creatAndSaveEntryToDatabase(CaseType.DTEN, CaseStatus.Completed,1);
     }
 
-    public void creatAndSaveEntryToDatabase(String caseType, String caseStatus, int quantity){
+    public void creatAndSaveEntryToDatabase(CaseType caseType, CaseStatus caseStatus, int quantity){
         for (int i = 0; i < quantity; i++) {
             Map<String, String> data = new HashMap<>();
-            data.put(CORRESPONDENCE_TYPE, caseType);
-            data.put(CASE_STATUS, caseStatus);
+            data.put(CORRESPONDENCE_TYPE, caseType.name());
+            data.put(CASE_STATUS, caseStatus.name());
             caseReference++;
             Event event = new Event(UUID.randomUUID().toString(), LocalDateTime.now(), caseType + valueOf(caseReference), data);
 
