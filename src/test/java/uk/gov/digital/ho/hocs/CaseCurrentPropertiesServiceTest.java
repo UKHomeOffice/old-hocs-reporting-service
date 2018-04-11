@@ -312,7 +312,6 @@ public class CaseCurrentPropertiesServiceTest {
     private CaseCurrentProperties getValidCaseCurrentProperties(String caseTask) {
         CaseCurrentProperties taskEntryDetails = new CaseCurrentProperties();
         switch (caseTask) {
-//            taskEntryDetails.setCaseReference("FOI/00001/18");
             case "Create case":
                 taskEntryDetails.setCreateCase(LocalDateTime.now());
                 break;

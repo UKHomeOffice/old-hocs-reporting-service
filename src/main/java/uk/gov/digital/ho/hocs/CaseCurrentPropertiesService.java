@@ -102,15 +102,13 @@ public class CaseCurrentPropertiesService {
     public void createTaskEntryDetails(Event event) throws EntityCreationException {
         String caseType[] = {"FOI", "FTC", "FTCI", "FSC", "FSCI", "IMCB", "IMCM", "UTEN"};
         try {
-            int bound = caseType.length;
-            for (int i = 0; i < bound; i++) {
-                if (event.getData().get(CORRESPONDENCE_TYPE).contains(caseType[i])) {
+                if (Arrays.asList(caseType).contains(event.getData().get(CORRESPONDENCE_TYPE).toString())) {
                     CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
                     log.info("task entry Details = " + caseCurrentProperties);
 
                     checkCaseTaskTimeStamp(event, caseCurrentProperties);
                 }
-            }
+
         } catch (DataIntegrityViolationException e) {
 
             if (e.getCause() instanceof ConstraintViolationException &&
