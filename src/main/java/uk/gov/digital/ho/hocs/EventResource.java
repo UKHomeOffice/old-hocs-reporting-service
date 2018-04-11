@@ -29,6 +29,7 @@ public class EventResource {
         try {
             casePropertiesService.createProperties(event);
             caseCurrentPropertiesService.createCurrentProperties(event);
+            caseCurrentPropertiesService.createTaskEntryDetails(event);
             return ResponseEntity.ok("OK");
         } catch (EntityCreationException e) {
             log.info("Event \"{}\" not written", event.getUuid());

@@ -1,8 +1,6 @@
 package uk.gov.digital.ho.hocs.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +11,7 @@ import java.util.Map;
 @Table(name = "current_properties")
 @Access(AccessType.FIELD)
 @Getter
+@ToString
 @EqualsAndHashCode(of = {"uuid", "timestamp"}, callSuper = false)
 public class CaseCurrentProperties extends BaseProperties {
 
@@ -590,6 +589,50 @@ public class CaseCurrentProperties extends BaseProperties {
 
     @Column(name = "urn_suffix")
     private String urnSuffix;
+
+    @Setter
+    @Column(name = "create_case")
+    private LocalDateTime CreateCase;
+
+    @Setter
+    @Column(name = "draft_response")
+    private LocalDateTime DraftResponse;
+
+    @Setter
+    @Column(name = "qa_review")
+    private LocalDateTime QAReview;
+
+    @Setter
+    @Column(name = "ukvi_cqt_approval")
+    private LocalDateTime ukviCQTApproval;
+
+    @Setter
+    @Column(name = "ukvi_private_office_approval")
+    private LocalDateTime ukviPrivateOfficeApproval;
+
+    @Setter
+    @Column(name = "foi_scs_approval")
+    private LocalDateTime foiScsApproval;
+
+    @Setter
+    @Column(name = "foi_press_office_review")
+    private LocalDateTime foiPressOfficeReview;
+
+    @Setter
+    @Column(name = "foi_spads_approval")
+    private LocalDateTime foiSpadsApproval;
+
+    @Setter
+    @Column(name = "foi_foi_minister_signoff")
+    private LocalDateTime foiFoiMinisterSignoff;
+
+    @Setter
+    @Column(name = "dispatch_response")
+    private LocalDateTime DispatchResponse;
+
+    @Setter
+    @Column(name = "completed ")
+    private LocalDateTime Completed;
 
     public CaseCurrentProperties(Event event) {
         update(event);
