@@ -11,7 +11,6 @@ import java.util.Map;
 @Table(name = "current_properties")
 @Access(AccessType.FIELD)
 @Getter
-@ToString
 @EqualsAndHashCode(of = {"uuid", "timestamp"}, callSuper = false)
 public class CaseCurrentProperties extends BaseProperties {
 

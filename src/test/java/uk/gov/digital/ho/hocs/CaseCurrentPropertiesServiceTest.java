@@ -40,7 +40,7 @@ public class CaseCurrentPropertiesServiceTest {
      * Test that an event is saved as event
      */
     public void testCreateEvent() {
-        Event event = getValidEventWithCaseTask();
+        Event event = getValidEvent();
         currentPropertiesService.createCurrentProperties(event);
 
         verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
@@ -49,7 +49,7 @@ public class CaseCurrentPropertiesServiceTest {
 
     @Test()
     public void testUpdateEvent() {
-        Event event = getValidEventWithCaseTask();
+        Event event = getValidEvent();
         currentPropertiesService.createCurrentProperties(event);
 
         when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(new CaseCurrentProperties(event));
@@ -63,7 +63,7 @@ public class CaseCurrentPropertiesServiceTest {
 
     @Test()
     public void testRepoDataIntegrityExceptionThrowsEntityCreationExceptionProperty() {
-        Event event = getValidEventWithCaseTask();
+        Event event = getValidEvent();
         when(mockCurrentPropertiesRepo.save(any(CaseCurrentProperties.class))).thenThrow(new DataIntegrityViolationException("Thrown DataIntegrityViolationException", new ConstraintViolationException("", null, "current_properties_id_idempotent")));
 
         currentPropertiesService.createCurrentProperties(event);
@@ -74,7 +74,7 @@ public class CaseCurrentPropertiesServiceTest {
 
     @Test(expected = DataIntegrityViolationException.class)
     public void testRepoUnhandledExceptionThrowsDataIntegrityExceptionProperty() {
-        Event event = getValidEventWithCaseTask();
+        Event event = getValidEvent();
         when(mockCurrentPropertiesRepo.save(any(CaseCurrentProperties.class))).thenThrow(new DataIntegrityViolationException("Thrown DataIntegrityViolationException", new ConstraintViolationException("", null, "other error")));
 
         currentPropertiesService.createCurrentProperties(event);
@@ -271,7 +271,7 @@ public class CaseCurrentPropertiesServiceTest {
         verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
     }
 
-    private Event getValidEventWithCaseTask() {
+    private Event getValidEvent() {
         return getValidEventWithTime(LocalDateTime.now());
     }
 
