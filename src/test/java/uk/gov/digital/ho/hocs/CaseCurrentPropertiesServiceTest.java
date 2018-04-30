@@ -171,6 +171,26 @@ public class CaseCurrentPropertiesServiceTest {
 
     @Test
     public void testUpdateTaskEntryDetailsWhenCaseGoesFromCreateCaseToDraftResponse() {
+        Event event = getValidEventWithCaseTask("QA case");
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("Create case"));
+        currentPropertiesService.createTaskEntryDetails(event);
+
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
+    }
+
+    @Test
+    public void testUpdateTaskEntryDetailsWhenCaseGoesFromDraftResponseToMarkUp() {
+        Event event = getValidEventWithCaseTask("Mark up");
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("QA case"));
+        currentPropertiesService.createTaskEntryDetails(event);
+
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
+    }
+
+    @Test
+    public void testUpdateTaskEntryDetailsWhenCaseGoesFromCreateCaseToQACase() {
         Event event = getValidEventWithCaseTask("Draft response");
         when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("Create case"));
         currentPropertiesService.createTaskEntryDetails(event);
@@ -183,6 +203,16 @@ public class CaseCurrentPropertiesServiceTest {
     public void testUpdateTaskEntryDetailsWhenCaseGoesFromDraftResponseToQaReview() {
         Event event = getValidEventWithCaseTask("QA review");
         when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("Draft response"));
+        currentPropertiesService.createTaskEntryDetails(event);
+
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
+    }
+
+    @Test
+    public void testUpdateTaskEntryDetailsWhenCaseGoesFromQaReviewToAmendResponse() {
+        Event event = getValidEventWithCaseTask("Amend response");
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("QA review"));
         currentPropertiesService.createTaskEntryDetails(event);
 
         verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
@@ -251,9 +281,39 @@ public class CaseCurrentPropertiesServiceTest {
     }
 
     @Test
+    public void testUpdateTaskEntryDetailsWhenCaseGoesFromPrivateOfficeApprovalToDCMinisterSignOff() {
+        Event event = getValidEventWithCaseTask("Minister's sign-off");
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("Private Office approval"));
+        currentPropertiesService.createTaskEntryDetails(event);
+
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
+    }
+
+    @Test
+    public void testUpdateTaskEntryDetailsWhenCaseGoesFromQAReviewtoHomeSecSignOff() {
+        Event event = getValidEventWithCaseTask("Home Sec's sign-off");
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("QA review"));
+        currentPropertiesService.createTaskEntryDetails(event);
+
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
+    }
+
+    @Test
+    public void testUpdateTaskEntryDetailsWhenCaseGoesFromHomeSecSignOfftoHSPrivateOfficeApproval() {
+        Event event = getValidEventWithCaseTask("HS Private Office approval");
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("Home Sec's sign-off"));
+        currentPropertiesService.createTaskEntryDetails(event);
+
+        verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
+        verify(mockCurrentPropertiesRepo, times(1)).save(any(CaseCurrentProperties.class));
+    }
+
+    @Test
     public void testUpdateTaskEntryDetailsWhenCaseGoesFromFoiMinisterSignOffToDispatchResponse() {
         Event event = getValidEventWithCaseTask("Dispatch response");
-        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("FOI Minister sign-off"));
+        when(mockCurrentPropertiesRepo.findByCaseReference(event.getCaseReference())).thenReturn(getValidCaseCurrentProperties("DCU Minister sign-off"));
         currentPropertiesService.createTaskEntryDetails(event);
 
         verify(mockCurrentPropertiesRepo).findByCaseReference(event.getCaseReference());
@@ -304,7 +364,7 @@ public class CaseCurrentPropertiesServiceTest {
         String uuid = "uuid";
         String caseRef = "CaseRef";
         Map<String, String> data = new HashMap<>();
-        data.put("correspondenceType", "MIN");
+        data.put("correspondenceType", "COL");
         data.put("caseTask", "Create case");
         return new Event(uuid, LocalDateTime.now(), caseRef, data);
     }
@@ -315,12 +375,26 @@ public class CaseCurrentPropertiesServiceTest {
             case "Create case":
                 taskEntryDetails.setCreateCase(LocalDateTime.now());
                 break;
+            case "QA case":
+                taskEntryDetails.setCreateCase(LocalDateTime.now());
+                break;
+            case "Mark up":
+                taskEntryDetails.setCreateCase(LocalDateTime.now());
+                taskEntryDetails.setQACase(LocalDateTime.now());
+                break;
             case "Draft response":
                 taskEntryDetails.setCreateCase(LocalDateTime.now());
                 taskEntryDetails.setDraftResponse(LocalDateTime.now());
                 break;
             case "QA review":
                 taskEntryDetails.setCreateCase(LocalDateTime.now());
+                taskEntryDetails.setDraftResponse(LocalDateTime.now());
+                taskEntryDetails.setQAReview(LocalDateTime.now());
+                break;
+            case "Amend response":
+                taskEntryDetails.setCreateCase(LocalDateTime.now());
+                taskEntryDetails.setQACase(LocalDateTime.now());
+                taskEntryDetails.setMarkUp(LocalDateTime.now());
                 taskEntryDetails.setDraftResponse(LocalDateTime.now());
                 taskEntryDetails.setQAReview(LocalDateTime.now());
                 break;
@@ -335,7 +409,7 @@ public class CaseCurrentPropertiesServiceTest {
                 taskEntryDetails.setDraftResponse(LocalDateTime.now());
                 taskEntryDetails.setQAReview(LocalDateTime.now());
                 taskEntryDetails.setUkviCQTApproval(LocalDateTime.now());
-                taskEntryDetails.setUkviPrivateOfficeApproval(LocalDateTime.now());
+                taskEntryDetails.setPrivateOfficeApproval(LocalDateTime.now());
                 break;
             case "SCS approval":
                 taskEntryDetails.setCreateCase(LocalDateTime.now());
@@ -357,6 +431,28 @@ public class CaseCurrentPropertiesServiceTest {
                 taskEntryDetails.setFoiScsApproval(LocalDateTime.now());
                 taskEntryDetails.setFoiPressOfficeReview(LocalDateTime.now());
                 taskEntryDetails.setFoiSpadsApproval(LocalDateTime.now());
+                break;
+            case "Minister's sign-off":
+                taskEntryDetails.setCreateCase(LocalDateTime.now());
+                taskEntryDetails.setDraftResponse(LocalDateTime.now());
+                taskEntryDetails.setQAReview(LocalDateTime.now());
+                taskEntryDetails.setPrivateOfficeApproval(LocalDateTime.now());
+                taskEntryDetails.setDcuMinisterSignoff(LocalDateTime.now());
+                break;
+            case "Home Sec's sign-off":
+                taskEntryDetails.setCreateCase(LocalDateTime.now());
+                taskEntryDetails.setDraftResponse(LocalDateTime.now());
+                taskEntryDetails.setQAReview(LocalDateTime.now());
+                taskEntryDetails.setPrivateOfficeApproval(LocalDateTime.now());
+                taskEntryDetails.setHomeSecSignOff(LocalDateTime.now());
+                break;
+            case "HS private office approval":
+                taskEntryDetails.setCreateCase(LocalDateTime.now());
+                taskEntryDetails.setDraftResponse(LocalDateTime.now());
+                taskEntryDetails.setQAReview(LocalDateTime.now());
+                taskEntryDetails.setPrivateOfficeApproval(LocalDateTime.now());
+                taskEntryDetails.setHomeSecSignOff(LocalDateTime.now());
+                taskEntryDetails.setHsPrivateOfficeApproval(LocalDateTime.now());
                 break;
             case "FOI Minister sign-off":
                 taskEntryDetails.setCreateCase(LocalDateTime.now());
