@@ -591,23 +591,35 @@ public class CaseCurrentProperties extends BaseProperties {
 
     @Setter
     @Column(name = "create_case")
-    private LocalDateTime CreateCase;
+    private LocalDateTime createCase;
+
+    @Setter
+    @Column(name = "qa_case")
+    private LocalDateTime qACase;
+
+    @Setter
+    @Column(name = "mark_up")
+    private LocalDateTime markUp;
 
     @Setter
     @Column(name = "draft_response")
-    private LocalDateTime DraftResponse;
+    private LocalDateTime draftResponse;
 
     @Setter
     @Column(name = "qa_review")
-    private LocalDateTime QAReview;
+    private LocalDateTime qAReview;
+
+    @Setter
+    @Column(name = "amend_response")
+    private LocalDateTime amendResponse;
 
     @Setter
     @Column(name = "ukvi_cqt_approval")
     private LocalDateTime ukviCQTApproval;
 
     @Setter
-    @Column(name = "ukvi_private_office_approval")
-    private LocalDateTime ukviPrivateOfficeApproval;
+    @Column(name = "private_office_approval")
+    private LocalDateTime privateOfficeApproval;
 
     @Setter
     @Column(name = "foi_scs_approval")
@@ -622,16 +634,28 @@ public class CaseCurrentProperties extends BaseProperties {
     private LocalDateTime foiSpadsApproval;
 
     @Setter
+    @Column(name = "dcu_minister_signoff")
+    private LocalDateTime dcuMinisterSignoff;
+
+    @Setter
     @Column(name = "foi_foi_minister_signoff")
     private LocalDateTime foiFoiMinisterSignoff;
 
     @Setter
+    @Column(name = "home_sec_sign_off")
+    private LocalDateTime homeSecSignOff;
+
+    @Setter
+    @Column(name = "hs_private_office_approval")
+    private LocalDateTime hsPrivateOfficeApproval;
+
+    @Setter
     @Column(name = "dispatch_response")
-    private LocalDateTime DispatchResponse;
+    private LocalDateTime dispatchResponse;
 
     @Setter
     @Column(name = "completed ")
-    private LocalDateTime Completed;
+    private LocalDateTime completed;
 
     public CaseCurrentProperties(Event event) {
         update(event);

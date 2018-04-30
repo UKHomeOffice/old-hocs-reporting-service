@@ -67,7 +67,7 @@ public class CasePropertiesRepositoryTest {
     public void shouldNotAllowIdentical() {
         Event event = getValidEvent();
 
-        Event newEvent = getValidEvent();
+        Event newEvent = event;
 
         CaseProperties caseProperties = new CaseProperties(event);
         Long id = casePropertiesRepository.save(caseProperties).getId();

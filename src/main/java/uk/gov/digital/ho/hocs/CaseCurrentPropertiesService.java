@@ -20,28 +20,34 @@ import java.util.Set;
 @Slf4j
 public class CaseCurrentPropertiesService {
 
-    private static HashMap<String,String[]> caseTypesMapping;
+    private static HashMap<String, String[]> caseTypesMapping;
     public static final String CORRESPONDENCE_TYPE = "correspondenceType";
     public static final String CASE_TASK = "caseTask";
     public static final String CREATE_CASE = "Create case";
+    public static final String QA_CASE = "QA case";
+    public static final String MARK_UP = "Mark up";
     public static final String DRAFT_RESPONSE = "Draft response";
     public static final String QA_REVIEW = "QA review";
+    public static final String AMEND_RESPONSE = "Amend response";
     public static final String CQT_APPROVAL = "CQT approval";
     public static final String PRIVATE_OFFICE_APPROVAL = "Private Office approval";
     public static final String SCS_APPROVAL = "SCS approval";
     public static final String PRESS_OFFICE_REVIEW = "Press Office review";
     public static final String SP_ADS_APPROVAL = "SpAds approval";
+    public static final String DCU_MINISTER_SIGN_OFF = "Minister's sign-off";
     public static final String FOI_MINISTER_SIGN_OFF = "FOI Minister sign-off";
+    public static final String HOME_SEC_SIGN_OFF = "Home Sec's sign-off";
+    public static final String HS_PRIVATE_OFFICE_APPROVAL = "HS Private Office approval";
     public static final String DISPATCH_RESPONSE = "Dispatch response";
     public static final String NONE = "None";
 
     // This code should be in the data-service but we also want to get rid of getCurrentProperties code.
     static {
         caseTypesMapping = new HashMap<>();
-        caseTypesMapping.put("DCU", new String[]{"MIN","TRO","DTEN"});
-        caseTypesMapping.put("UKVI", new String[]{"IMCB","IMCM","UTEN"});
+        caseTypesMapping.put("DCU", new String[]{"MIN", "TRO", "DTEN"});
+        caseTypesMapping.put("UKVI", new String[]{"IMCB", "IMCM", "UTEN"});
         caseTypesMapping.put("FOI", new String[]{"FOI", "FTC", "FTCI", "FSC", "FSCI"});
-        caseTypesMapping.put("HMPOCOR", new String[]{"COM","COM1","COM2","DGEN","GNR"});
+        caseTypesMapping.put("HMPOCOR", new String[]{"COM", "COM1", "COM2", "DGEN", "GNR"});
         caseTypesMapping.put("HMPOCOL", new String[]{"COL"});
     }
 
@@ -55,9 +61,9 @@ public class CaseCurrentPropertiesService {
         try {
             CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
 
-            if(caseCurrentProperties == null) {
+            if (caseCurrentProperties == null) {
                 currentPropertiesRepository.save(new CaseCurrentProperties(event));
-            } else if(event.getTimestamp().isAfter(caseCurrentProperties.getTimestamp())) {
+            } else if (event.getTimestamp().isAfter(caseCurrentProperties.getTimestamp())) {
                 log.info("Entry already found, updating: " + event.getCaseReference());
                 caseCurrentProperties.update(event);
                 currentPropertiesRepository.save(caseCurrentProperties);
@@ -68,8 +74,7 @@ public class CaseCurrentPropertiesService {
                     (((ConstraintViolationException) e.getCause()).getConstraintName().toLowerCase().contains("current_properties_id_idempotent"))) {
                 // Do Nothing.
                 log.info("Received duplicate message {}, {}", event.getUuid(), event.getTimestamp());
-            }
-            else {
+            } else {
                 throw e;
             }
         }
@@ -89,25 +94,25 @@ public class CaseCurrentPropertiesService {
             LocalDate now = LocalDate.now();
             LocalDateTime today = LocalDateTime.of(now, LocalTime.MAX);
 
-            int monthsBack =4;
+            int monthsBack = 4;
             // Start at the first day of the month
             LocalDateTime start = LocalDateTime.of(now.minusMonths(monthsBack).getYear(),
-                                                   now.minusMonths(monthsBack).getMonth(),
-                                                   1,0,0);
+                    now.minusMonths(monthsBack).getMonth(),
+                    1, 0, 0);
 
             return currentPropertiesRepository.getAllByTimestampBetweenAndCorrespondenceTypeIn(start, today, correspondenceTypes);
         }
     }
 
     public void createTaskEntryDetails(Event event) throws EntityCreationException {
-        String caseType[] = {"FOI", "FTC", "FTCI", "FSC", "FSCI", "IMCB", "IMCM", "UTEN"};
+        String caseType[] = {"FOI", "FTC", "FTCI", "FSC", "FSCI", "IMCB", "IMCM", "UTEN", "MIN", "TRO", "DTEN"};
         try {
-                if (Arrays.asList(caseType).contains(event.getData().get(CORRESPONDENCE_TYPE).toString())) {
-                    CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
-                    log.info("task entry Details = " + caseCurrentProperties);
+            if (Arrays.asList(caseType).contains(event.getData().get(CORRESPONDENCE_TYPE).toString())) {
+                CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
+                log.info("task entry Details = " + caseCurrentProperties);
 
-                    checkCaseTaskTimeStamp(event, caseCurrentProperties);
-                }
+                checkCaseTaskTimeStamp(event, caseCurrentProperties);
+            }
 
         } catch (DataIntegrityViolationException e) {
 
@@ -131,6 +136,20 @@ public class CaseCurrentPropertiesService {
                     currentPropertiesRepository.save(caseCurrentProperties);
                 }
                 break;
+            case QA_CASE:
+                log.info(QA_CASE);
+                if (caseCurrentProperties.getQACase() == null) {
+                    caseCurrentProperties.setQACase(event.getTimestamp());
+                    currentPropertiesRepository.save(caseCurrentProperties);
+                }
+                break;
+            case MARK_UP:
+                log.info(MARK_UP);
+                if (caseCurrentProperties.getMarkUp() == null) {
+                    caseCurrentProperties.setMarkUp(event.getTimestamp());
+                    currentPropertiesRepository.save(caseCurrentProperties);
+                }
+                break;
             case DRAFT_RESPONSE:
                 log.info(DRAFT_RESPONSE);
                 if (caseCurrentProperties.getDraftResponse() == null) {
@@ -145,6 +164,13 @@ public class CaseCurrentPropertiesService {
                     currentPropertiesRepository.save(caseCurrentProperties);
                 }
                 break;
+            case AMEND_RESPONSE:
+                log.info(AMEND_RESPONSE);
+                if (caseCurrentProperties.getAmendResponse() == null) {
+                    caseCurrentProperties.setAmendResponse(event.getTimestamp());
+                    currentPropertiesRepository.save(caseCurrentProperties);
+                }
+                break;
             case CQT_APPROVAL:
                 log.info(CQT_APPROVAL);
                 if (caseCurrentProperties.getUkviCQTApproval() == null) {
@@ -154,8 +180,8 @@ public class CaseCurrentPropertiesService {
                 break;
             case PRIVATE_OFFICE_APPROVAL:
                 log.info(PRIVATE_OFFICE_APPROVAL);
-                if (caseCurrentProperties.getUkviPrivateOfficeApproval() == null) {
-                    caseCurrentProperties.setUkviPrivateOfficeApproval(event.getTimestamp());
+                if (caseCurrentProperties.getPrivateOfficeApproval() == null) {
+                    caseCurrentProperties.setPrivateOfficeApproval(event.getTimestamp());
                     currentPropertiesRepository.save(caseCurrentProperties);
                 }
                 break;
@@ -180,10 +206,31 @@ public class CaseCurrentPropertiesService {
                     currentPropertiesRepository.save(caseCurrentProperties);
                 }
                 break;
+            case DCU_MINISTER_SIGN_OFF:
+                log.info(DCU_MINISTER_SIGN_OFF);
+                if (caseCurrentProperties.getDcuMinisterSignoff() == null) {
+                    caseCurrentProperties.setDcuMinisterSignoff(event.getTimestamp());
+                    currentPropertiesRepository.save(caseCurrentProperties);
+                }
+                break;
             case FOI_MINISTER_SIGN_OFF:
                 log.info(FOI_MINISTER_SIGN_OFF);
                 if (caseCurrentProperties.getFoiFoiMinisterSignoff() == null) {
                     caseCurrentProperties.setFoiFoiMinisterSignoff(event.getTimestamp());
+                    currentPropertiesRepository.save(caseCurrentProperties);
+                }
+                break;
+            case HOME_SEC_SIGN_OFF:
+                log.info(HOME_SEC_SIGN_OFF);
+                if (caseCurrentProperties.getHomeSecSignOff() == null) {
+                    caseCurrentProperties.setHomeSecSignOff(event.getTimestamp());
+                    currentPropertiesRepository.save(caseCurrentProperties);
+                }
+                break;
+            case HS_PRIVATE_OFFICE_APPROVAL:
+                log.info(HS_PRIVATE_OFFICE_APPROVAL);
+                if (caseCurrentProperties.getHsPrivateOfficeApproval() == null) {
+                    caseCurrentProperties.setHsPrivateOfficeApproval(event.getTimestamp());
                     currentPropertiesRepository.save(caseCurrentProperties);
                 }
                 break;
