@@ -14,5 +14,6 @@ public interface CasePropertiesRepository extends CrudRepository<CaseProperties,
     @Query(value = "select pr.* from properties pr, (select max(id) as id, max(msg_timestamp), p.case_reference from properties p where p.correspondence_type in ?3 and p.msg_timestamp between ?1 and ?2 GROUP BY p.case_reference) spr where pr.id = spr.id", nativeQuery = true)
     Set<CaseProperties> getAllByTimestampBetweenAndCorrespondenceTypeIn(LocalDateTime start, LocalDateTime end, String[] correspondenceTypes);
 
-
+    @Query(value = "select p.* from properties p where p.correspondence_type in ?1 ", nativeQuery = true)
+    Set<CaseProperties> getAllCorrespondenceTypeIn(String[] correspondenceTypes);
 }

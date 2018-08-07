@@ -57,10 +57,6 @@ public class CasePropertiesService {
         }
     }
 
-    Set<CaseProperties> getProperties(String unit) {
-        return getProperties(unit, LocalDate.MAX, 24);
-    }
-
     Set<CaseProperties> getProperties(String unit, String cutoff) {
         return getProperties(unit, LocalDate.parse(cutoff), 4);
     }
@@ -85,6 +81,23 @@ public class CasePropertiesService {
                     1,0,0);
 
             return casePropertiesRepository.getAllByTimestampBetweenAndCorrespondenceTypeIn(start, today, correspondenceTypes);
+        }
+    }
+
+    Set<CaseProperties> getAllProperties(String unit) {
+
+        String[] correspondenceTypes = caseTypesMapping.get(unit);
+
+        if (correspondenceTypes == null) {
+            log.error("Unit {} not found", unit);
+            return new HashSet<>();
+        } else {
+
+
+            log.info("Fetching All Properties for \"{}\"", Arrays.toString(correspondenceTypes));
+
+
+            return casePropertiesRepository.getAllCorrespondenceTypeIn(correspondenceTypes);
         }
     }
 }

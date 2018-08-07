@@ -55,13 +55,13 @@ public class CasePropertiesResource {
 
     @RequestMapping(value = "/all/{unit}/json", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<CaseProperties[]> getCasePropertiesJson(@PathVariable("unit") String unit) {
-        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getProperties(unit);
+        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getAllProperties(unit);
         return ResponseEntity.ok(caseCurrentProperties.toArray(new CaseProperties[]{}));
     }
 
     @RequestMapping(value = "/all/{unit}/csv", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
     public ResponseEntity<String> getCasePropertiesCSV(@PathVariable("unit") String unit) {
-        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getProperties(unit);
+        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getAllProperties(unit);
 
         CsvSchema schema = csvMapper.schemaFor(CaseProperties.class).withHeader();
         String value;
