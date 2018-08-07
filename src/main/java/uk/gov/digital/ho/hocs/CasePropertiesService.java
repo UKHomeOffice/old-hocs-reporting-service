@@ -57,7 +57,15 @@ public class CasePropertiesService {
         }
     }
 
+    Set<CaseProperties> getProperties(String unit) {
+        return getProperties(unit, LocalDate.MAX, 24);
+    }
+
     Set<CaseProperties> getProperties(String unit, String cutoff) {
+        return getProperties(unit, LocalDate.parse(cutoff), 4);
+    }
+
+    Set<CaseProperties> getProperties(String unit, LocalDate localDateCutOff, int monthsBack) {
 
         String[] correspondenceTypes = caseTypesMapping.get(unit);
 
@@ -65,13 +73,12 @@ public class CasePropertiesService {
             log.error("Unit {} not found", unit);
             return new HashSet<>();
         } else {
-           LocalDate localDateCutOff = LocalDate.parse(cutoff);
 
-            log.info("Fetching All Properties for \"{}\" up to {}", Arrays.toString(correspondenceTypes), cutoff);
+
+            log.info("Fetching All Properties for \"{}\" up to {}", Arrays.toString(correspondenceTypes), localDateCutOff.toString());
 
             LocalDateTime today = LocalDateTime.of(localDateCutOff, LocalTime.MAX);
 
-            int monthsBack =4;
             // Start at the first day of the month
             LocalDateTime start = LocalDateTime.of(localDateCutOff.minusMonths(monthsBack).getYear(),
                     localDateCutOff.minusMonths(monthsBack).getMonth(),

@@ -52,4 +52,27 @@ public class CasePropertiesResource {
                 .header("Content-Disposition", "inline; filename=\"hocs_" + cutoff + ".csv\"")
                 .body(value);
     }
+
+    @RequestMapping(value = "/all/{unit}/json", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<CaseProperties[]> getCasePropertiesJson(@PathVariable("unit") String unit) {
+        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getProperties(unit);
+        return ResponseEntity.ok(caseCurrentProperties.toArray(new CaseProperties[]{}));
+    }
+
+    @RequestMapping(value = "/all/{unit}/csv", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public ResponseEntity<String> getCasePropertiesCSV(@PathVariable("unit") String unit) {
+        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getProperties(unit);
+
+        CsvSchema schema = csvMapper.schemaFor(CaseProperties.class).withHeader();
+        String value;
+        try {
+            value = csvMapper.writer(schema).writeValueAsString(caseCurrentProperties);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=\"hocs_all.csv\"")
+                .body(value);
+    }
 }
