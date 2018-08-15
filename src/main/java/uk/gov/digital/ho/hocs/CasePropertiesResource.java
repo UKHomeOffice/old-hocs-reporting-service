@@ -53,6 +53,27 @@ public class CasePropertiesResource {
                 .body(value);
     }
 
+    @RequestMapping(value = "/all/{type}/{number}/{year}", method = RequestMethod.GET, produces = "text/csv;charset=UTF-8")
+    public ResponseEntity<String> getCasePropertiesCSV(@PathVariable("type") String type, @PathVariable("number") String number, @PathVariable("year") String year ) {
+
+        String caseRef = type + "/" + number + "/" + year;
+
+        Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getAllCaseProperties(caseRef);
+
+        CsvSchema schema = csvMapper.schemaFor(CaseProperties.class).withHeader();
+        String value;
+        try {
+            value = csvMapper.writer(schema).writeValueAsString(caseCurrentProperties);
+        } catch (JsonProcessingException e) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "inline; filename=\"hocs_" + caseRef + ".csv\"")
+                .body(value);
+    }
+
+
     @RequestMapping(value = "/all/{unit}/json", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<CaseProperties[]> getCasePropertiesJson(@PathVariable("unit") String unit) {
         Set<CaseProperties> caseCurrentProperties = this.casePropertiesService.getAllProperties(unit);

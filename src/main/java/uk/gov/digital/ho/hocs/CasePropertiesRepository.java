@@ -16,4 +16,6 @@ public interface CasePropertiesRepository extends CrudRepository<CaseProperties,
 
     @Query(value = "select p.* from properties p where p.correspondence_type in ?1 ", nativeQuery = true)
     Set<CaseProperties> getAllCorrespondenceTypeIn(String[] correspondenceTypes);
+
+    Set<CaseProperties> getAllByCaseRef(String caseRef);
 }

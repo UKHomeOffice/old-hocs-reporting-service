@@ -100,4 +100,12 @@ public class CasePropertiesService {
             return casePropertiesRepository.getAllCorrespondenceTypeIn(correspondenceTypes);
         }
     }
+
+    Set<CaseProperties> getAllCaseProperties(String caseRef) {
+
+            log.info("Fetching All Properties for Case \"{}\"", caseRef);
+
+            return casePropertiesRepository.getAllByCaseRef(caseRef);
+    }
+
 }
