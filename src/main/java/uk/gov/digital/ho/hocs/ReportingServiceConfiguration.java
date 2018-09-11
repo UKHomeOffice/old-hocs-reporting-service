@@ -5,13 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.text.SimpleDateFormat;
 
 @Configuration
 public class ReportingServiceConfiguration {
-
 
     @Autowired
     public ReportingServiceConfiguration(ObjectMapper objectMapper) {

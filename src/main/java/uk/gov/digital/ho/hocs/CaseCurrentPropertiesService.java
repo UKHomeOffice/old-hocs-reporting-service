@@ -62,6 +62,7 @@ public class CaseCurrentPropertiesService {
             CaseCurrentProperties caseCurrentProperties = currentPropertiesRepository.findByCaseReference(event.getCaseReference());
 
             if (caseCurrentProperties == null) {
+                log.info("New Entry, saving");
                 currentPropertiesRepository.save(new CaseCurrentProperties(event));
             } else if (event.getTimestamp().isAfter(caseCurrentProperties.getTimestamp())) {
                 log.info("Entry already found, updating: " + event.getCaseReference());
@@ -75,6 +76,7 @@ public class CaseCurrentPropertiesService {
                 // Do Nothing.
                 log.info("Received duplicate message {}, {}", event.getUuid(), event.getTimestamp());
             } else {
+                log.error(e.getMessage());
                 throw e;
             }
         }

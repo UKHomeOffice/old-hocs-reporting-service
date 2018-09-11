@@ -6,16 +6,59 @@
     <springProperty scope="context" name="appName" source="info.app.name"/>
     <springProperty scope="context" name="appVersion" source="info.app.version"/>
 
-    <logger name="uk.gov" additivity="false" level="INFO">
-        <appender-ref ref="CONSOLE"/>
+    <springProfile name="development">
+        <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <Pattern>${CONSOLE_LOG_PATTERN}</Pattern>
+            </layout>
+        </appender>
+        <logger name="uk.gov" additivity="false" level="DEBUG">
+            <appender-ref ref="consoleAppender"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="!development">
+        <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <includeCallerInfo>true</includeCallerInfo>
+            </encoder>
+        </appender>
+        <logger name="uk.gov" additivity="false" level="INFO">
+            <appender-ref ref="consoleAppender"/>
+        </logger>
+    </springProfile>
+
+    <logger name="org.camunda" additivity="false" level="INFO">
+        <appender-ref ref="consoleAppender"/>
     </logger>
 
-    <logger name="com.github.tomakehurst.wiremock" additivity="false" level="INFO">
-        <appender-ref ref="CONSOLE"/>
+    <logger name="org.eclipse.jetty" additivity="false" level="WARN">
+        <appender-ref ref="consoleAppender"/>
     </logger>
+
+    <logger name="org.flywaydb" additivity="false" level="WARN">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.springframework" additivity="false" level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.apache.camel" additivity="false" level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="org.hibernate" additivity="false" level="INFO">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
+    <logger name="com.zaxxer" additivity="false" level="WARN">
+        <appender-ref ref="consoleAppender"/>
+    </logger>
+
 
     <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="consoleAppender"/>
     </root>
 
 </configuration>
