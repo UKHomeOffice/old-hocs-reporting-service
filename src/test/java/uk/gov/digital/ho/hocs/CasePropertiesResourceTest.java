@@ -1,5 +1,7 @@
 package uk.gov.digital.ho.hocs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +13,9 @@ import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.Event;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mockitoSession;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,18 +37,32 @@ public class CasePropertiesResourceTest {
     @Test
     public void shouldReturnBadRequestWhenUnableCreate() throws EntityCreationException {
         Event event = new Event();
-        doThrow(new EntityCreationException("")).when(casePropertiesService).createProperties(event);
-        ResponseEntity httpResponse = eventResource.postEvent(event);
-        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        doThrow(new EntityCreationException("")).when(casePropertiesService).createProperties(any(Event.class));
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String msg = objectMapper.writeValueAsString(event);
+            ResponseEntity httpResponse = eventResource.postEvent(msg);
+            assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
 
-        verify(casePropertiesService).createProperties(event);
+        verify(casePropertiesService).createProperties(any(Event.class));
     }
 
     @Test
     public void shouldReturnOKWhenAbleCreate() throws EntityCreationException {
         Event event = new Event();
-        ResponseEntity httpResponse = eventResource.postEvent(event);
-        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(casePropertiesService).createProperties(event);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            String msg = objectMapper.writeValueAsString(event);
+            ResponseEntity httpResponse = eventResource.postEvent(msg);
+            assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        verify(casePropertiesService).createProperties(any(Event.class));
     }
 }

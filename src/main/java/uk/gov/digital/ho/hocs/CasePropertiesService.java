@@ -52,6 +52,7 @@ public class CasePropertiesService {
                 log.info("Received duplicate message {}, {}", event.getUuid(), event.getTimestamp());
             }
             else {
+                log.error(e.getMessage());
                 throw e;
             }
         }

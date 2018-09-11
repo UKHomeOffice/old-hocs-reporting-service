@@ -1,5 +1,7 @@
 package uk.gov.digital.ho.hocs;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +13,7 @@ import uk.gov.digital.ho.hocs.exception.EntityCreationException;
 import uk.gov.digital.ho.hocs.model.Event;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
@@ -35,18 +38,30 @@ public class CaseCurrentPropertiesResourceTest {
     @Test
     public void shouldReturnBadRequestWhenUnableCreate() throws EntityCreationException {
         Event event = new Event();
-        doThrow(new EntityCreationException("")).when(caseCurrentPropertiesService).createCurrentProperties(event);
-        ResponseEntity httpResponse = eventResource.postEvent(event);
-        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
-        verify(caseCurrentPropertiesService).createCurrentProperties(event);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String msg = objectMapper.writeValueAsString(event);
+            doThrow(new EntityCreationException("")).when(caseCurrentPropertiesService).createCurrentProperties(any(Event.class));
+            ResponseEntity httpResponse = eventResource.postEvent(msg);
+            assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        } catch (JsonProcessingException e) {
+
+        }
+        verify(caseCurrentPropertiesService).createCurrentProperties(any(Event.class));
     }
 
     @Test
     public void shouldReturnOKWhenAbleCreate() throws EntityCreationException {
         Event event = new Event();
-        ResponseEntity httpResponse = eventResource.postEvent(event);
-        assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
-        verify(caseCurrentPropertiesService).createCurrentProperties(event);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            String msg = objectMapper.writeValueAsString(event);
+            ResponseEntity httpResponse = eventResource.postEvent(msg);
+            assertThat(httpResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
+        } catch (JsonProcessingException e) {
+
+        }
+        verify(caseCurrentPropertiesService).createCurrentProperties(any(Event.class));
     }
 }
