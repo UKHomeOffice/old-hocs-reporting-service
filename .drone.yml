@@ -61,7 +61,7 @@ pipeline:
     - VERSION=build-${DRONE_BUILD_NUMBER}
     - KUBE_SERVER=https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
     secrets:
-    - hocs_reporting_service_prod
+    - hocs_reporting_service_dev
     commands:
     - cd kube-hocs-reporting-service
     - ./deploy.sh
