@@ -26,7 +26,7 @@ pipeline:
     commands:
     - docker login -u="ukhomeofficedigital+hocs" -p=$${DOCKER_PASSWORD} quay.io
     - docker tag hocs-reporting-service quay.io/ukhomeofficedigital/hocs-reporting-service:build-$${DRONE_BUILD_NUMBER}
-    - docker tag hocs-reporting-service quay.io/ukhomeofficedigital/hocs-service:latest
+    - docker tag hocs-reporting-service quay.io/ukhomeofficedigital/hocs-reporting-service:latest
     - docker push quay.io/ukhomeofficedigital/hocs-reporting-service:build-$${DRONE_BUILD_NUMBER}
     - docker push quay.io/ukhomeofficedigital/hocs-reporting-service:latest
     when:
