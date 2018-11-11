@@ -62,6 +62,7 @@ pipeline:
     - KUBE_SERVER=https://kube-api-notprod.notprod.acp.homeoffice.gov.uk
     secrets:
     - hocs_reporting_service_dev
+    - poise_whitelist
     commands:
     - cd kube-hocs-reporting-service
     - ./deploy.sh
@@ -78,6 +79,7 @@ pipeline:
     secrets:
     - hocs_reporting_service_dev
     - hocs_reporting_service_qa
+    - poise_whitelist
     commands:
     - cd kube-hocs-reporting-service
     - ./deploy.sh
@@ -94,6 +96,7 @@ pipeline:
     - KUBE_SERVER=https://kube-api-prod.prod.acp.homeoffice.gov.uk
     secrets:
     - hocs_reporting_service_prod
+    - poise_whitelist
     commands:
     - cd kube-hocs-reporting-service
     - ./deploy.sh
