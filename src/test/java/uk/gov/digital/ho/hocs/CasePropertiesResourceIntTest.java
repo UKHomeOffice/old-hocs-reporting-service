@@ -92,7 +92,7 @@ public class CasePropertiesResourceIntTest {
 
     @Test
     public void shouldNotReturnWhenOutsideVaidDateRangeMinus() throws EntityCreationException {
-        Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusMonths(2), "UUID1");
+        Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusMonths(1), "UUID1");
         repository.save(new CaseProperties(event));
 
         ResponseEntity<CaseProperties[]> actualList = restTemplate.getForEntity("/cases/" + testDate + "/DCU/json", CaseProperties[].class);
@@ -101,7 +101,7 @@ public class CasePropertiesResourceIntTest {
 
     @Test
     public void shouldNotReturnWhenOutsideVaidDateRangeMinusCsv() throws EntityCreationException, IOException {
-        Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusMonths(2), "UUID1");
+        Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusMonths(1), "UUID1");
         repository.save(new CaseProperties(event));
 
         ResponseEntity<String> actualList = restTemplate.getForEntity("/cases/" + testDate + "/DCU/csv", String.class);
