@@ -59,7 +59,7 @@ public class CasePropertiesService {
     }
 
     Set<CaseProperties> getProperties(String unit, String cutoff) {
-        return getProperties(unit, LocalDate.parse(cutoff), 4);
+        return getProperties(unit, LocalDate.parse(cutoff), 12);
     }
 
     Set<CaseProperties> getProperties(String unit, LocalDate localDateCutOff, int monthsBack) {
