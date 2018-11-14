@@ -90,7 +90,7 @@ public class CaseCurrentPropertiesResourceIntTest {
 
     @Test
     public void shouldNotReturnWhenOutsideVaidDateRangeMinus() throws EntityCreationException {
-        Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusMonths(2), "CaseRef1");
+        Event event = getValidEventWithDate(LocalDate.now().minusYears(1).minusMonths(1), "CaseRef1");
         repository.save(new CaseCurrentProperties(event));
 
         ResponseEntity<CaseCurrentProperties[]> actualList = restTemplate.getForEntity("/cases/current/DCU/json", CaseCurrentProperties[].class);
