@@ -96,7 +96,7 @@ public class CaseCurrentPropertiesService {
             LocalDate now = LocalDate.now();
             LocalDateTime today = LocalDateTime.of(now, LocalTime.MAX);
 
-            int monthsBack = 4;
+            int monthsBack = 12;
             // Start at the first day of the month
             LocalDateTime start = LocalDateTime.of(now.minusMonths(monthsBack).getYear(),
                     now.minusMonths(monthsBack).getMonth(),
